@@ -21,7 +21,7 @@ To install KitchenConnect on your local machine, follow these steps:
 
 To start the app, run the following command in the project directory:
 
-npm start
+`npm start`
 
 
 This will start the development server and open the app in your default web browser. The app will automatically reload if you make any changes to the code.
