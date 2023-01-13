@@ -6,13 +6,18 @@ const Cookbook = require('./cookbookSchema')
 const userSchema = new Schema({
     username: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
-    password: {
+    hashedPassword: {
         type: String,
-        required: true
+        required: true,
     },
-    email: String,
+    email: {
+        type: String,
+        required: true,
+        unique: true
+    },
     firstName: String,
     lastName: String,
     avatar: String,

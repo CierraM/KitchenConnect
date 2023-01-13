@@ -21,18 +21,18 @@ const recipeSchema = new Schema({
     userPermissions: {
         readonly: {
             type: [mongoose.ObjectId],
-            ref: User
+            ref: 'User'
         },
         owner: {
             type: mongoose.ObjectId,
-            ref: User
+            ref: 'User'
         }
     },
     groupPermissions: {
         //groups that can view the recipe. Only the owner can edit it, hence, only a readonly field exists for groups
         readonly: {
             type: [mongoose.ObjectId],
-            ref: Group
+            ref: 'Group'
         }
     }
 })

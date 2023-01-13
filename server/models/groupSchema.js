@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const User = require('./userSchema');
 
 const groupSchema = new Schema({
     name: {
@@ -9,12 +8,12 @@ const groupSchema = new Schema({
     },
     members: {
         type: [mongoose.ObjectId],
-        ref: User
+        ref: 'User'
     },
     //the admin should also be a member
     admins: {
         type: [mongoose.ObjectId],
-        ref: User
+        ref: 'User'
     }
 })
 

@@ -18,4 +18,6 @@ const controller = require('../../controllers/v1/recipeController')
 
 //unlink a recipe from a group - take the group off the group readonly list
 
+//get public recipes (maybe we need to paginate this one)
+
 module.exports = router;
