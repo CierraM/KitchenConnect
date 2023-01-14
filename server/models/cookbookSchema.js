@@ -23,7 +23,7 @@ const cookbookSchema = new Schema({
         },
         //owner can grant read or write access to users and groups
         owner: {
-            type: [mongoose.ObjectId],
+            type: mongoose.ObjectId,
             ref: 'User'
         }
     },

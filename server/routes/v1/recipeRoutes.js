@@ -3,9 +3,9 @@ const router = express.Router()
 const controller = require('../../controllers/v1/recipeController')
 
 //create a new recipe
-
+router.post('/create', controller.createRecipe);
 //get a recipe by id
-
+router.get('/:id', controller.getRecipeById)
 //update a recipe by id - must be owner
 
 //delete a recipe by id - must be owner
@@ -18,6 +18,6 @@ const controller = require('../../controllers/v1/recipeController')
 
 //unlink a recipe from a group - take the group off the group readonly list
 
-//get public recipes (maybe we need to paginate this one)
+//get all public recipes (maybe we need to paginate this one)
 
 module.exports = router;

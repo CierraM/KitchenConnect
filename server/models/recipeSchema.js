@@ -14,6 +14,10 @@ const recipeSchema = new Schema({
         ordinal: Number,
         text: String
     }],
+    related: {
+        type: [mongoose.ObjectId],
+        ref: 'Recipe'
+    },
     private: {
         type: Boolean,
         default: false

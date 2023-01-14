@@ -97,13 +97,92 @@ exports.login = async (req, res, next) => {
 }
 
 //fetch all recipes and cookbooks that belong to a user
-exports.getRecipesByUser = (req, res, next) => {
+exports.getMyRecipes = (req, res, next) => {
+    console.log('getting user recipes')
+    // const userId = req.body.userId;
+    const userId = "63c0b7f789b7c27224f5ae2d" //testing only
+    if (!userId) {
+        return res.status(401).json({
+            message: "You must be logged in to view user recipes"
+        })
+    }
+
+    //get recipes
+    Recipe.find()
+        .populate()
+        .then(recipes => {
+
+            User.findById(userId)
+                .then(user => {
+                    const hiddenRecipes = user.hidden.recipes;
+                    const hiddenCookbooks = user.hidden.cookbooks;
+                    const favorites = user.favoriteRecipes;
+
+                    const userRecipes = recipes
+                        .filter(r => r.userPermissions.owner == userId ||
+                            r.userPermissions.readonly.includes(userId))
+                        .filter(r => !(hiddenRecipes.includes(r.id)))
+                        .map(r => {
+                            return {
+                                _id: r._id,
+                                title: r.title,
+                                description: r.description,
+                                tags: r.tags,
+                                ingredients: r.ingredients,
+                                steps: r.steps.map(step => {
+                                    return {
+                                        ordinal: step.ordinal,
+                                        text: step.text
+                                    }
+                                }),
+                                related: r.related,
+                                private: r.private,
+                                accessLevel: r.userPermissions.owner == userId ? "owner" : "readonly",
+                                isFavorite: favorites.includes(r)
+                            }
+                        })
+                    Cookbook.find()
+                        .populate()
+                        .then(cookbooks => {
+                            const userCookbooks = cookbooks
+                                .filter(c => c.userPermissions.readAccess.includes(userId) || c.userPermissions.owner == userId)
+                                .filter(c => !(hiddenCookbooks.includes(c.id)))
+                                .map(c => {
+                                    return {
+                                        _id: c._id,
+                                        title: c.title,
+                                        recipes: c.recipes
+                                    }
+                                })
+                            return res.status(200).json({
+                                recipes: userRecipes,
+                                cookbooks: userCookbooks
+                            })
+                        })
+                })
+        })
+
 
 }
 
 //fetch all favorite recipes for a user
 exports.getUserFavorites = (req, res, next) => {
+    console.log('attempting to retrieve user favorites')
+    // const userId = req.body.userId;
+    const userId = "63c0b7f789b7c27224f5ae2d" //testing only
 
+    User.findById(userId)
+        .populate("favoriteRecipes")
+        .then(user => {
+            if (!user) {
+                return res.status(400).json({
+                    message: "user does not exist"
+                })
+            }
+            return res.status(200).json({
+                favorites: user.favoriteRecipes
+            })
+        })
 }
 
 //update user info

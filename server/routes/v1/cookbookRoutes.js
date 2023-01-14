@@ -3,6 +3,7 @@ const router = express.Router()
 const controller = require('../../controllers/v1/cookbookController');
 
 //create a cookbook
+router.post('/create', controller.createCookbook)
 
 //add a new recipe to a cookbook
 
@@ -14,7 +15,7 @@ const controller = require('../../controllers/v1/cookbookController');
 
 //share cookbook with a user
 
-//unlink a cookbook from a user
+//unshare a cookbook from a user
 
 //share cookbook with a group
 

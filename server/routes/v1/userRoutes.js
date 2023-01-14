@@ -10,12 +10,20 @@ router.post('/signup', controller.signup);
 router.post('/login', controller.login);
 
 //fetch all recipes and cookbooks that belong to a user
-router.get('/:userId/recipes');
+router.get('/myRecipes', controller.getMyRecipes);
 
 //fetch all favorite recipes for a user
-router.get('/:userId/favorites');
+router.get('/favorites', controller.getUserFavorites);
 
 //update user info
-router.post('/:userId/update');
+router.post('/update');
+
+//hide a recipe
+
+//unhide a recipe
+
+//hide a cookbook
+
+//unhide a cookbook
 
 module.exports = router;
