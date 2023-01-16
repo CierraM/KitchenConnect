@@ -18,6 +18,15 @@ router.get('/favorites', controller.getUserFavorites);
 //update user info
 router.post('/update');
 
+//search for user by id, name, or username
+router.get('/search', controller.searchForUser);
+
+//send a connection request
+router.post('/sendConnectionRequest', controller.sendConnectionRequest);
+
+//respond to a connection request
+router.post('/respondToConnectionRequest', controller.respondToConnectionRequest);
+
 //hide a recipe
 
 //unhide a recipe

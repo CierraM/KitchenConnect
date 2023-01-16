@@ -18,22 +18,30 @@ const userSchema = new Schema({
         required: true,
         unique: true
     },
+    connections: {
+        type: [mongoose.ObjectId],
+        ref: 'User'
+    },
+    connectionRequests: {
+        type: [mongoose.ObjectId],
+        ref: 'User'
+    },
     firstName: String,
     lastName: String,
     avatar: String,
     favoriteRecipes: {
         type: [mongoose.ObjectId],
-        ref: Recipe
+        ref: 'Recipe'
     },
     //these fields are for if a user 'deletes' something from their dashboard.
     hidden: {
         recipes: {
             type: [mongoose.ObjectId],
-            ref: Recipe 
+            ref: 'Recipe' 
         },
         cookbooks: {
             type: [mongoose.ObjectId],
-            ref: Cookbook
+            ref: 'Cookbook'
         }
     }
     

@@ -187,5 +187,130 @@ exports.getUserFavorites = (req, res, next) => {
 
 //update user info
 exports.updateUserInfo = (req, res, next) => {
+    //TODO: write updateUserInfo
+    res.send('this route has not been written yet')
+}
+
+//search for user by id, name, or username. Return nonidentifiable information
+exports.searchForUser = (req, res, next) => {
+    console.log('attempting to search for a user')
+    const query = req.query.query?.trim().toLowerCase();
+
+    if (!query) {
+        return res.status(404).json({
+            message: "No search parameters passed in",
+            users: []
+        })
+    }
+
+    const filteredQuery = [];
+    if (query.split(' ').length > 1) {
+        filteredQuery.push({ firstName: { $regex: query.split(' ')[0], $options: 'i' }, lastName: { $regex: query.split(' ')[1], $options: 'i' } })
+    }
+    else {
+        if (mongoose.isValidObjectId(query)) {
+            filteredQuery.push({_id: query})
+        }
+        filteredQuery.push({ email: query })
+        filteredQuery.push({username: query})
+    }
+    console.log(filteredQuery)
+
+    User.find({
+        $or: filteredQuery
+    }).then(users => {
+        res.status(200).json({
+            users: users.map(user => {
+                return {
+                    username: user.username,
+                    avatar: user.avatar,
+                    _id: user._id
+                }
+            })
+        })
+    })
+
+
+}
+
+exports.sendConnectionRequest = (req, res, next) => {
+    const to = req.body.toUser;
+
+    //TODO: get this id from auth middleware
+    const from = req.body.fromUser;
+
+    if (!to || !from || !mongoose.isValidObjectId(to) || !mongoose.isValidObjectId(from)) {
+        res.status(400).json({
+            message: "invalid input. Request body should have a toUser and a fromUser which are both valid objectIds"
+        })
+    }
+
+    User.findById(to).then(user => {
+        if (user.connections.includes(from)) {
+             return res.status(200).json({
+                message: "request not sent. User already included in connections"
+            })
+        }
+        if (user.connectionRequests.includes(from)) {
+            return res.status(200).json({
+                message: "A request has already been sent. Not sending another one."
+            })
+        }
+        User.findOneAndUpdate({ _id: to }, {
+            '$push': {connectionRequests: from}
+        }).then((user) => {
+            if (!user) {
+                return res.status(404).json({
+                    message: "User not found."
+                })
+            }
+            return res.status(200).json({
+                message: 'connection request sent'
+            })
+        })
+    })
+
+}
+
+exports.respondToConnectionRequest = (req, res, next) => {
+    //remove connection from connectionRequests, and add the users to each others' connections
+    //TODO: get userId from auth middleware instead of request
+    const userId = req.body.userId;
+    const respondingTo = req.body.respondingTo;
+    const accept = req.body.accept;
+
+    if (!userId) {
+        return res.status(401).json({
+            message: "You must be logged in to respond to a request."
+        })
+    }
+
+    User.findOneAndUpdate({ _id: userId }, {
+        '$pull': { connectionRequests: respondingTo}
+    }).then(updatedUser => {
+        if (updatedUser.connections.includes(respondingTo)) {
+            return res.status(200).json({
+                message: "User already connected. No further action taken."
+            })
+        }
+        if (accept) {
+            User.findOneAndUpdate(userId, {
+                '$push': {connections: respondingTo}
+            }).then(user => {
+                User.findByIdAndUpdate(respondingTo, {
+                    '$push': {connections: userId}
+                }).then(user => {
+                    return res.status(200).json({
+                        message: "connection accepted"
+                    })
+                })
+            })
+        } else {
+            return res.status(200).json({
+                message: "connection successfully declined"
+            })
+        }
+    })
+
 
 }
