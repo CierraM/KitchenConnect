@@ -45,12 +45,12 @@ exports.createRecipe = (req, res, next) => {
                     message: "Recipe was not able to be saved."
                 })
             }
-                //add recipe to each cookbook
-                cookbookIds.foreach(cb => {
-                    Cookbook.findOneAndUpdate({ _id: cb }, {
-                        '$push': { recipes: recipe }
-                    })
+            //add recipe to each cookbook
+            cookbookIds.foreach(cb => {
+                Cookbook.findOneAndUpdate({ _id: cb }, {
+                    '$push': { recipes: recipe }
                 })
+            })
 
 
             return res.status(200).json({
@@ -97,6 +97,43 @@ exports.getRecipeById = (req, res, next) => {
                 }
             })
         })
+}
+
+exports.shareRecipeWithUser = (req, res, next) => {
+    //TODO: get user id from auth
+    //make sure you have permission to share
+    const userId = "63c0b7f789b7c27224f5ae2d";
+
+    const recipeId = req.body.recipeId;
+    const recipientGroup = req.body.shareWith.groupId;
+    const recipientUser = req.body.shareWith.userId;
+
+    Recipe.findById(recipeId).then(recipe => {
+        if (!permissionToViewRecipe(recipe, userId)) {
+            return res.status(401).json({
+                message: "You do not have permission to share this recipe. Contact the recipe owner for permission"
+            })
+        }
+
+        if (recipe.userPermissions.readonly.includes(recipientUser) || recipe.groupPermissions.readonly.includes(recipientGroup)) {
+            return res.status(200).json({
+                message: "user/group already shared with. No action taken."
+            })
+        }
+        //TODO: this still doesn't work when you send a userId to be updated. I don't know why.
+        const updateQuery = {
+            ...(recipientUser && { userPermissions: { $push: { readonly: recipientUser } } }),
+            ...(recipientGroup && { groupPermissions: { $push: { readonly: recipientGroup } } })
+        }
+
+        recipe.update({ _id: recipeId }, updateQuery).then(result => {
+            res.status(201).json({
+                message: `Recipe shared. ${result.modifiedCount} rows updated`
+            })
+        })
+
+    })
+
 }
 
 

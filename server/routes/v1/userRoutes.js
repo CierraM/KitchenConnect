@@ -15,9 +15,6 @@ router.get('/myRecipes', controller.getMyRecipes);
 //fetch all favorite recipes for a user
 router.get('/favorites', controller.getUserFavorites);
 
-//update user info
-router.post('/update');
-
 //search for user by id, name, or username
 router.get('/search', controller.searchForUser);
 
@@ -34,5 +31,9 @@ router.post('/respondToConnectionRequest', controller.respondToConnectionRequest
 //hide a cookbook
 
 //unhide a cookbook
+
+//get user info
+
+//update user info
 
 module.exports = router;
