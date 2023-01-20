@@ -21,7 +21,7 @@ router.post('/unlinkFromUser', controller.removeFromUser);
 router.post('/unlinkFromGroup', controller.removeFromGroup);
 
 //update a recipe by id - must be owner
-router.put('/update', controller.updateRecipe);
+router.patch('/update', controller.updateRecipe);
 
 //get all public recipes (maybe we need to paginate this one)
 router.get('/', controller.getAllPublicRecipes);

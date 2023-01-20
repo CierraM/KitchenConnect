@@ -7,7 +7,8 @@ const userSchema = new Schema({
     username: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        immutable: true
     },
     hashedPassword: {
         type: String,
@@ -16,7 +17,8 @@ const userSchema = new Schema({
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        immutable: true
     },
     connections: {
         type: [mongoose.ObjectId],
@@ -34,17 +36,15 @@ const userSchema = new Schema({
         ref: 'Recipe'
     },
     //these fields are for if a user 'deletes' something from their dashboard.
-    hidden: {
-        recipes: {
-            type: [mongoose.ObjectId],
-            ref: 'Recipe' 
-        },
-        cookbooks: {
-            type: [mongoose.ObjectId],
-            ref: 'Cookbook'
-        }
+    hiddenRecipes: {
+        type: [mongoose.ObjectId],
+        ref: 'Recipe'
+    },
+    hiddenCookbooks: {
+        type: [mongoose.ObjectId],
+        ref: 'Cookbook'
     }
-    
+
 })
 
 module.exports = mongoose.model('User', userSchema)

@@ -312,5 +312,56 @@ exports.respondToConnectionRequest = (req, res, next) => {
         }
     })
 
+}
 
+// use this route to do things like changing what is hidden, etc.
+exports.updateUser = (req, res, next) => {
+    //TODO: get this from auth middleware
+    const userId = "63c59fe2cc99adddd0a4d3d9"; //testing only
+    const changes = req.body.changes;
+
+    delete changes["hashedPassword"]
+
+    if (!userId) {
+        return res.status(401).json({
+            message: "you must be logged in to update a user"
+        }) 
+    }
+
+    User.findById(userId).then(user => {
+        user.updateOne(changes).then(update => {
+            return res.status(200).json({
+                message: "user updated successfully",
+                update: update
+            })
+        })
+    }) 
+}
+
+exports.getUser = (req, res, next) => {
+       //TODO: get this from auth middleware
+    const userId = "63c59fe2cc99adddd0a4d3d9"; //testing only
+
+    if (!userId) {
+        return res.status(401).json({
+            message: "you must be logged in to get user data"
+        }) 
+    }
+    
+    User.findById(userId).then(user => {
+        return res.status(200).json({
+            user: {
+                username: user.username,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                avatar: user.avatar,
+                favoriteRecipes: user.favoriteRecipes,
+                hiddenRecipes: user.hiddenRecipes,
+                hiddenCookbooks: user.hiddenCookbooks,
+                connections: user.connections,
+                connectionRequests: user.connectionRequests,
+            }
+        })
+    })
 }

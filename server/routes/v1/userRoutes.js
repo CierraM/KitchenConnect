@@ -24,16 +24,10 @@ router.post('/sendConnectionRequest', controller.sendConnectionRequest);
 //respond to a connection request
 router.post('/respondToConnectionRequest', controller.respondToConnectionRequest);
 
-//hide a recipe
-
-//unhide a recipe
-
-//hide a cookbook
-
-//unhide a cookbook
+//update user info
+router.patch('/update', controller.updateUser)
 
 //get user info
-
-//update user info
+router.get('/', controller.getUser);
 
 module.exports = router;
