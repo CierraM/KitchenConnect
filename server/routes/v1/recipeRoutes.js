@@ -12,13 +12,18 @@ router.get('/:id', controller.getRecipeById);
 router.post('/share', controller.shareRecipeWithUser);
 
 //delete a recipe by id - must be owner
+router.delete('/delete/:id', controller.deleteRecipe);
 
 //unlink a recipe from a user - take them off the readonly list
+router.post('/unlinkFromUser', controller.removeFromUser);
 
 //unlink a recipe from a group - take the group off the group readonly list
-
-//get all public recipes (maybe we need to paginate this one)
+router.post('/unlinkFromGroup', controller.removeFromGroup);
 
 //update a recipe by id - must be owner
+router.put('/update', controller.updateRecipe);
+
+//get all public recipes (maybe we need to paginate this one)
+router.get('/', controller.getAllPublicRecipes);
 
 module.exports = router;

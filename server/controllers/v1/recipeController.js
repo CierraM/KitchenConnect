@@ -46,7 +46,7 @@ exports.createRecipe = (req, res, next) => {
                 })
             }
             //add recipe to each cookbook
-            cookbookIds.foreach(cb => {
+            cookbookIds.forEach(cb => {
                 Cookbook.findOneAndUpdate({ _id: cb }, {
                     '$push': { recipes: recipe }
                 })
@@ -137,3 +137,111 @@ exports.shareRecipeWithUser = (req, res, next) => {
 }
 
 
+exports.deleteRecipe = (req, res, next) => {
+    //TODO: get user id from auth
+    const userId = "63c0b7f789b7c27224f5ae2d";
+    const recipeId = req.params.id;
+
+    Recipe.findById(recipeId).then(recipe => {
+        if (!recipe) {
+            return res.status(404).json({
+                message: "this recipe does not exist"
+            })
+        }
+        if (!(recipe.userPermissions.owner == userId)) {
+            return res.status(401).json({
+                message: "You are not authorized to delete this recipe"
+            })
+        }
+        recipe.delete().then(result => {
+            res.status(200).json({
+                message: "recipe successfully deleted"
+            })
+        })
+    })
+}
+
+exports.removeFromUser = (req, res, next) => {
+    //so far this only lets a user remove the recipe from their own account
+    //maybe someday there will be a need to allow other users to remove a recipe from someone
+
+    //TODO: get user id from auth
+    const userId = "63c0b7f789b7c27224f5ae2d";
+    const recipeId = req.body.recipeId
+
+    Recipe.findById(recipeId).then(recipe => {
+        recipe.update({ userPermissions: { '$pull': { readonly: userId } } }).then(result => {
+            return res.status(200).json({
+                message: 'user removed from recipe'
+            })
+        })
+    })
+
+}
+
+exports.removeFromGroup = (req, res, next) => {
+    //this is authorized if the user owns the recipe or is a group admin
+
+    //TODO: get user id from auth
+    const userId = "63c0b7f789b7c27224f5ae2d";
+    const groupId = req.body.groupId
+
+    Group.findById(groupId).then(group => {
+        Recipe.findById(recipeId).then(recipe => {
+            if (recipe.userPermissions.owner != userId && !group.admins.includes(userId)) {
+                return res.status(401).json({
+                    message: "you do not have permission to remove this recipe"
+                })
+            }
+            recipe.update({ groupPermissiosn: { '$pull': { readonly: groupId } } }).then(result => {
+                return res.status(200).json({
+                    message: 'removed group access to recipe'
+                })
+            })
+        })
+    })
+
+}
+
+exports.getAllPublicRecipes = (req, res, next) => {
+    Recipe.find({ private: false }).then(recipes => {
+        return res.status(200).json({
+            recipes: recipes.map(recipe => {
+                return {
+                    _id: recipe._id,
+                    title: recipe.title,
+                    description: recipe.description,
+                    image: recipe.image,
+                    tags: recipe.tags,
+                    ingredients: recipe.ingredients,
+                    steps: recipe.steps,
+                    related: recipe.related,
+                    private: false
+                }
+            })
+        })
+    })
+}
+
+exports.updateRecipe = (req, res, next) => {
+    //TODO: get user id from auth
+    const userId = "63c0b7f789b7c27224f5ae2d";
+    const recipeId = req.body.recipeId;
+    const update = req.body.changes;
+    console.log(update)
+
+    Recipe.findById(recipeId).then(recipe => {
+        if (recipe.userPermissions.owner != userId) {
+            return res.status(401).json({
+                message: "You do not have permission to update this recipe"
+            })
+        }
+        recipe.update(update).then(updatedRecipe => {
+            return res.status(200).json({
+                message: "update successful",
+                update: updatedRecipe
+            })
+        })
+
+    })
+}
