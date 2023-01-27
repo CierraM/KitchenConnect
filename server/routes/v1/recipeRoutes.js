@@ -9,7 +9,7 @@ router.post('/create', controller.createRecipe);
 router.get('/:id', controller.getRecipeById);
 
 //share recipe with a user or group - need user id and recipe id
-router.post('/share', controller.shareRecipeWithUser);
+router.patch('/share', controller.shareRecipe);
 
 //delete a recipe by id - must be owner
 router.delete('/delete/:id', controller.deleteRecipe);

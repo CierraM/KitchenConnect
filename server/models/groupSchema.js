@@ -14,6 +14,10 @@ const groupSchema = new Schema({
     admins: {
         type: [mongoose.ObjectId],
         ref: 'User'
+    },
+    owner: {
+        type: mongoose.ObjectId,
+        ref: 'User'
     }
 })
 

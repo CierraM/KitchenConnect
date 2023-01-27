@@ -15,7 +15,8 @@ exports.createGroup = (req, res, next) => {
     Group.create({
         name: groupName,
         members: [userId],
-        admins: [userId]
+        admins: [userId],
+        owner: userId
     }).then(group => {
         if (!group) {
             return res.status(500).json({
@@ -47,14 +48,14 @@ exports.addMembers = (req, res, next) => {
                 message: "you do not have permission to add members to this group"
             })
         }
-        
+
         let results = [];
         memberIds.forEach(async member => {
             if (group.members.includes(member)) {
-                results.push({message: `member with id ${member} not added because they already belong to this group.`})
+                results.push({ message: `member with id ${member} not added because they already belong to this group.` })
             }
             else {
-                results.push({message: `member with id ${member} successfully added to the group.`})
+                results.push({ message: `member with id ${member} successfully added to the group.` })
                 await group.update({ '$push': { members: member } })
             }
         })
@@ -82,7 +83,7 @@ exports.removeMember = async (req, res, next) => {
                 message: "you do not have permission to remove members from this group"
             })
         }
-        
+
         if (!group.members.includes(memberId)) {
             return res.status(200).json({ message: `Member not part of this group. Unable to remove.` })
         }
@@ -109,24 +110,24 @@ exports.getGroupRecipes = (req, res, next) => {
         Recipe.find()
             .populate()
             .then(recipes => {
-            
+
                 const groupRecipes = recipes.filter(r => r.groupPermissions.readonly.includes(groupId))
                     .map(r => {
                         return {
                             _id: r._id,
-                                title: r.title,
-                                description: r.description,
-                                tags: r.tags,
-                                ingredients: r.ingredients,
-                                steps: r.steps.map(step => {
-                                    return {
-                                        ordinal: step.ordinal,
-                                        text: step.text
-                                    }
-                                }),
-                                related: r.related,
-                                private: r.private,
-                                accessLevel: r.userPermissions.owner == userId ? "owner" : "readonly",
+                            title: r.title,
+                            description: r.description,
+                            tags: r.tags,
+                            ingredients: r.ingredients,
+                            steps: r.steps.map(step => {
+                                return {
+                                    ordinal: step.ordinal,
+                                    text: step.text
+                                }
+                            }),
+                            related: r.related,
+                            private: r.private,
+                            accessLevel: r.userPermissions.owner == userId ? "owner" : "readonly",
                         }
                     })
                 Cookbook.find()
@@ -137,8 +138,8 @@ exports.getGroupRecipes = (req, res, next) => {
                             .map(c => {
                                 return {
                                     _id: c._id,
-                                        title: c.title,
-                                        recipes: c.recipes
+                                    title: c.title,
+                                    recipes: c.recipes
                                 }
                             })
                         return res.status(200).json({
@@ -146,7 +147,119 @@ exports.getGroupRecipes = (req, res, next) => {
                             cookbooks: groupCookbooks
                         })
                     })
-        })
+            })
     })
 
+}
+
+exports.registerAdmin = async (req, res, next) => {
+    // to register an admin, you need to be an admin of the group already.
+    //TODO: make sure this comes from auth middleware
+    const userId = req.body.userId;
+    const adminId = req.body.adminId;
+    const groupId = req.body.groupId;
+
+    //make sure this user has permission to add another admin
+    Group.findById(groupId).then(async group => {
+        if (!group) {
+            return res.status(404).json({
+                message: "group not found"
+            })
+        }
+        if (!group.admins.includes(userId)) {
+            return res.status(401).json({
+                message: "you do not have permission to add admins to this group"
+            })
+        }
+
+        if (group.admins.includes(adminId)) {
+            return res.status(201).json({ message: `member with id ${adminId} not added because they are already an admin for this group.` })
+        }
+        else {
+            await group.update({ '$push': { admins: adminId } })
+            return res.status(201).json({ message: `member with id ${adminId} successfully registered as admin.` })
+        }
+
+    })
+}
+
+exports.removeAdmin = async (req, res, next) => {
+    //TODO: make sure this comes from auth middleware
+    const userId = req.body.userId;
+    const adminId = req.body.adminId;
+    const groupId = req.body.groupId;
+
+    //make sure this user has permission to remove members
+    await Group.findById(groupId).then(async group => {
+        if (!group) {
+            return res.status(404).json({
+                message: "group not found"
+            })
+        }
+        //only a group owner can remove admins
+        if (!group.owner == userId) {
+            return res.status(401).json({
+                message: "you do not have permission to remove admins from this group. Only the group owner can remove admins."
+            })
+        }
+
+        if (!group.admins.includes(adminId)) {
+            return res.status(200).json({ message: `Member not an admin of this group. Unable to remove.` })
+        }
+        else {
+            group.update({ '$pull': { admins: adminId } }).then(result => {
+                return res.status(200).json({ message: `admin status successfully revoked` })
+            })
+
+        }
+
+    })
+}
+
+exports.getUserGroups = (req, res, next) => {
+    let userId = req.query.userId;
+    if (!userId) {
+        //get this from auth
+        userId = req.userId;
+    }
+
+    Group.find({ members: userId }).then(groups => {
+        return res.status(200).json({
+            groups: groups.map(group => {
+                return {
+                    _id: group._id,
+                    name: group.name,
+                    members: group.members,
+                    admins: group.admins
+                }
+            })
+        })
+    })
+}
+
+exports.deleteGroup = (req, res, next) => {
+    //TODO: make sure this comes from auth middleware
+    const userId = req.body.userId;
+    const groupId = req.body.groupId;
+
+    //make sure this user has permission to remove members
+    Group.findById(groupId).then(group => {
+        if (!group) {
+            return res.status(404).json({
+                message: "Group not found"
+            })
+        }
+        //only a group owner can remove admins
+        if (!group.owner == userId) {
+            return res.status(401).json({
+                message: "You do not have permission to remove admins from this group. Only the group owner can remove admins."
+            })
+        }
+
+        Group.deleteOne({ _id: groupId }).then(result => {
+            res.status(200).json({
+                message: "Group deleted."
+            })
+        })
+    })
 }

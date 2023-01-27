@@ -30,3 +30,32 @@ exports.permissionToViewRecipe = (recipe, userId) => {
     return false;
 }
 
+exports.hasPermissionToShareCookbook = (cookbook, userId) => {
+    if (cookbook.userPermissions.owner == userId) {
+        return true;
+    }
+    if (cookbook.userPermissions.writeAccess.includes(userId)) {
+        return true;
+    }
+    if (cookbook.userPermissions.readAccess.includes(userId)) {
+        return true;
+    }
+    return false;
+    
+}
+
+//returns array that includes readaccess, writeaccess, and owner
+exports.getAllCookbookPermissions = cookbook => {
+    const readAccess = cookbook.userPermissions.readAccess;
+    const writeAccess = cookbook.userPermissions.writeAccess;
+    const owner = cookbook.owner
+    
+
+    const permissions = readAccess.concat(writeAccess);
+    permissions.push(owner);
+
+    //filter the array to return only unique values
+    return permissions.filter((v, q, self) => {
+        return i == self.indexOf(v)
+    })
+}

@@ -6,7 +6,8 @@ const Cookbook = require('../../models/cookbookSchema');
 const Recipe = require('../../models/recipeSchema');
 const Group = require('../../models/groupSchema');
 const {
-    objectIdOfArray
+    objectIdOfArray,
+    getAllCookbookPermissions
 } = require('../../helpers/helpers');
 
 exports.createCookbook = (req, res, next) => {
@@ -101,3 +102,26 @@ exports.removeRecipe = (req, res, next) => {
             })
         })
 }
+
+// exports.shareCookbook = (req, res, next) => {
+//         //TODO: get user id from auth
+//     //make sure you have permission to share
+//     const userId = "63c0b7f789b7c27224f5ae2d";
+
+
+//     const cookbookId = req.body.cookbookId;
+//     const recipientGroup = req.body.shareWith.groupId;
+//     const recipientUser = req.body.shareWith.userId;
+
+//     Cookbook.findById(cookbookId).then(cookbook => {
+//         if (!getAllCookbookPermissions(cookbook).includes(userId)) {
+//             return res.status(401).json({
+//                 message: "You do not have permission to share this cookbook. Contact the cookbook owner for permission"
+//             })
+//         }
+
+
+
+//     })
+
+// }

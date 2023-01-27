@@ -9,18 +9,21 @@ router.post('/create', controller.createGroup);
 router.post('/addMembers', controller.addMembers);
 
 //remove a member from a group
-router.post('/removeMember', controller.removeMember)
+router.post('/removeMember', controller.removeMember);
 
 //get all recipes and cookbooks that a group can see
-router.get('/:id/getRecipes', controller.getGroupRecipes)
+router.get('/:id/getRecipes', controller.getGroupRecipes);
 
 //register a new admin
+router.patch('/registerAdmin', controller.registerAdmin);
 
 //remove a group admin
+router.patch('/removeAdmin', controller.removeAdmin)
 
 //see all groups that a user is part of
+router.get('/userGroups', controller.getUserGroups);
 
 //delete a group
-
+router.delete('/delete', controller.deleteGroup)
 
 module.exports = router;

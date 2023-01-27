@@ -99,7 +99,7 @@ exports.getRecipeById = (req, res, next) => {
         })
 }
 
-exports.shareRecipeWithUser = (req, res, next) => {
+exports.shareRecipe = (req, res, next) => {
     //TODO: get user id from auth
     //make sure you have permission to share
     const userId = "63c0b7f789b7c27224f5ae2d";

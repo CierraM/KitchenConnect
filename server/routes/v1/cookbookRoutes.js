@@ -11,9 +11,10 @@ router.post('/addRecipe', controller.addRecipe);
 //remove a recipe from a cookbook
 router.post('/removeRecipe', controller.removeRecipe);
 
-//share cookbook with a group
-
 //share cookbook with a user
+router.patch('/share', controller.shareCookbook)
+
+//share cookbook with a group
 
 //update a cookbook's name
 
