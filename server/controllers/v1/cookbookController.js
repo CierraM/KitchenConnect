@@ -61,7 +61,7 @@ exports.addRecipe = (req, res, next) => {
                 message: "you do not have permissions to edit this cookbook"
             })
         }
-        
+
         if (cookbook.recipes.includes(recipeId)) {
             return res.status(200).json({
                 message: "Recipe already included in cookbook"
@@ -77,51 +77,269 @@ exports.addRecipe = (req, res, next) => {
 }
 
 exports.removeRecipe = (req, res, next) => {
-        //TODO: make sure this comes from auth file
-        const userId = req.body.userId;
-        const cookbookId = req.body.cookbookId;
-        const recipeId = req.body.recipeId;
-    
-        Cookbook.findById(cookbookId).then(cookbook => {
-            if (!(cookbook.userPermissions.owner == userId || cookbook.userPermissions.writeAccess.includes(userId))) {
+    //TODO: make sure this comes from auth file
+    const userId = req.body.userId;
+    const cookbookId = req.body.cookbookId;
+    const recipeId = req.body.recipeId;
+
+    Cookbook.findById(cookbookId).then(cookbook => {
+        if (!(cookbook.userPermissions.owner == userId || cookbook.userPermissions.writeAccess.includes(userId))) {
+            return res.status(401).json({
+                message: "you do not have permissions to edit this cookbook"
+            })
+        }
+
+        if (!cookbook.recipes.includes(recipeId)) {
+            return res.status(200).json({
+                message: "Recipe not included in cookbook. Nothing to remove."
+            })
+        }
+
+        cookbook.update({ '$pull': { recipes: recipeId } }).then(result => {
+            return res.status(201).json({
+                message: "recipe removed successfully."
+            })
+        })
+    })
+}
+
+exports.shareWithUser = (req, res, next) => {
+    //This one is a little different.
+    //To share a cookbook, you can specify read or write access
+    //anyone with read access can share the cookbook for someone else to read it
+    //but you need to have write access to grant someone else write access
+
+    //TODO: get user id from auth
+    const userId = "63c0b7f789b7c27224f5ae2d";
+
+
+    const cookbookId = req.body.cookbookId;
+    const recipientUserId = req.body.recipientUserId;
+    let permissionLevel = req.body.permissionLevel.toLowerCase().trim() == 'write' ? 'write' : 'read';
+
+    if (!cookbookId || !recipientUserId || !req.body.permissionLevel) {
+        return res.status(400).json({
+            message: "improperly formatted request"
+        })
+    }
+
+    Cookbook.findById(cookbookId).then(cookbook => {
+        if (!cookbook.userPermissions.writeAccess.includes(userId) && cookbook.userPermissions.owner != userId) {
+            console.log('no write access')
+            if (!cookbook.userPermissions.readAccess.includes(userId)) {
+                console.log('no read access either')
                 return res.status(401).json({
-                    message: "you do not have permissions to edit this cookbook"
+                    message: "you do not have permission to share this cookbook"
                 })
+            } else {
+                permissionLevel = 'read';
             }
-            
-            if (!cookbook.recipes.includes(recipeId)) {
+        }
+
+        if (permissionLevel == 'read') {
+            if (cookbook.userPermissions?.readAccess.includes(recipientUserId)) {
                 return res.status(200).json({
-                    message: "Recipe not included in cookbook. Nothing to remove."
+                    message: 'user has already been granted read permission'
                 })
             }
-    
-            cookbook.update({ '$pull': { recipes: recipeId } }).then(result => {
-                return res.status(201).json({
-                    message: "recipe removed successfully."
+            cookbook.userPermissions.readAccess.push(recipientUserId);
+            cookbook.save()
+                .then(result => {
+                    if (!result) {
+                        return res.status(500).json({
+                            message: "unable to save results"
+                        })
+                    }
+                    return res.status(200).json({
+                        message: "read permission granted for this cookbook"
+                    })
+                })
+        }
+        if (permissionLevel == 'write') {
+            if (cookbook.userPermissions?.writeAccess.includes(recipientUserId)) {
+                return res.status(200).json({
+                    message: 'user has already been granted write permission'
+                })
+            }
+            cookbook.userPermissions.writeAccess.push(recipientUserId);
+            cookbook.save()
+                .then(result => {
+                    if (!result) {
+                        return res.status(500).json({
+                            message: "unable to save results"
+                        })
+                    }
+                    return res.status(200).json({
+                        message: "write permission granted for this cookbook"
+                    })
+                })
+        }
+
+    })
+
+}
+
+exports.shareWithGroup = (req, res, next) => {
+    //TODO: get user id from auth
+    const userId = "63c0b7f789b7c27224f5ae2d";
+
+
+    const cookbookId = req.body.cookbookId;
+    const recipientGroupId = req.body.recipientGroupId;
+    let permissionLevel = req.body.permissionLevel.toLowerCase().trim() == 'write' ? 'write' : 'read';
+
+    if (!cookbookId || !recipientGroupId || !req.body.permissionLevel) {
+        return res.status(400).json({
+            message: "improperly formatted request"
+        })
+    }
+
+    Cookbook.findById(cookbookId).then(cookbook => {
+        if (!cookbook.userPermissions.writeAccess.includes(userId) && cookbook.userPermissions.owner != userId) {
+            if (!cookbook.userPermissions.readAccess.includes(userId)) {
+                return res.status(401).json({
+                    message: "you do not have permission to share this cookbook"
+                })
+            } else {
+                permissionLevel = 'read';
+            }
+        }
+
+        if (permissionLevel == 'read') {
+            if (cookbook.groupPermissions?.readAccess.includes(recipientGroupId)) {
+                return res.status(200).json({
+                    message: 'group has already been granted read permission'
+                })
+            }
+            cookbook.groupPermissions.readAccess.push(recipientGroupId)
+            cookbook.save()
+                .then(result => {
+                    if (!result) {
+                        return res.status(500).json({
+                            message: "unable to save recipe"
+                        })
+                    }
+                    return res.status(200).json({
+                        message: "read permission granted for this cookbook"
+                    })
+                })
+        }
+        if (permissionLevel == 'write') {
+            if (cookbook.groupPermissions?.writeAccess.includes(recipientGroupId)) {
+                return res.status(200).json({
+                    message: 'group has already been granted write permission'
+                })
+            }
+            cookbook.groupPermissions.writeAccess.push(recipientGroupId);
+            cookbook.save()
+                .then(result => {
+                    if (!result) {
+                        return res.status(500).json({
+                            message: "unable to save recipe"
+                        })
+                    }
+                    return res.status(200).json({
+                        message: "write permission granted for this cookbook"
+                    })
+                })
+        }
+
+    })
+}
+
+exports.updateCookbook = (req, res, next) => {
+    //TODO: test this
+    //TODO: get user id from auth
+    const userId = "63c0b7f789b7c27224f5ae2d";
+    const cookbookId = req.body.cookbookId;
+    const update = req.body.changes;
+    console.log(update)
+
+    Cookbook.findById(cookbookId).then(cookbook => {
+        if (cookbook.userPermissions.owner != userId) {
+            return res.status(401).json({
+                message: "You do not have permission to update this cookbook"
+            })
+        }
+        cookbook.update(update).then(updatedCookbook => {
+            return res.status(200).json({
+                message: "update successful",
+                update: updatedCookbook
+            })
+        })
+
+    })
+}
+
+exports.unlinkCookbookFromGroup = (req, res, next) => {
+    //the recipe can be removed by group admins or cookbook owner
+
+    //TODO: get user id from auth
+    const userId = "63c0b7f789b7c27224f5ae2d";
+    const groupId = req.body.groupId;
+    const cookbookId = req.body.cookbookId;
+
+    Group.findById(groupId).then(group => {
+        Cookbook.findById(cookbookId).then(cookbook => {
+            if (cookbook.userPermissions.owner != userId && !group.admins.includes(userId)) {
+                return res.status(401).json({
+                    message: "you do not have permission to remove this recipe"
+                })
+            }
+            cookbook.update({
+                groupPermissions: {
+                    '$pull': { readAccess: groupId },
+                    '$pull': { writeAccess: groupId }
+                },
+            }).then(result => {
+                return res.status(200).json({
+                    message: 'removed group access to recipe',
+                    result: result
                 })
             })
         })
+    })
+
 }
 
-// exports.shareCookbook = (req, res, next) => {
-//         //TODO: get user id from auth
-//     //make sure you have permission to share
-//     const userId = "63c0b7f789b7c27224f5ae2d";
+exports.unlinkCookbookFromUser = (req, res, next) => {
+    //TODO: test this
+    //so far this only lets a user remove the recipe from their own account
+    //maybe someday there will be a need to allow other users to remove a recipe from someone
 
+    //TODO: get user id from auth
+    const userId = "63c0b7f789b7c27224f5ae2d";
+    const cookbookId = req.body.cookbookId
 
-//     const cookbookId = req.body.cookbookId;
-//     const recipientGroup = req.body.shareWith.groupId;
-//     const recipientUser = req.body.shareWith.userId;
+    Cookbook.findById(cookbookId).then(cookbook => {
+        cookbook.update({
+            userPermissions: {
+                '$pull': { readAccess: userId },
+                '$pull': { writeAccess: groupId }
+            }
+        }).then(result => {
+            return res.status(200).json({
+                message: 'user removed from cookbook'
+            })
+        })
+    })
+}
 
-//     Cookbook.findById(cookbookId).then(cookbook => {
-//         if (!getAllCookbookPermissions(cookbook).includes(userId)) {
-//             return res.status(401).json({
-//                 message: "You do not have permission to share this cookbook. Contact the cookbook owner for permission"
-//             })
-//         }
+exports.deleteCookbook = (req, res, next) => {
+    //TODO: get user id from auth
+    const userId = "63c0b7f789b7c27224f5ae2d";
+    const cookbookId = req.body.cookbookId;
 
-
-
-//     })
-
-// }
+    Cookbook.findById(cookbookId).then(cookbook => {
+        if (!cookbook.userPermissions.owner == userId) {
+            return res.status(401).json({
+                message: "you do not have permission to delete this cookbook"
+            })
+        }
+        cookbook.delete().then(result => {
+            return res.status(200).json({
+                message: "cookbook deleted"
+            })
+        });
+    })
+}

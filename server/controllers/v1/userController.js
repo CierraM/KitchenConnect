@@ -6,7 +6,6 @@ const jwt = require('jsonwebtoken');
 const User = require('../../models/userSchema');
 const Cookbook = require('../../models/cookbookSchema');
 const Recipe = require('../../models/recipeSchema');
-const Group = require('../../models/groupSchema');
 
 //signup new user
 exports.signup = async (req, res, next) => {
@@ -49,7 +48,7 @@ exports.signup = async (req, res, next) => {
                 return res.status(200).json({
                     message: "User successfully signed up",
                     user: {
-                        _id: user._id.toString,
+                        _id: user._id,
                         username: user.username,
                         email: user.email,
                         firstName: user.firstName,
@@ -91,7 +90,10 @@ exports.login = async (req, res, next) => {
                 email,
                 userId: loadedUser._id.toString()
             }, process.env.SECRET_KEY)
-            res.cookie('jwt', token).send('User authenticated')
+            res.cookie('jwt', token).json({
+                message: 'User authenticated',
+                _id: loadedUser._id
+            })
         })
 
 }
@@ -114,14 +116,14 @@ exports.getMyRecipes = (req, res, next) => {
 
             User.findById(userId)
                 .then(user => {
-                    const hiddenRecipes = user.hidden.recipes;
-                    const hiddenCookbooks = user.hidden.cookbooks;
+                    const hiddenRecipes = user.hidden?.recipes;
+                    const hiddenCookbooks = user.hidden?.cookbooks;
                     const favorites = user.favoriteRecipes;
 
                     const userRecipes = recipes
                         .filter(r => r.userPermissions.owner == userId ||
                             r.userPermissions.readonly.includes(userId))
-                        .filter(r => !(hiddenRecipes.includes(r.id)))
+                        .filter(r => !(hiddenRecipes?.includes(r.id)))
                         .map(r => {
                             return {
                                 _id: r._id,
@@ -146,7 +148,7 @@ exports.getMyRecipes = (req, res, next) => {
                         .then(cookbooks => {
                             const userCookbooks = cookbooks
                                 .filter(c => c.userPermissions.readAccess.includes(userId) || c.userPermissions.owner == userId)
-                                .filter(c => !(hiddenCookbooks.includes(c.id)))
+                                .filter(c => !(hiddenCookbooks?.includes(c.id)))
                                 .map(c => {
                                     return {
                                         _id: c._id,
@@ -169,7 +171,7 @@ exports.getMyRecipes = (req, res, next) => {
 exports.getUserFavorites = (req, res, next) => {
     console.log('attempting to retrieve user favorites')
     // const userId = req.body.userId;
-    const userId = "63c0b7f789b7c27224f5ae2d" //testing only
+    const userId = "63c59fe2cc99adddd0a4d3d9" //testing only
 
     User.findById(userId)
         .populate("favoriteRecipes")
@@ -180,16 +182,23 @@ exports.getUserFavorites = (req, res, next) => {
                 })
             }
             return res.status(200).json({
-                favorites: user.favoriteRecipes
+                favorites: user.favoriteRecipes.map(r => {
+                    return {
+                        title: r.title,
+                        description: r.description,
+                        image: r.image,
+                        ingredients: r.ingredients,
+                        steps: r.steps,
+                        notes: r.notes,
+                        related: r.related,
+                        private: r.private,
+                        owner: r.userPermissions.owner
+                    }
+                })
             })
         })
 }
 
-//update user info
-exports.updateUserInfo = (req, res, next) => {
-    //TODO: write updateUserInfo
-    res.send('this route has not been written yet')
-}
 
 //search for user by id, name, or username. Return nonidentifiable information
 exports.searchForUser = (req, res, next) => {

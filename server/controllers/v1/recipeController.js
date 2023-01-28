@@ -55,7 +55,7 @@ exports.createRecipe = (req, res, next) => {
 
             return res.status(200).json({
                 message: "Recipe created successfully",
-                recipe: recipe
+                _id: recipe._id
             })
         })
 }
@@ -99,14 +99,13 @@ exports.getRecipeById = (req, res, next) => {
         })
 }
 
-exports.shareRecipe = (req, res, next) => {
+exports.shareRecipeWithUser = (req, res, next) => {
     //TODO: get user id from auth
     //make sure you have permission to share
     const userId = "63c0b7f789b7c27224f5ae2d";
 
     const recipeId = req.body.recipeId;
-    const recipientGroup = req.body.shareWith.groupId;
-    const recipientUser = req.body.shareWith.userId;
+    const recipientUser = req.body.recipientUserId;
 
     Recipe.findById(recipeId).then(recipe => {
         if (!permissionToViewRecipe(recipe, userId)) {
@@ -115,25 +114,74 @@ exports.shareRecipe = (req, res, next) => {
             })
         }
 
-        if (recipe.userPermissions.readonly.includes(recipientUser) || recipe.groupPermissions.readonly.includes(recipientGroup)) {
+        if (recipe.userPermissions.readonly.includes(recipientUser)) {
             return res.status(200).json({
-                message: "user/group already shared with. No action taken."
+                message: "user already shared with. No action taken."
             })
-        }
-        //TODO: this still doesn't work when you send a userId to be updated. I don't know why.
-        const updateQuery = {
-            ...(recipientUser && { userPermissions: { $push: { readonly: recipientUser } } }),
-            ...(recipientGroup && { groupPermissions: { $push: { readonly: recipientGroup } } })
         }
 
-        recipe.update({ _id: recipeId }, updateQuery).then(result => {
-            res.status(201).json({
-                message: `Recipe shared. ${result.modifiedCount} rows updated`
+        recipe.userPermissions.readonly.push(recipientUser);
+        recipe.save()
+            .then(result => {
+                if (!result) {
+                    return res.status(500).json({
+                        message: "unable to save recipe"
+                    })
+                }
+                res.status(201).json({
+                    message: `Recipe shared.`
+                })
             })
-        })
 
     })
 
+}
+
+exports.shareRecipeWithGroup = (req, res, next) => {
+    //TODO: get user id from auth
+    //make sure you have permission to share
+    const userId = "63c0b7f789b7c27224f5ae2d";
+
+    const recipeId = req.body.recipeId;
+    const recipientGroup = req.body.recipientGroupId;
+
+    if (!recipeId || !recipientGroup) {
+        return res.status(400).json({
+            messsage: "request is missing information"
+        })
+    }
+
+    Recipe.findById(recipeId).then(recipe => {
+        if (!recipe) {
+            return res.status(404).json({
+                message: "recipe not found"
+            })
+        }
+        if (!permissionToViewRecipe(recipe, userId)) {
+            return res.status(401).json({
+                message: "You do not have permission to share this recipe. Contact the recipe owner for permission"
+            })
+        }
+
+        if (recipe.groupPermissions.readonly.includes(recipientGroup)) {
+            return res.status(200).json({
+                message: "group already shared with. No action taken."
+            })
+        }
+        recipe.groupPermissions.readonly.push(recipientGroup)
+        recipe.save()
+            .then(result => {
+                if (!result) {
+                    return res.status(500).json({
+                        message: "unable to save recipe"
+                    })
+                }
+                res.status(201).json({
+                    message: `Recipe shared`,
+                })
+            })
+
+    })
 }
 
 
@@ -184,7 +232,8 @@ exports.removeFromGroup = (req, res, next) => {
 
     //TODO: get user id from auth
     const userId = "63c0b7f789b7c27224f5ae2d";
-    const groupId = req.body.groupId
+    const groupId = req.body.groupId;
+    const recipeId = req.body.recipeId;
 
     Group.findById(groupId).then(group => {
         Recipe.findById(recipeId).then(recipe => {
@@ -193,9 +242,10 @@ exports.removeFromGroup = (req, res, next) => {
                     message: "you do not have permission to remove this recipe"
                 })
             }
-            recipe.update({ groupPermissiosn: { '$pull': { readonly: groupId } } }).then(result => {
+            recipe.update({ groupPermissions: { '$pull': { readonly: groupId } } }).then(result => {
                 return res.status(200).json({
-                    message: 'removed group access to recipe'
+                    message: 'removed group access to recipe',
+                    result: result
                 })
             })
         })

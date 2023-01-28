@@ -8,17 +8,18 @@ router.post('/create', controller.createRecipe);
 //get a recipe by id
 router.get('/:id', controller.getRecipeById);
 
-//share recipe with a user or group - need user id and recipe id
-router.patch('/share', controller.shareRecipe);
-
+//share recipe with a user or group
+router.patch('/shareWithUser', controller.shareRecipeWithUser);
+router.patch('/shareWithGroup', controller.shareRecipeWithGroup)
+    ;
 //delete a recipe by id - must be owner
 router.delete('/delete/:id', controller.deleteRecipe);
 
 //unlink a recipe from a user - take them off the readonly list
-router.post('/unlinkFromUser', controller.removeFromUser);
+router.patch('/unlinkFromUser', controller.removeFromUser);
 
 //unlink a recipe from a group - take the group off the group readonly list
-router.post('/unlinkFromGroup', controller.removeFromGroup);
+router.patch('/unlinkFromGroup', controller.removeFromGroup);
 
 //update a recipe by id - must be owner
 router.patch('/update', controller.updateRecipe);

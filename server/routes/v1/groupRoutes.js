@@ -6,10 +6,10 @@ const controller = require('../../controllers/v1/groupController');
 router.post('/create', controller.createGroup);
 
 //add a members to a group
-router.post('/addMembers', controller.addMembers);
+router.patch('/addMembers', controller.addMembers);
 
 //remove a member from a group
-router.post('/removeMember', controller.removeMember);
+router.patch('/removeMember', controller.removeMember);
 
 //get all recipes and cookbooks that a group can see
 router.get('/:id/getRecipes', controller.getGroupRecipes);

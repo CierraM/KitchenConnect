@@ -101,6 +101,11 @@ exports.getGroupRecipes = (req, res, next) => {
     const groupId = req.params.id;
 
     Group.findById(groupId).then(group => {
+        if (!group) {
+            return res.status(404).json({
+                message: "group not found"
+            })
+        }
         if (!group.members.includes(userId)) {
             return res.status(401).json({
                 message: "You are not part of this group."

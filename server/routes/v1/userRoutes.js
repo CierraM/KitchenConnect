@@ -19,12 +19,12 @@ router.get('/favorites', controller.getUserFavorites);
 router.get('/search', controller.searchForUser);
 
 //send a connection request
-router.post('/sendConnectionRequest', controller.sendConnectionRequest);
+router.patch('/sendConnectionRequest', controller.sendConnectionRequest);
 
 //respond to a connection request
-router.post('/respondToConnectionRequest', controller.respondToConnectionRequest);
+router.patch('/respondToConnectionRequest', controller.respondToConnectionRequest);
 
-//update user info
+//update user info - use this for hiding recipes and cookbooks also.
 router.patch('/update', controller.updateUser)
 
 //get user info

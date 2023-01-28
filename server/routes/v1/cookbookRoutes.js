@@ -6,22 +6,26 @@ const controller = require('../../controllers/v1/cookbookController');
 router.post('/create', controller.createCookbook);
 
 //add a new recipe to a cookbook
-router.post('/addRecipe', controller.addRecipe);
+router.patch('/addRecipe', controller.addRecipe);
 
 //remove a recipe from a cookbook
-router.post('/removeRecipe', controller.removeRecipe);
+router.patch('/removeRecipe', controller.removeRecipe);
 
-//share cookbook with a user
-router.patch('/share', controller.shareCookbook)
+//share cookbook
+router.patch('/shareWithUser', controller.shareWithUser)
+router.patch('/shareWithGroup', controller.shareWithGroup)
 
-//share cookbook with a group
-
-//update a cookbook's name
-
-//delete a cookbook - remove from where the user can see it, but does not actually remove it from existance
-
-//unshare a cookbook from a user
+//update a cookbook by id - must be owner
+router.patch('/update', controller.updateCookbook);
 
 //unlink a cookbook from a group
+router.patch('/unlinkFromGroup', controller.unlinkCookbookFromGroup);
+
+//unshare a cookbook from a user
+router.patch('/unlinkFromUser', controller.unlinkCookbookFromUser)
+
+//delete cookbook
+router.delete('/delete', controller.deleteCookbook)
+
 
 module.exports = router;
