@@ -101,8 +101,8 @@ exports.login = async (req, res, next) => {
 //fetch all recipes and cookbooks that belong to a user
 exports.getMyRecipes = (req, res, next) => {
     console.log('getting user recipes')
-    // const userId = req.body.userId;
-    const userId = "63c0b7f789b7c27224f5ae2d" //testing only
+    const userId = req.userId
+
     if (!userId) {
         return res.status(401).json({
             message: "You must be logged in to view user recipes"
@@ -170,8 +170,8 @@ exports.getMyRecipes = (req, res, next) => {
 //fetch all favorite recipes for a user
 exports.getUserFavorites = (req, res, next) => {
     console.log('attempting to retrieve user favorites')
-    // const userId = req.body.userId;
-    const userId = "63c59fe2cc99adddd0a4d3d9" //testing only
+    
+    const userId = req.userId;
 
     User.findById(userId)
         .populate("favoriteRecipes")
@@ -245,8 +245,7 @@ exports.searchForUser = (req, res, next) => {
 exports.sendConnectionRequest = (req, res, next) => {
     const to = req.body.toUser;
 
-    //TODO: get this id from auth middleware
-    const from = req.body.fromUser;
+    const from = req.userId;
 
     if (!to || !from || !mongoose.isValidObjectId(to) || !mongoose.isValidObjectId(from)) {
         res.status(400).json({
@@ -283,8 +282,7 @@ exports.sendConnectionRequest = (req, res, next) => {
 
 exports.respondToConnectionRequest = (req, res, next) => {
     //remove connection from connectionRequests, and add the users to each others' connections
-    //TODO: get userId from auth middleware instead of request
-    const userId = req.body.userId;
+    const userId = req.userId;
     const respondingTo = req.body.respondingTo;
     const accept = req.body.accept;
 
@@ -325,8 +323,7 @@ exports.respondToConnectionRequest = (req, res, next) => {
 
 // use this route to do things like changing what is hidden, etc.
 exports.updateUser = (req, res, next) => {
-    //TODO: get this from auth middleware
-    const userId = "63c59fe2cc99adddd0a4d3d9"; //testing only
+    const userId = req.userId;
     const changes = req.body.changes;
 
     delete changes["hashedPassword"]
@@ -348,8 +345,7 @@ exports.updateUser = (req, res, next) => {
 }
 
 exports.getUser = (req, res, next) => {
-       //TODO: get this from auth middleware
-    const userId = "63c59fe2cc99adddd0a4d3d9"; //testing only
+    const userId = req.userId;
 
     if (!userId) {
         return res.status(401).json({

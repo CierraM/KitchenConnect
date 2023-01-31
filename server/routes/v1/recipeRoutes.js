@@ -1,28 +1,29 @@
 const express = require('express');
 const router = express.Router()
 const controller = require('../../controllers/v1/recipeController')
+const {isAuth} = require('../../auth/auth');
 
 //create a new recipe
-router.post('/create', controller.createRecipe);
+router.post('/create', isAuth, controller.createRecipe);
 
 //get a recipe by id
-router.get('/:id', controller.getRecipeById);
+router.get('/:id', isAuth, controller.getRecipeById);
 
 //share recipe with a user or group
-router.patch('/shareWithUser', controller.shareRecipeWithUser);
-router.patch('/shareWithGroup', controller.shareRecipeWithGroup)
+router.patch('/shareWithUser', isAuth, controller.shareRecipeWithUser);
+router.patch('/shareWithGroup', isAuth, controller.shareRecipeWithGroup)
     ;
 //delete a recipe by id - must be owner
-router.delete('/delete/:id', controller.deleteRecipe);
+router.delete('/delete/:id', isAuth, controller.deleteRecipe);
 
 //unlink a recipe from a user - take them off the readonly list
-router.patch('/unlinkFromUser', controller.removeFromUser);
+router.patch('/unlinkFromUser', isAuth, controller.removeFromUser);
 
 //unlink a recipe from a group - take the group off the group readonly list
-router.patch('/unlinkFromGroup', controller.removeFromGroup);
+router.patch('/unlinkFromGroup', isAuth, controller.removeFromGroup);
 
 //update a recipe by id - must be owner
-router.patch('/update', controller.updateRecipe);
+router.patch('/update', isAuth, controller.updateRecipe);
 
 //get all public recipes (maybe we need to paginate this one)
 router.get('/', controller.getAllPublicRecipes);

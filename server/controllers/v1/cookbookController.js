@@ -12,10 +12,7 @@ const {
 
 exports.createCookbook = (req, res, next) => {
     console.log('Attempting create cookbook')
-    //get this from auth middleware
-    // const userId = req.body.userId;
-    // TODO: remove
-    const userId = '63c0b7f789b7c27224f5ae2d'
+    const userId = req.userId;
     if (!userId) {
         return res.status(401).json({
             message: "You must be logged in to create a recipe."
@@ -48,8 +45,7 @@ exports.createCookbook = (req, res, next) => {
 
 exports.addRecipe = (req, res, next) => {
 
-    //TODO: make sure this comes from auth file
-    const userId = req.body.userId;
+    const userId = req.userId;
     const cookbookId = req.body.cookbookId;
     const recipeId = req.body.recipeId;
 
@@ -77,8 +73,7 @@ exports.addRecipe = (req, res, next) => {
 }
 
 exports.removeRecipe = (req, res, next) => {
-    //TODO: make sure this comes from auth file
-    const userId = req.body.userId;
+    const userId = req.userId;
     const cookbookId = req.body.cookbookId;
     const recipeId = req.body.recipeId;
 
@@ -109,9 +104,7 @@ exports.shareWithUser = (req, res, next) => {
     //anyone with read access can share the cookbook for someone else to read it
     //but you need to have write access to grant someone else write access
 
-    //TODO: get user id from auth
-    const userId = "63c0b7f789b7c27224f5ae2d";
-
+    const userId = req.userId;
 
     const cookbookId = req.body.cookbookId;
     const recipientUserId = req.body.recipientUserId;
@@ -180,8 +173,7 @@ exports.shareWithUser = (req, res, next) => {
 }
 
 exports.shareWithGroup = (req, res, next) => {
-    //TODO: get user id from auth
-    const userId = "63c0b7f789b7c27224f5ae2d";
+    const userId = req.userId;
 
 
     const cookbookId = req.body.cookbookId;
@@ -249,8 +241,7 @@ exports.shareWithGroup = (req, res, next) => {
 
 exports.updateCookbook = (req, res, next) => {
     //TODO: test this
-    //TODO: get user id from auth
-    const userId = "63c0b7f789b7c27224f5ae2d";
+    const userId = req.userId;
     const cookbookId = req.body.cookbookId;
     const update = req.body.changes;
     console.log(update)
@@ -274,8 +265,7 @@ exports.updateCookbook = (req, res, next) => {
 exports.unlinkCookbookFromGroup = (req, res, next) => {
     //the recipe can be removed by group admins or cookbook owner
 
-    //TODO: get user id from auth
-    const userId = "63c0b7f789b7c27224f5ae2d";
+    const userId = req.userId;
     const groupId = req.body.groupId;
     const cookbookId = req.body.cookbookId;
 
@@ -307,8 +297,7 @@ exports.unlinkCookbookFromUser = (req, res, next) => {
     //so far this only lets a user remove the recipe from their own account
     //maybe someday there will be a need to allow other users to remove a recipe from someone
 
-    //TODO: get user id from auth
-    const userId = "63c0b7f789b7c27224f5ae2d";
+    const userId = req.userId;
     const cookbookId = req.body.cookbookId
 
     Cookbook.findById(cookbookId).then(cookbook => {
@@ -326,8 +315,7 @@ exports.unlinkCookbookFromUser = (req, res, next) => {
 }
 
 exports.deleteCookbook = (req, res, next) => {
-    //TODO: get user id from auth
-    const userId = "63c0b7f789b7c27224f5ae2d";
+    const userId = req.userId;
     const cookbookId = req.body.cookbookId;
 
     Cookbook.findById(cookbookId).then(cookbook => {

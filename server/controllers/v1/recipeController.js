@@ -1,7 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
-const User = require('../../models/userSchema');
 const Cookbook = require('../../models/cookbookSchema');
 const Recipe = require('../../models/recipeSchema');
 const Group = require('../../models/groupSchema');
@@ -12,8 +11,7 @@ const {
 
 exports.createRecipe = (req, res, next) => {
     console.log('Attempting create recipe')
-    //get this from auth middleware
-    const userId = req.body.userId;
+    const userId = req.userId;
     if (!userId) {
         return res.status(401).json({
             message: "You must be logged in to create a recipe."
@@ -61,8 +59,9 @@ exports.createRecipe = (req, res, next) => {
 }
 
 exports.getRecipeById = (req, res, next) => {
+    //TODO: this might cause problems that I am passing this through the auth middleware. I need some way to handle cases where a user might be able to access the public recipe wihtout being logged in
     const recipeId = req.params.id;
-    const userId = req.body.userId;
+    const userId = req.userId;
 
     Recipe.findById(recipeId)
         .populate()
@@ -100,9 +99,7 @@ exports.getRecipeById = (req, res, next) => {
 }
 
 exports.shareRecipeWithUser = (req, res, next) => {
-    //TODO: get user id from auth
-    //make sure you have permission to share
-    const userId = "63c0b7f789b7c27224f5ae2d";
+    const userId = req.userId;
 
     const recipeId = req.body.recipeId;
     const recipientUser = req.body.recipientUserId;
@@ -138,9 +135,7 @@ exports.shareRecipeWithUser = (req, res, next) => {
 }
 
 exports.shareRecipeWithGroup = (req, res, next) => {
-    //TODO: get user id from auth
-    //make sure you have permission to share
-    const userId = "63c0b7f789b7c27224f5ae2d";
+    const userId = req.userId;
 
     const recipeId = req.body.recipeId;
     const recipientGroup = req.body.recipientGroupId;
@@ -186,8 +181,7 @@ exports.shareRecipeWithGroup = (req, res, next) => {
 
 
 exports.deleteRecipe = (req, res, next) => {
-    //TODO: get user id from auth
-    const userId = "63c0b7f789b7c27224f5ae2d";
+    const userId = req.userId;
     const recipeId = req.params.id;
 
     Recipe.findById(recipeId).then(recipe => {
@@ -213,8 +207,7 @@ exports.removeFromUser = (req, res, next) => {
     //so far this only lets a user remove the recipe from their own account
     //maybe someday there will be a need to allow other users to remove a recipe from someone
 
-    //TODO: get user id from auth
-    const userId = "63c0b7f789b7c27224f5ae2d";
+    const userId = req.userId;
     const recipeId = req.body.recipeId
 
     Recipe.findById(recipeId).then(recipe => {
@@ -230,8 +223,7 @@ exports.removeFromUser = (req, res, next) => {
 exports.removeFromGroup = (req, res, next) => {
     //this is authorized if the user owns the recipe or is a group admin
 
-    //TODO: get user id from auth
-    const userId = "63c0b7f789b7c27224f5ae2d";
+    const userId = req.userId;
     const groupId = req.body.groupId;
     const recipeId = req.body.recipeId;
 
@@ -274,8 +266,7 @@ exports.getAllPublicRecipes = (req, res, next) => {
 }
 
 exports.updateRecipe = (req, res, next) => {
-    //TODO: get user id from auth
-    const userId = "63c0b7f789b7c27224f5ae2d";
+    const userId = req.userId;
     const recipeId = req.body.recipeId;
     const update = req.body.changes;
     console.log(update)

@@ -8,8 +8,7 @@ const Group = require('../../models/groupSchema');
 
 //create a group
 exports.createGroup = (req, res, next) => {
-    //TODO: make sure this comes from auth middleware, not request
-    const userId = req.body.userId;
+    const userId = req.userId;
     const groupName = req.body.groupName;
 
     Group.create({
@@ -31,8 +30,7 @@ exports.createGroup = (req, res, next) => {
 }
 
 exports.addMembers = (req, res, next) => {
-    //TODO: make sure this comes from auth middleware
-    const userId = req.body.userId;
+    const userId = req.userId;
     const memberIds = req.body.memberIds;
     const groupId = req.body.groupId;
 
@@ -66,8 +64,7 @@ exports.addMembers = (req, res, next) => {
 }
 
 exports.removeMember = async (req, res, next) => {
-    //TODO: make sure this comes from auth middleware
-    const userId = req.body.userId;
+    const userId = req.userId;
     const memberId = req.body.memberId;
     const groupId = req.body.groupId;
 
@@ -96,8 +93,7 @@ exports.removeMember = async (req, res, next) => {
 }
 
 exports.getGroupRecipes = (req, res, next) => {
-    //TODO: get userid from token
-    const userId = '63c0b7f789b7c27224f5ae2d';
+    const userId = req.userId;
     const groupId = req.params.id;
 
     Group.findById(groupId).then(group => {
@@ -159,8 +155,7 @@ exports.getGroupRecipes = (req, res, next) => {
 
 exports.registerAdmin = async (req, res, next) => {
     // to register an admin, you need to be an admin of the group already.
-    //TODO: make sure this comes from auth middleware
-    const userId = req.body.userId;
+    const userId = req.userId;
     const adminId = req.body.adminId;
     const groupId = req.body.groupId;
 
@@ -189,8 +184,7 @@ exports.registerAdmin = async (req, res, next) => {
 }
 
 exports.removeAdmin = async (req, res, next) => {
-    //TODO: make sure this comes from auth middleware
-    const userId = req.body.userId;
+    const userId = req.userId;
     const adminId = req.body.adminId;
     const groupId = req.body.groupId;
 
@@ -243,8 +237,7 @@ exports.getUserGroups = (req, res, next) => {
 }
 
 exports.deleteGroup = (req, res, next) => {
-    //TODO: make sure this comes from auth middleware
-    const userId = req.body.userId;
+    const userId = req.userId;
     const groupId = req.body.groupId;
 
     //make sure this user has permission to remove members
