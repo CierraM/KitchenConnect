@@ -11,6 +11,12 @@ exports.createGroup = (req, res, next) => {
     const userId = req.userId;
     const groupName = req.body.groupName;
 
+    if (!userId) {
+        return res.status(401).json({
+            message: "You are not allowed to access this resource."
+        })
+    }
+
     Group.create({
         name: groupName,
         members: [userId],
@@ -33,6 +39,12 @@ exports.addMembers = (req, res, next) => {
     const userId = req.userId;
     const memberIds = req.body.memberIds;
     const groupId = req.body.groupId;
+
+    if (!userId) {
+        return res.status(401).json({
+            message: "You are not allowed to access this resource."
+        })
+    }
 
     //make sure this user has permission to add members
     Group.findById(groupId).then(group => {
@@ -68,6 +80,12 @@ exports.removeMember = async (req, res, next) => {
     const memberId = req.body.memberId;
     const groupId = req.body.groupId;
 
+    if (!userId) {
+        return res.status(401).json({
+            message: "You are not allowed to access this resource."
+        })
+    }
+
     //make sure this user has permission to add members
     await Group.findById(groupId).then(async group => {
         if (!group) {
@@ -95,6 +113,12 @@ exports.removeMember = async (req, res, next) => {
 exports.getGroupRecipes = (req, res, next) => {
     const userId = req.userId;
     const groupId = req.params.id;
+
+    if (!userId) {
+        return res.status(401).json({
+            message: "You are not allowed to access this resource."
+        })
+    }
 
     Group.findById(groupId).then(group => {
         if (!group) {
@@ -159,6 +183,12 @@ exports.registerAdmin = async (req, res, next) => {
     const adminId = req.body.adminId;
     const groupId = req.body.groupId;
 
+    if (!userId) {
+        return res.status(401).json({
+            message: "You are not allowed to access this resource."
+        })
+    }
+
     //make sure this user has permission to add another admin
     Group.findById(groupId).then(async group => {
         if (!group) {
@@ -187,6 +217,12 @@ exports.removeAdmin = async (req, res, next) => {
     const userId = req.userId;
     const adminId = req.body.adminId;
     const groupId = req.body.groupId;
+
+    if (!userId) {
+        return res.status(401).json({
+            message: "You are not allowed to access this resource."
+        })
+    }
 
     //make sure this user has permission to remove members
     await Group.findById(groupId).then(async group => {
@@ -218,8 +254,13 @@ exports.removeAdmin = async (req, res, next) => {
 exports.getUserGroups = (req, res, next) => {
     let userId = req.query.userId;
     if (!userId) {
-        //get this from auth
         userId = req.userId;
+
+        if (!userId) {
+            return res.status(401).json({
+                message: "You are not allowed to access this resource."
+            })
+        }
     }
 
     Group.find({ members: userId }).then(groups => {
@@ -239,6 +280,12 @@ exports.getUserGroups = (req, res, next) => {
 exports.deleteGroup = (req, res, next) => {
     const userId = req.userId;
     const groupId = req.body.groupId;
+
+    if (!userId) {
+        return res.status(401).json({
+            message: "You are not allowed to access this resource."
+        })
+    }
 
     //make sure this user has permission to remove members
     Group.findById(groupId).then(group => {

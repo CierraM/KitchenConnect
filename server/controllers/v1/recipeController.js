@@ -59,7 +59,6 @@ exports.createRecipe = (req, res, next) => {
 }
 
 exports.getRecipeById = (req, res, next) => {
-    //TODO: this might cause problems that I am passing this through the auth middleware. I need some way to handle cases where a user might be able to access the public recipe wihtout being logged in
     const recipeId = req.params.id;
     const userId = req.userId;
 
@@ -73,7 +72,7 @@ exports.getRecipeById = (req, res, next) => {
             }
 
             if (!permissionToViewRecipe(recipe, userId)) {
-                return res.status(404).json({
+                return res.status(401).json({
                     message: "you do not have permission to view this recipe"
                 })
             }
@@ -100,6 +99,11 @@ exports.getRecipeById = (req, res, next) => {
 
 exports.shareRecipeWithUser = (req, res, next) => {
     const userId = req.userId;
+    if (!userId) {
+        return res.status(401).json({
+            message: "You are not allowed to access this resource."
+        })
+    }
 
     const recipeId = req.body.recipeId;
     const recipientUser = req.body.recipientUserId;
@@ -182,6 +186,11 @@ exports.shareRecipeWithGroup = (req, res, next) => {
 
 exports.deleteRecipe = (req, res, next) => {
     const userId = req.userId;
+    if (!userId) {
+        return res.status(401).json({
+            message: "You are not allowed to access this resource."
+        })
+    }
     const recipeId = req.params.id;
 
     Recipe.findById(recipeId).then(recipe => {
@@ -208,6 +217,11 @@ exports.removeFromUser = (req, res, next) => {
     //maybe someday there will be a need to allow other users to remove a recipe from someone
 
     const userId = req.userId;
+    if (!userId) {
+        return res.status(401).json({
+            message: "You are not allowed to access this resource."
+        })
+    }
     const recipeId = req.body.recipeId
 
     Recipe.findById(recipeId).then(recipe => {
@@ -224,6 +238,11 @@ exports.removeFromGroup = (req, res, next) => {
     //this is authorized if the user owns the recipe or is a group admin
 
     const userId = req.userId;
+    if (!userId) {
+        return res.status(401).json({
+            message: "You are not allowed to access this resource."
+        })
+    }
     const groupId = req.body.groupId;
     const recipeId = req.body.recipeId;
 
@@ -267,6 +286,11 @@ exports.getAllPublicRecipes = (req, res, next) => {
 
 exports.updateRecipe = (req, res, next) => {
     const userId = req.userId;
+    if (!userId) {
+        return res.status(401).json({
+            message: "You are not allowed to access this resource."
+        })
+    }
     const recipeId = req.body.recipeId;
     const update = req.body.changes;
     console.log(update)

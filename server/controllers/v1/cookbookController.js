@@ -46,6 +46,11 @@ exports.createCookbook = (req, res, next) => {
 exports.addRecipe = (req, res, next) => {
 
     const userId = req.userId;
+    if (!userId) {
+        return res.status(401).json({
+            message: "You are not allowed to access this resource."
+        })
+    }
     const cookbookId = req.body.cookbookId;
     const recipeId = req.body.recipeId;
 
@@ -74,6 +79,11 @@ exports.addRecipe = (req, res, next) => {
 
 exports.removeRecipe = (req, res, next) => {
     const userId = req.userId;
+    if (!userId) {
+        return res.status(401).json({
+            message: "You are not allowed to access this resource."
+        })
+    }
     const cookbookId = req.body.cookbookId;
     const recipeId = req.body.recipeId;
 
@@ -105,6 +115,11 @@ exports.shareWithUser = (req, res, next) => {
     //but you need to have write access to grant someone else write access
 
     const userId = req.userId;
+    if (!userId) {
+        return res.status(401).json({
+            message: "You are not allowed to access this resource."
+        })
+    }
 
     const cookbookId = req.body.cookbookId;
     const recipientUserId = req.body.recipientUserId;
@@ -174,7 +189,11 @@ exports.shareWithUser = (req, res, next) => {
 
 exports.shareWithGroup = (req, res, next) => {
     const userId = req.userId;
-
+    if (!userId) {
+        return res.status(401).json({
+            message: "You are not allowed to access this resource."
+        })
+    }
 
     const cookbookId = req.body.cookbookId;
     const recipientGroupId = req.body.recipientGroupId;
@@ -242,6 +261,11 @@ exports.shareWithGroup = (req, res, next) => {
 exports.updateCookbook = (req, res, next) => {
     //TODO: test this
     const userId = req.userId;
+    if (!userId) {
+        return res.status(401).json({
+            message: "You are not allowed to access this resource."
+        })
+    }
     const cookbookId = req.body.cookbookId;
     const update = req.body.changes;
     console.log(update)
@@ -266,6 +290,11 @@ exports.unlinkCookbookFromGroup = (req, res, next) => {
     //the recipe can be removed by group admins or cookbook owner
 
     const userId = req.userId;
+    if (!userId) {
+        return res.status(401).json({
+            message: "You are not allowed to access this resource."
+        })
+    }
     const groupId = req.body.groupId;
     const cookbookId = req.body.cookbookId;
 
@@ -298,6 +327,11 @@ exports.unlinkCookbookFromUser = (req, res, next) => {
     //maybe someday there will be a need to allow other users to remove a recipe from someone
 
     const userId = req.userId;
+    if (!userId) {
+        return res.status(401).json({
+            message: "You are not allowed to access this resource."
+        })
+    }
     const cookbookId = req.body.cookbookId
 
     Cookbook.findById(cookbookId).then(cookbook => {
@@ -316,6 +350,11 @@ exports.unlinkCookbookFromUser = (req, res, next) => {
 
 exports.deleteCookbook = (req, res, next) => {
     const userId = req.userId;
+    if (!userId) {
+        return res.status(401).json({
+            message: "You are not allowed to access this resource."
+        })
+    }
     const cookbookId = req.body.cookbookId;
 
     Cookbook.findById(cookbookId).then(cookbook => {

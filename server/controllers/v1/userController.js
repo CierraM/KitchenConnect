@@ -173,6 +173,12 @@ exports.getUserFavorites = (req, res, next) => {
     
     const userId = req.userId;
 
+    if (!userId) {
+        return res.status(401).json({
+            message: "You are not allowed to access this resource."
+        })
+    }
+
     User.findById(userId)
         .populate("favoriteRecipes")
         .then(user => {
@@ -247,6 +253,12 @@ exports.sendConnectionRequest = (req, res, next) => {
 
     const from = req.userId;
 
+    if (!userId) {
+        return res.status(401).json({
+            message: "You are not allowed to access this resource."
+        })
+    }
+
     if (!to || !from || !mongoose.isValidObjectId(to) || !mongoose.isValidObjectId(from)) {
         res.status(400).json({
             message: "invalid input. Request body should have a toUser and a fromUser which are both valid objectIds"
@@ -288,6 +300,12 @@ exports.respondToConnectionRequest = (req, res, next) => {
 
     if (!userId) {
         return res.status(401).json({
+            message: "You are not allowed to access this resource."
+        })
+    }
+
+    if (!userId) {
+        return res.status(401).json({
             message: "You must be logged in to respond to a request."
         })
     }
@@ -326,6 +344,12 @@ exports.updateUser = (req, res, next) => {
     const userId = req.userId;
     const changes = req.body.changes;
 
+    if (!userId) {
+        return res.status(401).json({
+            message: "You are not allowed to access this resource."
+        })
+    }
+    
     delete changes["hashedPassword"]
 
     if (!userId) {
