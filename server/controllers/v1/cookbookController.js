@@ -1,16 +1,11 @@
-const express = require('express');
 const mongoose = require('mongoose');
 
-const User = require('../../models/userSchema');
 const Cookbook = require('../../models/cookbookSchema');
-const Recipe = require('../../models/recipeSchema');
 const Group = require('../../models/groupSchema');
-const {
-    objectIdOfArray,
-    getAllCookbookPermissions
-} = require('../../helpers/helpers');
+const {objectIdOfArray, checkForErrors} = require('../../helpers/helpers');
 
 exports.createCookbook = (req, res, next) => {
+    checkForErrors(req, res)
     console.log('Attempting create cookbook')
     const userId = req.userId;
     if (!userId) {
@@ -44,7 +39,7 @@ exports.createCookbook = (req, res, next) => {
 }
 
 exports.addRecipe = (req, res, next) => {
-
+    checkForErrors(req, res)
     const userId = req.userId;
     if (!userId) {
         return res.status(401).json({
@@ -78,6 +73,7 @@ exports.addRecipe = (req, res, next) => {
 }
 
 exports.removeRecipe = (req, res, next) => {
+    checkForErrors();
     const userId = req.userId;
     if (!userId) {
         return res.status(401).json({
@@ -109,6 +105,7 @@ exports.removeRecipe = (req, res, next) => {
 }
 
 exports.shareWithUser = (req, res, next) => {
+    checkForErrors(req, res)
     //This one is a little different.
     //To share a cookbook, you can specify read or write access
     //anyone with read access can share the cookbook for someone else to read it
@@ -188,6 +185,7 @@ exports.shareWithUser = (req, res, next) => {
 }
 
 exports.shareWithGroup = (req, res, next) => {
+    checkForErrors(req, res)
     const userId = req.userId;
     if (!userId) {
         return res.status(401).json({
@@ -259,6 +257,7 @@ exports.shareWithGroup = (req, res, next) => {
 }
 
 exports.updateCookbook = (req, res, next) => {
+    checkForErrors(req, res)
     //TODO: test this
     const userId = req.userId;
     if (!userId) {
@@ -287,6 +286,7 @@ exports.updateCookbook = (req, res, next) => {
 }
 
 exports.unlinkCookbookFromGroup = (req, res, next) => {
+    checkForErrors(req, res)
     //the recipe can be removed by group admins or cookbook owner
 
     const userId = req.userId;
@@ -322,6 +322,7 @@ exports.unlinkCookbookFromGroup = (req, res, next) => {
 }
 
 exports.unlinkCookbookFromUser = (req, res, next) => {
+    checkForErrors(req, res)
     //TODO: test this
     //so far this only lets a user remove the recipe from their own account
     //maybe someday there will be a need to allow other users to remove a recipe from someone
@@ -349,6 +350,7 @@ exports.unlinkCookbookFromUser = (req, res, next) => {
 }
 
 exports.deleteCookbook = (req, res, next) => {
+    checkForErrors(req, res)
     const userId = req.userId;
     if (!userId) {
         return res.status(401).json({

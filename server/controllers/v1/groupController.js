@@ -1,13 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
-const User = require('../../models/userSchema');
 const Cookbook = require('../../models/cookbookSchema');
 const Recipe = require('../../models/recipeSchema');
 const Group = require('../../models/groupSchema');
+const {checkForErrors} = require('../../helpers/helpers');
 
 //create a group
 exports.createGroup = (req, res, next) => {
+    checkForErrors()
     const userId = req.userId;
     const groupName = req.body.groupName;
 
@@ -36,6 +37,7 @@ exports.createGroup = (req, res, next) => {
 }
 
 exports.addMembers = (req, res, next) => {
+    checkForErrors();
     const userId = req.userId;
     const memberIds = req.body.memberIds;
     const groupId = req.body.groupId;
@@ -76,6 +78,7 @@ exports.addMembers = (req, res, next) => {
 }
 
 exports.removeMember = async (req, res, next) => {
+    checkForErrors()
     const userId = req.userId;
     const memberId = req.body.memberId;
     const groupId = req.body.groupId;
@@ -178,6 +181,7 @@ exports.getGroupRecipes = (req, res, next) => {
 }
 
 exports.registerAdmin = async (req, res, next) => {
+    checkForErrors()
     // to register an admin, you need to be an admin of the group already.
     const userId = req.userId;
     const adminId = req.body.adminId;
@@ -214,6 +218,7 @@ exports.registerAdmin = async (req, res, next) => {
 }
 
 exports.removeAdmin = async (req, res, next) => {
+    checkForErrors()
     const userId = req.userId;
     const adminId = req.body.adminId;
     const groupId = req.body.groupId;
@@ -278,6 +283,7 @@ exports.getUserGroups = (req, res, next) => {
 }
 
 exports.deleteGroup = (req, res, next) => {
+    checkForErrors()
     const userId = req.userId;
     const groupId = req.body.groupId;
 

@@ -1,4 +1,3 @@
-const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -6,9 +5,10 @@ const jwt = require('jsonwebtoken');
 const User = require('../../models/userSchema');
 const Cookbook = require('../../models/cookbookSchema');
 const Recipe = require('../../models/recipeSchema');
-
+const {checkForErrors} = require('../../helpers/helpers');
 //signup new user
 exports.signup = async (req, res, next) => {
+    checkForErrors();
     console.log('signing up')
     const username = req.body.username;
     const password = req.body.password;
@@ -64,6 +64,7 @@ exports.signup = async (req, res, next) => {
 
 //login
 exports.login = async (req, res, next) => {
+    checkForErrors();
     console.log('attempting login')
     const email = req.body.email;
     const password = req.body.password;
@@ -90,7 +91,7 @@ exports.login = async (req, res, next) => {
                 email,
                 userId: loadedUser._id.toString()
             }, process.env.SECRET_KEY)
-            res.cookie('jwt', token).json({
+            res.cookie('Authorization', token).json({
                 message: 'User authenticated',
                 _id: loadedUser._id
             })
@@ -249,6 +250,7 @@ exports.searchForUser = (req, res, next) => {
 }
 
 exports.sendConnectionRequest = (req, res, next) => {
+    checkForErrors()
     const to = req.body.toUser;
 
     const from = req.userId;
@@ -380,6 +382,7 @@ exports.getUser = (req, res, next) => {
     User.findById(userId).then(user => {
         return res.status(200).json({
             user: {
+                _id: user._id,
                 username: user.username,
                 firstName: user.firstName,
                 lastName: user.lastName,

@@ -1,15 +1,17 @@
-const express = require('express');
 const mongoose = require('mongoose');
+const isAuth = require('../../auth/auth')
 
 const Cookbook = require('../../models/cookbookSchema');
 const Recipe = require('../../models/recipeSchema');
 const Group = require('../../models/groupSchema');
 const {
     objectIdOfArray,
-    permissionToViewRecipe
+    permissionToViewRecipe,
+    checkForErrors
 } = require('../../helpers/helpers');
 
 exports.createRecipe = (req, res, next) => {
+    checkForErrors();
     console.log('Attempting create recipe')
     const userId = req.userId;
     if (!userId) {
@@ -60,7 +62,6 @@ exports.createRecipe = (req, res, next) => {
 
 exports.getRecipeById = (req, res, next) => {
     const recipeId = req.params.id;
-    const userId = req.userId;
 
     Recipe.findById(recipeId)
         .populate()
@@ -71,10 +72,17 @@ exports.getRecipeById = (req, res, next) => {
                 })
             }
 
-            if (!permissionToViewRecipe(recipe, userId)) {
-                return res.status(401).json({
-                    message: "you do not have permission to view this recipe"
+            if (recipe.private) {
+                //check for JWT and get userId
+                isAuth(req, res, () => {
+                    if (!permissionToViewRecipe(recipe, userId)) {
+                        return res.status(401).json({
+                            message: "you do not have permission to view this recipe"
+                        })
+                    }
+                    return;
                 })
+
             }
 
             return res.status(200).json({
@@ -98,6 +106,7 @@ exports.getRecipeById = (req, res, next) => {
 }
 
 exports.shareRecipeWithUser = (req, res, next) => {
+    checkForErrors();
     const userId = req.userId;
     if (!userId) {
         return res.status(401).json({
@@ -139,6 +148,7 @@ exports.shareRecipeWithUser = (req, res, next) => {
 }
 
 exports.shareRecipeWithGroup = (req, res, next) => {
+    checkForErrors();
     const userId = req.userId;
 
     const recipeId = req.body.recipeId;
@@ -215,7 +225,7 @@ exports.deleteRecipe = (req, res, next) => {
 exports.removeFromUser = (req, res, next) => {
     //so far this only lets a user remove the recipe from their own account
     //maybe someday there will be a need to allow other users to remove a recipe from someone
-
+    checkForErrors();
     const userId = req.userId;
     if (!userId) {
         return res.status(401).json({
@@ -285,6 +295,7 @@ exports.getAllPublicRecipes = (req, res, next) => {
 }
 
 exports.updateRecipe = (req, res, next) => {
+    checkForErrors();
     const userId = req.userId;
     if (!userId) {
         return res.status(401).json({
