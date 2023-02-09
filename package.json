@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@chakra-ui/icons": "^2.0.17",
     "@chakra-ui/react": "^2.4.9",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
@@ -18,10 +19,12 @@
     "express-jwt": "^8.3.0",
     "express-validator": "^6.14.3",
     "framer-motion": "^9.0.1",
+    "jotai": "^2.0.0",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^6.8.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.8.1",
     "react-scripts": "5.0.1",
     "swagger-ui": "^4.15.5",
     "web-vitals": "^2.1.4"

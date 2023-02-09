@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
 
 exports.isAuth = (req, res, next) => {
-    const authHeader = req.get('Authorization');
+    console.log(req.cookies.Authorization)
+    const authHeader = req.cookies.Authorization;
     if (!authHeader) {
         return res.status(401).json({
             message: "Not authenticated"
@@ -10,16 +11,18 @@ exports.isAuth = (req, res, next) => {
 
     let decodedToken;
     try {
-        decodedToken = jwt.verify(authHeader, process.env.SECRET);
+        decodedToken = jwt.verify(authHeader, process.env.SECRET_KEY);
     }
     catch (err) {
-        return res.status(500).json({
+        console.log(err)
+        return res.status(403).json({
             message: "failed to confirm token"
         })
     }
 
     if (!decodedToken) {
-        res.status(400).json({
+        console.log('no token')
+        res.status(403).json({
             message: "failed to confirm token"
         })
     }

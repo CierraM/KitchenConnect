@@ -18,7 +18,6 @@ router.post(
 //login
 router.post(
     '/login',
-    body('email').isEmail(),
     controller.login
 );
 

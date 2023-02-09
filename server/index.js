@@ -28,7 +28,12 @@ app.use('/api/v1/recipe', recipeRoutes);
 app.use('/api/v1/cookbook', cookbookRoutes);
 app.use('/api/v1/group', groupRoutes);
 
-//swagger docs
+app.get("/logout", (req, res) => {
+	return res
+		.clearCookie("Authorization")
+		.status(200)
+		.json({ message: "Successfully logged out 😏 🍀" });
+});
 
 //wildcard - serve index.html
 app.use('*', (req, res, next) => {

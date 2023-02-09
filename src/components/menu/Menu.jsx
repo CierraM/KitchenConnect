@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import { HamburgerIcon } from '@chakra-ui/icons'
 import {
     Drawer,
     DrawerBody,
@@ -9,7 +10,8 @@ import {
     DrawerCloseButton,
     useDisclosure,
     Button,
-    Input
+    Input,
+    IconButton
 } from '@chakra-ui/react'
   
 const Menu =  () => {
@@ -17,31 +19,25 @@ const Menu =  () => {
     const btnRef = useRef()
   
     return (
-      <>
-        <Button ref={btnRef} colorScheme='teal' onClick={onOpen}>
-          Open
-        </Button>
+        <>
+            <IconButton icon={<HamburgerIcon/>} ref={btnRef} onClick={onOpen} />        
         <Drawer
           isOpen={isOpen}
-          placement='right'
+          placement='left'
           onClose={onClose}
           finalFocusRef={btnRef}
         >
           <DrawerOverlay />
           <DrawerContent>
             <DrawerCloseButton />
-            <DrawerHeader>Create your account</DrawerHeader>
+            <DrawerHeader>KitchenConnect</DrawerHeader>
   
             <DrawerBody>
-              <Input placeholder='Type here...' />
+              <p>My Recipes</p>
+                <p>My Cookbooks</p>
+                <p>My Groups</p>
             </DrawerBody>
-  
-            <DrawerFooter>
-              <Button variant='outline' mr={3} onClick={onClose}>
-                Cancel
-              </Button>
-              <Button colorScheme='blue'>Save</Button>
-            </DrawerFooter>
+
           </DrawerContent>
         </Drawer>
       </>

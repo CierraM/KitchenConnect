@@ -8,7 +8,7 @@ const Recipe = require('../../models/recipeSchema');
 const {checkForErrors} = require('../../helpers/helpers');
 //signup new user
 exports.signup = async (req, res, next) => {
-    checkForErrors();
+    checkForErrors(req, res);
     console.log('signing up')
     const username = req.body.username;
     const password = req.body.password;
@@ -64,7 +64,7 @@ exports.signup = async (req, res, next) => {
 
 //login
 exports.login = async (req, res, next) => {
-    checkForErrors();
+    checkForErrors(req,res);
     console.log('attempting login')
     const email = req.body.email;
     const password = req.body.password;
@@ -91,7 +91,7 @@ exports.login = async (req, res, next) => {
                 email,
                 userId: loadedUser._id.toString()
             }, process.env.SECRET_KEY)
-            res.cookie('Authorization', token).json({
+            res.cookie('Authorization', token).status(200).json({
                 message: 'User authenticated',
                 _id: loadedUser._id
             })
@@ -145,10 +145,10 @@ exports.getMyRecipes = (req, res, next) => {
                             }
                         })
                     Cookbook.find()
-                        .populate()
+                        .populate('recipes')
                         .then(cookbooks => {
                             const userCookbooks = cookbooks
-                                .filter(c => c.userPermissions.readAccess.includes(userId) || c.userPermissions.owner == userId)
+                                .filter(c => c.userPermissions.readAccess.includes(userId) || c.userPermissions.owner == userId || c.userPermissions.writeAccess.includes(userId))
                                 .filter(c => !(hiddenCookbooks?.includes(c.id)))
                                 .map(c => {
                                     return {
@@ -159,7 +159,31 @@ exports.getMyRecipes = (req, res, next) => {
                                 })
                             return res.status(200).json({
                                 recipes: userRecipes,
-                                cookbooks: userCookbooks
+                                cookbooks: userCookbooks.map(c => {
+                                    return {
+                                        title: c.title,
+                                        recipes: c.recipes.map(r => {
+                                            return {
+                                                _id: r._id,
+                                                title: r.title,
+                                                description: r.description,
+                                                tags: r.tags,
+                                                ingredients: r.ingredients,
+                                                steps: r.steps.map(step => {
+                                                    return {
+                                                        ordinal: step.ordinal,
+                                                        text: step.text
+                                                    }
+                                                }),
+                                                related: r.related,
+                                                private: r.private,
+                                                accessLevel: r.userPermissions.owner == userId ? "owner" : "readonly",
+                                                isFavorite: favorites.includes(r)
+                                            }
+                                        }),
+                                        owner: c.userPermissions?.owner,
+                                    }
+                                })
                             })
                         })
                 })
@@ -250,7 +274,7 @@ exports.searchForUser = (req, res, next) => {
 }
 
 exports.sendConnectionRequest = (req, res, next) => {
-    checkForErrors()
+    checkForErrors(req, res)
     const to = req.body.toUser;
 
     const from = req.userId;
