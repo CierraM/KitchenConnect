@@ -1,10 +1,15 @@
-const { Card } = require("@chakra-ui/react")
+import {LinkBox, LinkOverlay, Box, Text, Heading, Link, Container, Card, CardBody} from '@chakra-ui/react'
+import {Link as ReactRouterLink} from "react-router-dom"
 
-const RecipeCard = () => {
+const RecipeCard = ({item, type}) => {
     return (
-        <Card>
-            <p>recipe</p>
-        </Card>
+        <Link as={ReactRouterLink} to={`/${type}/${item._id}`} w={"full"} _hover={{textDecoration: "none", shadow: "md"}}>
+            <Card shadow={"sm"} variant={"outline"}>
+                <CardBody>
+                    <Text>{item.title}</Text>
+                </CardBody>
+            </Card>
+        </Link>
     )
 }
 

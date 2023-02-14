@@ -28,19 +28,19 @@ const FilterSection = ({tags}) => {
     const { value, getCheckboxProps } = useCheckboxGroup({
         onChange: handleChange,
     })
-    tags = ['dessert', 'cookies', 'ice cream']
+    tags = ['dessert', 'cookies', 'ice cream', 'breakfast', 'mom', 'favorites', 'orange']
     return (
-        <Wrap >
+        <Wrap py={2}>
             {tags.map((tag, index) => {
                 if (!showAll) {
                     if (index == 2) {
-                        return <Tag cursor="pointer" key="0" onClick={setShowAll}>...</Tag>
+                        return <Tag cursor="pointer" key="-1" onClick={setShowAll} colorScheme={"orange"} variant={"outline"}>...</Tag>
                     }
                     else if (index > 2) {
                         return;
                     }
                 }
-                return <CustomCheckbox label={tag} {...getCheckboxProps({ value: tag })}/>
+                return <CustomCheckbox key={index} label={tag} {...getCheckboxProps({ value: tag })}/>
             })}
         </Wrap>
     )

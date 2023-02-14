@@ -1,9 +1,11 @@
-import Template from '../components/ui/template';
-import SearchBar from '../components/ui/searchBar';
-import List from '../components/myRecipes/List';
-import FilterSection from "../components/myRecipes/filterButton";
+import Template from "../components/ui/template";
 import RecipeBrowser from "../components/myRecipes/recipeBrowser";
-import recipeBrowser from "../components/myRecipes/recipeBrowser";
+import FilterSection from "../components/myRecipes/filterButton";
+import List from "../components/myRecipes/List";
+import CookbookTab from "../components/viewCookbook/cookbookTab";
+import {useEffect, useState} from "react";
+import {useParams} from "react-router-dom";
+import useHttp from "../util/use-http";
 
 const recipes = {
     "recipes": [
@@ -80,7 +82,7 @@ const recipes = {
     ],
     "cookbooks": [
         {
-            "_id": "63c1f67854e3fe5b572a5b67",
+            "_id": "0",
             "title": "My Second Cookbook",
             "recipes": [
                 {
@@ -134,8 +136,20 @@ const recipes = {
         }
     ]
 }
-const MyRecipes = () => {
-    //Get recipes from server
+const ViewCookbook = () => {
+    const {id} = useParams()
+    const {isLoading, error, sendRequest} = useHttp()
+    const [cookbook, setCookbook] = useState({})
+
+    useEffect(() => {
+        sendRequest({
+            url: `${process.env.REACT_APP_SERVER_URL}/cookbook/${id}`,
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'}
+        }, response => {
+                setCookbook(response.cookbook)
+        })
+    }, [id, sendRequest])
 
     const recipeTabContent = (
         <>
@@ -145,14 +159,14 @@ const MyRecipes = () => {
     )
 
     const cookbookTabContent = (
-        <List items={recipes.cookbooks} type={"cookbook"}/>
+        <CookbookTab cookbook={cookbook}/>
     )
+
     return (
         <Template>
-            <RecipeBrowser recipeTabContent={recipeTabContent} cookbookTabContent={cookbookTabContent} defaultIndex={0}/>
+            <RecipeBrowser recipeTabContent={recipeTabContent} cookbookTabContent={cookbookTabContent} defaultIndex={1}/>
         </Template>
     )
-
 }
 
-export default MyRecipes
+export default ViewCookbook

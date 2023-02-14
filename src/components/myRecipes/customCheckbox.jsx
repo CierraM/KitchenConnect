@@ -5,7 +5,7 @@ const CustomCheckbox = ({label, ...radioProps}) => {
     return (
         <chakra.label {...htmlProps} cursor='pointer' key="tag">
             <input {...getInputProps({})} hidden />
-            <Tag {...getCheckboxProps()} colorScheme={state.isChecked ? 'orange' : 'grey'}>
+            <Tag {...getCheckboxProps()} colorScheme='orange' variant={state.isChecked ? 'solid' : 'outline' }>
                 {label}
             </Tag>
         </chakra.label>

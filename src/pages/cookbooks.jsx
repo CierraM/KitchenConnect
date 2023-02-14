@@ -1,9 +1,7 @@
-import Template from '../components/ui/template';
-import SearchBar from '../components/ui/searchBar';
-import List from '../components/myRecipes/List';
 import FilterSection from "../components/myRecipes/filterButton";
+import List from "../components/myRecipes/List";
+import Template from "../components/ui/template";
 import RecipeBrowser from "../components/myRecipes/recipeBrowser";
-import recipeBrowser from "../components/myRecipes/recipeBrowser";
 
 const recipes = {
     "recipes": [
@@ -134,9 +132,8 @@ const recipes = {
         }
     ]
 }
-const MyRecipes = () => {
-    //Get recipes from server
 
+const Cookbooks = () => {
     const recipeTabContent = (
         <>
             <FilterSection></FilterSection>
@@ -149,10 +146,9 @@ const MyRecipes = () => {
     )
     return (
         <Template>
-            <RecipeBrowser recipeTabContent={recipeTabContent} cookbookTabContent={cookbookTabContent} defaultIndex={0}/>
+            <RecipeBrowser recipeTabContent={recipeTabContent} cookbookTabContent={cookbookTabContent} defaultIndex={1}/>
         </Template>
     )
-
 }
 
-export default MyRecipes
+export default Cookbooks

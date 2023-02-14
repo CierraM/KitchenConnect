@@ -13,6 +13,8 @@ router.post(
     controller.createCookbook
 );
 
+router.get('/:id', controller.getCookbook)
+
 //add a new recipe to a cookbook
 router.patch(
     '/addRecipe',

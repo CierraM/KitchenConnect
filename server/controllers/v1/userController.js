@@ -161,6 +161,7 @@ exports.getMyRecipes = (req, res, next) => {
                                 recipes: userRecipes,
                                 cookbooks: userCookbooks.map(c => {
                                     return {
+                                        _id: c._id,
                                         title: c.title,
                                         recipes: c.recipes.map(r => {
                                             return {

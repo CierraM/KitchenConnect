@@ -1,5 +1,5 @@
-import { useRef } from 'react'
-import { HamburgerIcon } from '@chakra-ui/icons'
+import {useRef} from 'react'
+import {HamburgerIcon} from '@chakra-ui/icons'
 import {
     Drawer,
     DrawerBody,
@@ -11,36 +11,41 @@ import {
     useDisclosure,
     Button,
     Input,
-    IconButton
+    IconButton,
+    Link, Flex
 } from '@chakra-ui/react'
-  
-const Menu =  () => {
-    const { isOpen, onOpen, onClose } = useDisclosure()
+import {Link as ReactRouterLink} from "react-router-dom"
+
+const Menu = () => {
+    const {isOpen, onOpen, onClose} = useDisclosure()
     const btnRef = useRef()
-  
+
     return (
         <>
-            <IconButton icon={<HamburgerIcon/>} ref={btnRef} onClick={onOpen} />        
-        <Drawer
-          isOpen={isOpen}
-          placement='left'
-          onClose={onClose}
-          finalFocusRef={btnRef}
-        >
-          <DrawerOverlay />
-          <DrawerContent>
-            <DrawerCloseButton />
-            <DrawerHeader>KitchenConnect</DrawerHeader>
-  
-            <DrawerBody>
-              <p>My Recipes</p>
-                <p>My Cookbooks</p>
-                <p>My Groups</p>
-            </DrawerBody>
+            <IconButton icon={<HamburgerIcon/>} ref={btnRef} onClick={onOpen}/>
+            <Drawer
+                isOpen={isOpen}
+                placement='left'
+                onClose={onClose}
+                finalFocusRef={btnRef}
+            >
+                <DrawerOverlay/>
+                <DrawerContent>
+                    <DrawerCloseButton/>
+                    <DrawerHeader>KitchenConnect</DrawerHeader>
 
-          </DrawerContent>
-        </Drawer>
-      </>
+                    <DrawerBody>
+                        <Flex flexDirection={"column"}>
+                            <Link as={ReactRouterLink} to={"/"}>My Recipes</Link>
+                            <Link as={ReactRouterLink} to={"/myCookbooks"}>My Cookbooks</Link>
+                            <p>My Groups</p>
+                        </Flex>
+
+                    </DrawerBody>
+
+                </DrawerContent>
+            </Drawer>
+        </>
     )
 }
 

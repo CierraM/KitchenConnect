@@ -64,7 +64,7 @@ exports.getRecipeById = (req, res, next) => {
     const recipeId = req.params.id;
 
     Recipe.findById(recipeId)
-        .populate()
+        .populate('related')
         .then(recipe => {
             if (!recipe) {
                 return res.status(404).json({
@@ -98,7 +98,21 @@ exports.getRecipeById = (req, res, next) => {
                             text: step.text
                         }
                     }),
-                    related: recipe.related,
+                    related: recipe.related.map(r => {
+                        return {
+                            _id: r._id,
+                            title: r.title,
+                            description: r.description,
+                            tags: r.tags,
+                            ingredients: r.ingredients,
+                            steps: r.steps.map(step => {
+                                return {
+                                    ordinal: step.ordinal,
+                                    text: step.text
+                                }
+                            })
+                        }
+                    }),
                     private: recipe.private
                 }
             })

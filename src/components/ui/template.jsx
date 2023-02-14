@@ -4,7 +4,7 @@ import SearchBar from "./searchBar"
 
 const Template = ({ children }) => {
     return (
-        <Box p={3}>
+        <Box p={3} h={"100%"}>
             <HStack align="center">
                 <Menu />
                 <SearchBar/>

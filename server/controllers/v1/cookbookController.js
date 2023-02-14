@@ -38,6 +38,41 @@ exports.createCookbook = (req, res, next) => {
     })
 }
 
+exports.getCookbook = (req, res, next) => {
+    const cookbookId = req.params.id;
+    console.log(cookbookId)
+    Cookbook.findById(cookbookId).populate('recipes')
+        .then(cookbook => {
+            if(!cookbook) {
+                return res.status(404).json({message: "cookbook not found"})
+            }
+            console.log(cookbook)
+            return res.status(200).json({
+                cookbook: {
+                    _id: cookbook._id,
+                    title: cookbook.title,
+                    owner: cookbook.userPermissions.owner,
+                    recipes: cookbook.recipes.map(r => {
+                            return {
+                                _id: r._id,
+                                title: r.title,
+                                description: r.description,
+                                tags: r.tags,
+                                ingredients: r.ingredients,
+                                steps: r.steps.map(step => {
+                                    return {
+                                        ordinal: step.ordinal,
+                                        text: step.text
+                                    }
+                                })
+                            }
+                        }
+                    )
+                }
+            })
+        })
+}
+
 exports.addRecipe = (req, res, next) => {
     checkForErrors(req, res)
     const userId = req.userId;
@@ -64,7 +99,7 @@ exports.addRecipe = (req, res, next) => {
             })
         }
 
-        cookbook.update({ '$push': { recipes: recipeId } }).then(result => {
+        cookbook.update({'$push': {recipes: recipeId}}).then(result => {
             return res.status(201).json({
                 message: "recipe added successfully."
             })
@@ -96,7 +131,7 @@ exports.removeRecipe = (req, res, next) => {
             })
         }
 
-        cookbook.update({ '$pull': { recipes: recipeId } }).then(result => {
+        cookbook.update({'$pull': {recipes: recipeId}}).then(result => {
             return res.status(201).json({
                 message: "recipe removed successfully."
             })
@@ -307,8 +342,8 @@ exports.unlinkCookbookFromGroup = (req, res, next) => {
             }
             cookbook.update({
                 groupPermissions: {
-                    '$pull': { readAccess: groupId },
-                    '$pull': { writeAccess: groupId }
+                    '$pull': {readAccess: groupId},
+                    '$pull': {writeAccess: groupId}
                 },
             }).then(result => {
                 return res.status(200).json({
@@ -338,8 +373,8 @@ exports.unlinkCookbookFromUser = (req, res, next) => {
     Cookbook.findById(cookbookId).then(cookbook => {
         cookbook.update({
             userPermissions: {
-                '$pull': { readAccess: userId },
-                '$pull': { writeAccess: groupId }
+                '$pull': {readAccess: userId},
+                '$pull': {writeAccess: groupId}
             }
         }).then(result => {
             return res.status(200).json({

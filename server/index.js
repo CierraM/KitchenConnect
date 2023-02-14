@@ -2,6 +2,7 @@
 if (process.env.NODE_ENV !== 'production') {
 	require('dotenv').config();
 }
+const path = require('path')
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -34,12 +35,6 @@ app.get("/logout", (req, res) => {
 		.status(200)
 		.json({ message: "Successfully logged out 😏 🍀" });
 });
-
-//wildcard - serve index.html
-app.use('*', (req, res, next) => {
-	console.log('This is the wildcard')
-	res.sendFile('../build/index.html')
-})
 
 app.listen(PORT);
 console.log('listening on port ', PORT)

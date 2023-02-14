@@ -15,15 +15,15 @@ const SortButton = () => {
     //TODO: make these arrows instead
     return (
         <Menu closeOnSelect={false}>
-            <MenuButton as={Button} rightIcon={<ChevronDownIcon/>}>
+            <MenuButton as={Button} rightIcon={<ChevronDownIcon/>} m={2}>
                 Sort
             </MenuButton>
             <MenuList minWidth='240px'>
-                <MenuOptionGroup defaultValue='desc' title='Order' type='radio'>
+                <MenuOptionGroup defaultValue='desc' type='radio'>
                     <MenuItemOption value='desc'>Alphabetical descending</MenuItemOption>
                     <MenuItemOption value='asc'>Alphabetical ascending</MenuItemOption>
-                    <MenuItemOption value='tagsAsc'>Sort by tags ascending</MenuItemOption>
-                    <MenuItemOption value='tagsDesc'>Sort by tags descending</MenuItemOption>
+                    <MenuItemOption value='tagsAsc'>Tags ascending</MenuItemOption>
+                    <MenuItemOption value='tagsDesc'>Tags descending</MenuItemOption>
                 </MenuOptionGroup>
             </MenuList>
         </Menu>
