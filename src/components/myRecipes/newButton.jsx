@@ -3,17 +3,16 @@ import {
     MenuButton,
     MenuList,
     MenuItem,
-    MenuItemOption,
-    MenuGroup,
-    MenuOptionGroup,
-    MenuDivider,
+    Link,
     Button
 } from '@chakra-ui/react'
+import {Link as ReactRouterLink} from "react-router-dom";
 import {AddIcon} from "@chakra-ui/icons"
 
 const NewButton = () => {
+
     return (
-        <Menu pos={"relative"} >
+        <Menu pos={"relative"}>
             <MenuButton
                 pos={"absolute"}
                 bottom={0}
@@ -23,13 +22,21 @@ const NewButton = () => {
                 shadow={"lg"}
                 m={"5"}
                 _hover={{shadow: "sm"}}
-                rightIcon={<AddIcon />}
+                rightIcon={<AddIcon/>}
             >
                 New
             </MenuButton>
             <MenuList>
-                <MenuItem>Recipe</MenuItem>
-                <MenuItem>Cookbook</MenuItem>
+                <Link as={ReactRouterLink} to={"/createRecipe"} _hover={{textDecoration: "none"}}>
+                    <MenuItem>
+                        Recipe
+                    </MenuItem>
+                </Link>
+                <Link as={ReactRouterLink} to={"/createCookbook"} _hover={{textDecoration: "none"}}>
+                    <MenuItem>
+                        Cookbook
+                    </MenuItem>
+                </Link>
             </MenuList>
         </Menu>
     )

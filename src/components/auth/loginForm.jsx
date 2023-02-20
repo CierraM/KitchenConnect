@@ -1,19 +1,18 @@
-
 import {
-  FormControl,
-  FormLabel,
-  Input,
-  Button,
-  Box,
-  Link,
-  Spinner,
-  Text,
-  Image,
-  Heading
+    FormControl,
+    FormLabel,
+    Input,
+    Button,
+    Box,
+    Link,
+    Spinner,
+    Text,
+    Image,
+    Heading
 } from '@chakra-ui/react'
-import React, { useRef, useEffect } from 'react';
+import React, {useRef, useEffect} from 'react';
 import PasswordInput from './passwordInput';
-import { Link as ReactRouterLink, useNavigate } from 'react-router-dom';
+import {Link as ReactRouterLink, useNavigate} from 'react-router-dom';
 import useHttp from '../../util/use-http';
 
 const LoginForm = () => {
@@ -21,26 +20,41 @@ const LoginForm = () => {
     const emailInputRef = useRef();
     const passwordInputRef = useRef();
 
-    const { isLoading, error, sendRequest } = useHttp();
-    const tryLogin = () => {
-
+    const {isLoading, error, sendRequest} = useHttp();
+    const tryLogin = (e) => {
+        e.preventDefault()
+        const request = {
+            email: emailInputRef.current.value,
+            password: passwordInputRef.current.value
+        }
+        sendRequest({
+            url: `${process.env.REACT_APP_SERVER_URL}/user/login`,
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: request
+        }, response => {
+            if (!error) {
+                navigate('/myRecipes')
+            }
+        })
     }
 
-        return (
-            <Box >
-                <Box
-                    m="auto"
-                    py='3'
-                    px='4'
-                    bg='white'
-                    alignItems='center'
-                    justifyContent='center'
-                    textAlign='center'>
-                    <Heading>Login</Heading>
+    return (
+        <Box>
+            <Box
+                m="auto"
+                py='3'
+                px='4'
+                bg='white'
+                alignItems='center'
+                justifyContent='center'
+                textAlign='center'>
+                <Heading>Login</Heading>
+                <form onSubmit={tryLogin}>
                     <Box m={2}>
                         <FormControl isRequired>
                             <FormLabel> Email </FormLabel>
-                            <Input placeholder='Email' ref={emailInputRef} />
+                            <Input placeholder='Email' ref={emailInputRef}/>
                         </FormControl>
                     </Box>
                     <Box m={2}>
@@ -55,19 +69,20 @@ const LoginForm = () => {
                     <Box>
                         {isLoading
                             ?
-                            <Spinner />
+                            <Spinner/>
                             :
-                            <Button type="submit" onSubmit={tryLogin} borderRadius="10">Login</Button>
+                            <Button type="submit" borderRadius="10">Login</Button>
                         }
-          
+
                     </Box>
-                    <Box m={6}>
-                        <Link as={ReactRouterLink} to={'/signup'}>Don't have an account? Click Here.</Link>
-                    </Box>
+                </form>
+                <Box m={6}>
+                    <Link as={ReactRouterLink} to={'/signup'}>Don't have an account? Click Here.</Link>
                 </Box>
             </Box>
-        );
-    
+        </Box>
+    );
+
 }
 
 

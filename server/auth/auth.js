@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 
 exports.isAuth = (req, res, next) => {
-    console.log(req.cookies.Authorization)
     const authHeader = req.cookies.Authorization;
     if (!authHeader) {
         return res.status(401).json({

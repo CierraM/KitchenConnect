@@ -16,12 +16,18 @@ const cookbookRoutes = require('./routes/v1/cookbookRoutes');
 const groupRoutes = require('./routes/v1/groupRoutes');
 const PORT = process.env.PORT || 8080;
 
+
 const app = express();
 
 //middlewares
+var corsOptions = {
+	origin: 'http://localhost:3000',
+	optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+	credentials: true
+}
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(cors());
 
 //create routers
 app.use('/api/v1/user', userRoutes);
