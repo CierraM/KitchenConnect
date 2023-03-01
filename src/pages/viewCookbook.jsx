@@ -6,6 +6,7 @@ import CookbookTab from "../components/viewCookbook/cookbookTab";
 import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import useHttp from "../util/use-http";
+import NewButton from "../components/myRecipes/newButton";
 
 const recipes = {
     "recipes": [
@@ -164,7 +165,9 @@ const ViewCookbook = () => {
 
     return (
         <Template>
-            <RecipeBrowser recipeTabContent={recipeTabContent} cookbookTabContent={cookbookTabContent} defaultIndex={1}/>
+            <RecipeBrowser recipeTabContent={recipeTabContent} cookbookTabContent={cookbookTabContent} defaultIndex={1}>
+                <NewButton/>
+            </RecipeBrowser>
         </Template>
     )
 }

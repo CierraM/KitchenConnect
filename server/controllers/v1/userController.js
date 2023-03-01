@@ -38,7 +38,6 @@ exports.signup = async (req, res, next) => {
                 lastName,
                 avatar
             }).then((user, error) => {
-                console.log(user)
                 if (error) {
                     return res.status(400).json({
                         message: "Unable to create user"
@@ -97,6 +96,14 @@ exports.login = async (req, res, next) => {
             })
         })
 
+}
+
+exports.logout = (req, res, next) => {
+    res.cookie('Authorization', 'none', {
+        expires: new Date(Date.now() + 5 * 1000),
+        httpOnly: true,
+    })
+    res.status(200).json({message: 'User logged out successfully'})
 }
 
 //fetch all recipes and cookbooks that belong to a user
@@ -252,11 +259,9 @@ exports.searchForUser = (req, res, next) => {
         if (mongoose.isValidObjectId(query)) {
             filteredQuery.push({_id: query})
         }
-        filteredQuery.push({ email: query })
-        filteredQuery.push({username: query})
+        filteredQuery.push({username: {$regex: query, $options: 'i'}})
+        filteredQuery.push({email: {$regex: query, $options: 'i'}})
     }
-    console.log(filteredQuery)
-
     User.find({
         $or: filteredQuery
     }).then(users => {
@@ -419,6 +424,21 @@ exports.getUser = (req, res, next) => {
                 connections: user.connections,
                 connectionRequests: user.connectionRequests,
             }
+        })
+    })
+}
+
+exports.getAllUsers = (req, res, next) => {
+    User.find().then(users => {
+        return res.status(200).json({
+            users: users.map(user => {
+                return {
+                    _id: user._id,
+                    username: user.username,
+                    firstName: user.firstName,
+                    lastName: user.lastName
+                }
+            })
         })
     })
 }

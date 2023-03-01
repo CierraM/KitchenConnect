@@ -62,7 +62,6 @@ router.patch(
     '/update',
     isAuth,
     body('recipeId').isString(),
-    body('changes').isJSON(),
     controller.updateRecipe
 );
 

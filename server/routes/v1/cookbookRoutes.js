@@ -56,7 +56,6 @@ router.patch(
     '/update',
     isAuth,
     body('cookbookId').isString(),
-    body('changes').isJSON(),
     controller.updateCookbook
 );
 

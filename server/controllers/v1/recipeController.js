@@ -11,9 +11,9 @@ const {
 } = require('../../helpers/helpers');
 
 exports.createRecipe = (req, res, next) => {
-    checkForErrors();
-    console.log('Attempting create recipe')
+    checkForErrors(req, res);
     const userId = req.userId;
+    console.log('Attempting create recipe')
     if (!userId) {
         return res.status(401).json({
             message: "You must be logged in to create a recipe."
@@ -57,7 +57,10 @@ exports.createRecipe = (req, res, next) => {
                 message: "Recipe created successfully",
                 _id: recipe._id
             })
-        })
+        }).catch(err => {
+            console.log(err)
+        return res.status(400).json({message: "there was a problem"})
+    })
 }
 
 exports.getRecipeById = (req, res, next) => {
@@ -116,7 +119,10 @@ exports.getRecipeById = (req, res, next) => {
                     private: recipe.private
                 }
             })
-        })
+        }).catch(err => {
+            console.log(err)
+            return res.status(400).json({message: "unable to fetch recipe"})
+    })
 }
 
 exports.shareRecipeWithUser = (req, res, next) => {
@@ -309,7 +315,7 @@ exports.getAllPublicRecipes = (req, res, next) => {
 }
 
 exports.updateRecipe = (req, res, next) => {
-    checkForErrors();
+    checkForErrors(req, res);
     const userId = req.userId;
     if (!userId) {
         return res.status(401).json({
@@ -318,7 +324,6 @@ exports.updateRecipe = (req, res, next) => {
     }
     const recipeId = req.body.recipeId;
     const update = req.body.changes;
-    console.log(update)
 
     Recipe.findById(recipeId).then(recipe => {
         if (recipe.userPermissions.owner != userId) {
@@ -326,10 +331,9 @@ exports.updateRecipe = (req, res, next) => {
                 message: "You do not have permission to update this recipe"
             })
         }
-        recipe.update(update).then(updatedRecipe => {
+        recipe.updateOne(update).then(updatedRecipe => {
             return res.status(200).json({
                 message: "update successful",
-                update: updatedRecipe
             })
         })
 

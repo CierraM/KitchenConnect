@@ -1,13 +1,15 @@
-import {Checkbox, CheckboxGroup, Stack} from "@chakra-ui/react";
+import {Checkbox, CheckboxGroup, Stack, useCheckbox} from "@chakra-ui/react";
 
 
 const AddToCookbook = ({cookbooks}) => {
+    const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } = useCheckbox()
+
     return (
-        <CheckboxGroup
+        <CheckboxGroup name={"cookbooks"}
         >
             {cookbooks.map((cookbook, index) => {
                 return (
-                    <Checkbox key={index}>{cookbook.title}</Checkbox>
+                    <Checkbox key={index} value={cookbook._id}>{cookbook.title}</Checkbox>
                 )
             })}
         </CheckboxGroup>

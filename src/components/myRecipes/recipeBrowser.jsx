@@ -1,12 +1,12 @@
 import Template from "../ui/template";
-import {Spacer, Tab, TabList, TabPanel, TabPanels, Tabs} from "@chakra-ui/react";
+import {Spacer, Tab, TabList, TabPanel, TabPanels, Tabs, Text} from "@chakra-ui/react";
 import SortButton from "./sortButton";
 import FilterSection from "./filterButton";
 import List from "./List";
 import NewButton from "./newButton";
 
 
-const RecipeBrowser = ({recipeTabContent, cookbookTabContent, filter, defaultIndex}) => {
+const RecipeBrowser = ({recipeTabContent, cookbookTabContent, filter, defaultIndex, children}) => {
 
     return (
         <>
@@ -26,7 +26,7 @@ const RecipeBrowser = ({recipeTabContent, cookbookTabContent, filter, defaultInd
                     </TabPanel>
                 </TabPanels>
             </Tabs>
-            <NewButton/>
+            {children}
         </>
     )
 }

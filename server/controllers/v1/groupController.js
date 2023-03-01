@@ -8,7 +8,7 @@ const {checkForErrors} = require('../../helpers/helpers');
 
 //create a group
 exports.createGroup = (req, res, next) => {
-    checkForErrors()
+    checkForErrors(req, res)
     const userId = req.userId;
     const groupName = req.body.groupName;
 
@@ -31,13 +31,17 @@ exports.createGroup = (req, res, next) => {
         }
         return res.status(201).json({
             message: "group created successfully",
-            name: group.name
+            name: group.name,
+            _id: group._id
         })
+    }).catch(err => {
+        console.log(err)
+        return res.status(400).json({message: "there was an error"})
     })
 }
 
 exports.addMembers = (req, res, next) => {
-    checkForErrors();
+    checkForErrors(req, res);
     const userId = req.userId;
     const memberIds = req.body.memberIds;
     const groupId = req.body.groupId;
@@ -48,6 +52,11 @@ exports.addMembers = (req, res, next) => {
         })
     }
 
+    if (!memberIds) {
+        return res.status(400).json({
+            message: "No value for memberIds included in request"
+        })
+    }
     //make sure this user has permission to add members
     Group.findById(groupId).then(group => {
         if (!group) {
@@ -62,7 +71,7 @@ exports.addMembers = (req, res, next) => {
         }
 
         let results = [];
-        memberIds.forEach(async member => {
+        memberIds?.forEach(async member => {
             if (group.members.includes(member)) {
                 results.push({ message: `member with id ${member} not added because they already belong to this group.` })
             }
@@ -78,9 +87,12 @@ exports.addMembers = (req, res, next) => {
 }
 
 exports.removeMember = async (req, res, next) => {
-    checkForErrors()
+    checkForErrors(req, res)
     const userId = req.userId;
-    const memberId = req.body.memberId;
+    let memberId = req.body.memberId;
+    if (!memberId) {
+        memberId = userId;
+    }
     const groupId = req.body.groupId;
 
     if (!userId) {
@@ -174,8 +186,14 @@ exports.getGroupRecipes = (req, res, next) => {
                             recipes: groupRecipes,
                             cookbooks: groupCookbooks
                         })
-                    })
+                    }).catch(err => {
+                        console.log(err)
+                    return res.status(400).json({message: 'there was an error'})
+                })
             })
+    }).catch(err => {
+        console.log(err)
+        return res.status(400).json({message: 'there was an error'})
     })
 
 }
@@ -268,13 +286,19 @@ exports.getUserGroups = (req, res, next) => {
         }
     }
 
-    Group.find({ members: userId }).then(groups => {
+    Group.find({ members: userId }).populate('members').then(groups => {
         return res.status(200).json({
             groups: groups.map(group => {
                 return {
                     _id: group._id,
                     name: group.name,
-                    members: group.members,
+                    members: group.members.map(m => {
+                        return {
+                            _id: m._id,
+                            username: m.username,
+                            avatar: m.avatar
+                        }
+                    }),
                     admins: group.admins
                 }
             })

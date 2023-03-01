@@ -25,7 +25,6 @@ router.patch(
 router.patch(
     '/removeMember',
     isAuth,
-    body('memberId').isString(),
     body('groupId').isString(),
     controller.removeMember
 );

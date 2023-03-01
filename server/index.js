@@ -42,6 +42,10 @@ app.get("/logout", (req, res) => {
 		.json({ message: "Successfully logged out 😏 🍀" });
 });
 
+app.use('/', (req, res) => {
+	res.sendStatus(200)
+})
+
 app.listen(PORT);
 console.log('listening on port ', PORT)
 

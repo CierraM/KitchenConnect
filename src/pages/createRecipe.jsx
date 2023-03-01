@@ -2,26 +2,49 @@ import Template from "../components/ui/template";
 import {
     FormControl,
     FormLabel,
-    FormErrorMessage,
     FormHelperText,
     Input,
-    Box, Heading, Textarea, Switch, Flex, VStack, IconButton, Button
+    Box,
+    Heading,
+    Textarea,
+    Switch,
+    Flex,
+    Button,
+    Checkbox,
+    CheckboxGroup,
+    Wrap,
+    InputGroup,
+    InputLeftElement, Text
 } from '@chakra-ui/react'
 import Ingredients from "../components/createRecipe/ingredients/ingredients";
 import Steps from "../components/createRecipe/steps/steps";
 import Tags from "../components/createRecipe/tags/tags";
 import {useRef, useState} from "react";
-import AddToCookbook from "../components/createRecipe/cookbook/AddToCookbook";
 import useHttp from "../util/use-http";
 import {useEffect} from "react";
+import RelatedRecipeTag from "../components/createRecipe/relatedRecipeTag";
+import {Search2Icon} from "@chakra-ui/icons";
+import {useNavigate, useParams} from "react-router-dom";
 
-const CreateRecipe = () => {
-    //TODO: add drag handles to ingredients and steps
-    const [cookboooks, setCookbooks] = useState([])
-    const {isLoading, error, sendRequest} = useHttp()
-
+const CreateRecipe = ({editing}) => {
+    //TODO: handle private recipes when that feature is ready
     const titleInputRef = useRef();
     const descriptionInputRef = useRef();
+    const [ingredients, setIngredients] = useState({ingredients: []});
+    const [steps, setSteps] = useState({steps: []});
+    const notesRef = useRef();
+    // const privateRef = useRef();
+    const [tags, setTags] = useState({tags: []});
+    const [selectedCookbooks, setSelectedCookbooks] = useState();
+    const [relatedRecipes, setRelatedRecipes] = useState([])
+
+    const [cookbooks, setCookbooks] = useState([])
+    const [recipes, setRecipes] = useState([])
+    const [filteredRecipes, setFilteredRecipes] = useState(recipes);
+
+    const navigate = useNavigate();
+    const {isLoading, error, sendRequest} = useHttp()
+    const {id} = useParams()
 
     useEffect(() => {
         sendRequest({
@@ -31,11 +54,88 @@ const CreateRecipe = () => {
         }, response => {
             if (!error) {
                 setCookbooks(response.cookbooks)
+                const cookbookRecipes = [].concat.apply([], response.cookbooks.map(c => c.recipes))
+                const allRecipes = response.recipes.concat(cookbookRecipes)
+                    .filter((v, i, a) => i === a.findIndex(t => (t._id === v._id)))
+                setRecipes(allRecipes)
             }
         })
     }, [error, sendRequest])
 
-    const [tags, setTags] = useState({tags: []});
+    useEffect(() => {
+        if (editing) {
+            sendRequest({
+                url: `${process.env.REACT_APP_SERVER_URL}/recipe/${id}`,
+                method: 'GET',
+                headers: {'Content-Type': 'application/json'}
+            }, (result) => {
+                if (!error) {
+                    const recipe = result.recipe;
+
+                    titleInputRef.current.value = recipe.title || '';
+                    descriptionInputRef.current.value = recipe.description || '';
+                    setIngredients({ingredients: recipe.ingredients})
+                    const recipeSteps = recipe.steps.sort((a, b) => a.ordinal < b.ordinal).map(s => s.text)
+                    setSteps({steps: recipeSteps})
+                    notesRef.current.value = recipe.notes || '';
+                    setTags({tags: recipe.tags})
+                    setSelectedCookbooks(recipe.cookbookIds)
+                    setRelatedRecipes(recipe.related)
+                }
+            })
+        }
+    }, [editing, id])
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+
+        const request = {
+            title: titleInputRef.current.value,
+            description: descriptionInputRef.current.value,
+            ingredients: ingredients.ingredients,
+            steps: steps.steps.map((s, index) => {
+                return {
+                    ordinal: index + 1,
+                    text: s
+                }
+            }),
+            notes: notesRef.current.value,
+            cookbookIds: selectedCookbooks,
+            tags: tags.tags,
+            related: relatedRecipes.map(r => r._id)
+
+        }
+
+        if (editing) {
+            const updateRequest = {
+                recipeId: id,
+                changes: request
+            }
+            sendRequest({
+                url: `${process.env.REACT_APP_SERVER_URL}/recipe/update`,
+                method: 'PATCH',
+                body: updateRequest,
+                headers: {'Content-Type': 'application/json'}
+            }, (result) => {
+                if (!error) {
+                    navigate("/")
+                }
+            })
+        } else {
+            sendRequest({
+                url: `${process.env.REACT_APP_SERVER_URL}/recipe/create`,
+                method: 'POST',
+                body: request,
+                headers: {'Content-Type': 'application/json'}
+            }, (result) => {
+                if (!error) {
+                    navigate("/")
+                }
+            })
+
+        }
+
+    }
 
     const addTag = (tag) => {
         if (!tag) {
@@ -45,6 +145,7 @@ const CreateRecipe = () => {
         temp.push(tag)
         setTags({tags: temp})
     }
+
     const removeTag = (tag) => {
         let temp = tags.tags;
         let result = [];
@@ -56,7 +157,6 @@ const CreateRecipe = () => {
         setTags({tags: result})
     }
 
-    const [ingredients, setIngredients] = useState({ingredients: []});
     const addIngredient = (ingredient) => {
         if (!ingredient) {
             return;
@@ -77,8 +177,6 @@ const CreateRecipe = () => {
         setIngredients({ingredients: result})
     }
 
-    const [steps, setSteps] = useState({steps: []});
-
     const addStep = (step) => {
         if (!step) {
             return;
@@ -87,6 +185,7 @@ const CreateRecipe = () => {
         temp.push(step)
         setSteps({steps: temp})
     }
+
     const removeStep = (step) => {
         let temp = steps.steps;
         let result = [];
@@ -98,21 +197,33 @@ const CreateRecipe = () => {
         setSteps({steps: result})
     }
 
-
-    const handleSubmit = () => {
-        const request = {
-            title: titleInputRef.current.value,
-            description: descriptionInputRef.current.value,
- dcfgh;''            ingredients: ingredients,
-            steps: steps,
-
+    const handleSearch = (e) => {
+        const searchValue = e.target.value;
+        if (!searchValue) {
+            setFilteredRecipes([]);
+            return;
         }
-
+        const filtered = recipes.filter((r) => {
+            return (r.title.toLowerCase().includes(searchValue.toLowerCase()) || r.tags?.includes(searchValue))
+        })
+        setFilteredRecipes(filtered)
     }
+
+
+    const toggleRelatedRecipeSelect = (recipe) => {
+        let temp = relatedRecipes.slice(0);
+        if (temp.map(r => r._id).includes(recipe._id)) {
+            setRelatedRecipes(temp.filter(r => r._id !== recipe._id))
+            return;
+        } else {
+            temp.push(recipe);
+        }
+        setRelatedRecipes(temp);
+    }
+
     return (
-        <Template>
-            <Box py={3}>
-                <Heading>New Recipe</Heading>
+            <Box p={3}>
+                <Heading>{editing ? 'Edit Recipe' : 'New Recipe'}</Heading>
                 <form onSubmit={handleSubmit}>
                     <FormControl mb={2}>
                         <FormLabel mb={0}>Title</FormLabel>
@@ -137,17 +248,17 @@ const CreateRecipe = () => {
 
                     <FormControl mb={2}>
                         <FormLabel mb={0}>Additional Notes</FormLabel>
-                        <Textarea/>
+                        <Textarea ref={notesRef}/>
                     </FormControl>
 
-                    <FormControl mb={2}>
-                        <Flex alignItems={"center"}>
-                            <FormLabel mb={0}>Make this recipe private?</FormLabel>
-                            <Switch></Switch>
-                        </Flex>
-                        <FormHelperText>If a recipe is private, only those you share it with will be able to view
-                            it.</FormHelperText>
-                    </FormControl>
+                    {/*<FormControl mb={2}>*/}
+                    {/*    <Flex alignItems={"center"}>*/}
+                    {/*        <FormLabel mb={0}>Make this recipe private?</FormLabel>*/}
+                    {/*        <Switch ref={privateRef}/>*/}
+                    {/*    </Flex>*/}
+                    {/*    <FormHelperText>If a recipe is private, only those you share it with will be able to view*/}
+                    {/*        it.</FormHelperText>*/}
+                    {/*</FormControl>*/}
 
                     <FormControl mb={3}>
                         <FormLabel mb={0}>Tags</FormLabel>
@@ -156,20 +267,48 @@ const CreateRecipe = () => {
                     </FormControl>
 
                     {
-                        cookboooks.length > 0 &&
+                        cookbooks.length > 0 &&
                         <FormControl mb={2}>
                             <FormLabel mb={0}>Add to a Cookbook</FormLabel>
-                            <AddToCookbook cookbooks={cookboooks}/>
+                            <CheckboxGroup onChange={setSelectedCookbooks}>
+                                {cookbooks.map((cookbook, index) => {
+                                    return (
+                                        <Checkbox key={index} value={cookbook._id}>{cookbook.title}</Checkbox>
+                                    )
+                                })}
+                            </CheckboxGroup>
                         </FormControl>
                     }
-                    <FormControl mb={2}>
+                    <FormControl mb={2} mt={4}>
                         <FormLabel mb={0}>Related Recipes</FormLabel>
-                        <p>Put related recipe search here</p>
+                        <Wrap my={relatedRecipes.length > 0 && 3}>
+                            {relatedRecipes.map((recipe, index) => {
+                                return <RelatedRecipeTag key={index} recipe={recipe} relatedRecipes={relatedRecipes}
+                                                         clickHandler={toggleRelatedRecipeSelect}/>
+                            })}
+                        </Wrap>
+                        <InputGroup>
+                            <Input placeholder="search for a recipe to link" onChange={handleSearch}
+                                   borderRadius={"none"}/>
+                            <InputLeftElement children={<Search2Icon/>}/>
+                        </InputGroup>
+                        <Box border={"1px solid lightgrey"} pl={3}>
+                            {filteredRecipes.length == 0 && <Text>Nothing to show</Text>}
+                            {filteredRecipes.map((recipe, index) => {
+                                return (
+                                    <RelatedRecipeTag key={index} recipe={recipe}
+                                                      clickHandler={toggleRelatedRecipeSelect}
+                                                      relatedRecipes={relatedRecipes}/>
+                                )
+                            })}
+                        </Box>
                     </FormControl>
-                    <Button type={"submit"}>Create Recipe</Button>
+                    <Button type={"submit"} colorScheme="blue" disabled={isLoading}>{editing ? 'Update Recipe' : 'Create Recipe'}</Button>
+                    <Button type="button" colorScheme="red" onClick={() => {
+                        navigate(-1)
+                    }}>Cancel</Button>
                 </form>
             </Box>
-        </Template>
     )
 }
 

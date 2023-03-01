@@ -27,6 +27,7 @@ exports.isAuth = (req, res, next) => {
     }
 
     req.userId = decodedToken.userId;
+    console.log("userid: ", req.userId)
 
     next();
 

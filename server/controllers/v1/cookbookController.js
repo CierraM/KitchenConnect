@@ -35,6 +35,9 @@ exports.createCookbook = (req, res, next) => {
             _id: cookbook._id,
             cookbook: cookbook
         })
+    }).catch(err => {
+        console.log(err)
+        res.status(400).json({message: "there was a problem"})
     })
 }
 
@@ -315,8 +318,14 @@ exports.updateCookbook = (req, res, next) => {
                 message: "update successful",
                 update: updatedCookbook
             })
+        }).catch(err => {
+            console.log(err);
+            res.status(400).json({message: 'there was an error'})
         })
 
+    }).catch(err => {
+        console.log(err);
+        res.status(400).json({message: 'there was an error'})
     })
 }
 

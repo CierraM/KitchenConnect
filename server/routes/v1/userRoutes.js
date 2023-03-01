@@ -24,6 +24,7 @@ router.post(
 //fetch all recipes and cookbooks that belong to a user
 router.get('/myRecipes', isAuth, controller.getMyRecipes);
 
+router.get('/logout', controller.logout);
 //fetch all favorite recipes for a user
 router.get('/favorites', isAuth, controller.getUserFavorites);
 
@@ -57,5 +58,8 @@ router.patch(
 
 //get user info
 router.get('/', isAuth, controller.getUser);
+
+//get a list of users
+router.get('/all', isAuth, controller.getAllUsers)
 
 module.exports = router;
