@@ -1,7 +1,7 @@
 import Template from "../components/ui/template";
 import RecipeBrowser from "../components/myRecipes/recipeBrowser";
 import FilterSection from "../components/myRecipes/filterButton";
-import List from "../components/myRecipes/List";
+import List from "../components/myRecipes/list";
 import CookbookTab from "../components/viewCookbook/cookbookTab";
 import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";

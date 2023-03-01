@@ -1,5 +1,5 @@
 import FilterSection from "../components/myRecipes/filterButton";
-import List from "../components/myRecipes/List";
+import List from "../components/myRecipes/list";
 import Template from "../components/ui/template";
 import RecipeBrowser from "../components/myRecipes/recipeBrowser";
 import {useEffect, useState} from "react";

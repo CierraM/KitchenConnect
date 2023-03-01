@@ -1,6 +1,6 @@
 import Template from '../components/ui/template';
 import SearchBar from '../components/ui/searchBar';
-import List from '../components/myRecipes/List';
+import List from '../components/myRecipes/list';
 import FilterSection from "../components/myRecipes/filterButton";
 import RecipeBrowser from "../components/myRecipes/recipeBrowser";
 import {useState, useEffect} from "react";

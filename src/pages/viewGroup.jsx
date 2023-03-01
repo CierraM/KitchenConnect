@@ -19,7 +19,7 @@ import {CloseIcon, Search2Icon} from "@chakra-ui/icons";
 import NewMemberModal from "../components/groups/newMemberModal";
 import RecipeBrowser from "../components/myRecipes/recipeBrowser";
 import FilterSection from "../components/myRecipes/filterButton";
-import List from "../components/myRecipes/List";
+import List from "../components/myRecipes/list";
 import GroupRecipeAddButton from "../components/groups/groupRecipeAddButton";
 
 const ViewGroup = () => {

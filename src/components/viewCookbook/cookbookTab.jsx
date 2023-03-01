@@ -1,7 +1,7 @@
 import {Button, Heading, Flex, Link, IconButton} from "@chakra-ui/react";
 import {Link as ReactRouterLink} from "react-router-dom";
 import FilterSection from "../myRecipes/filterButton";
-import List from "../myRecipes/List";
+import List from "../myRecipes/list";
 import {ArrowBackIcon, EditIcon, ExternalLinkIcon} from "@chakra-ui/icons";
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
