@@ -19,12 +19,20 @@ const PORT = process.env.PORT || 8080;
 
 const app = express();
 
-//middlewares
+var whitelist = ['100.20.92.101', '44.225.181.72', '44.227.217.144', 'http://localhost:3000']
 var corsOptions = {
-	origin: 'http://localhost:3000',
+	origin: function (origin, callback) {
+		if (whitelist.indexOf(origin) !== -1) {
+			callback(null, true)
+		} else {
+			callback(new Error('Not allowed by CORS'))
+		}
+	},
 	optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 	credentials: true
 }
+//middlewares
+
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(cookieParser());
