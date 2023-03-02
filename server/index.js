@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 8080;
 
 const app = express();
 
-// var whitelist = ['https://kitchen-connect-99f2.onrender.com', 'http://localhost:3000', '*']
+// var whitelist = ['https://kitchen-connect-99f2.onrender.com', 'http://localhost:3000']
 // var corsOptions = {
 // 	origin: function (origin, callback) {
 // 		console.log(origin)
@@ -33,8 +33,12 @@ const app = express();
 // 	credentials: true
 // }
 //middlewares
+var corsOptions = {
+	credentials: true,
+	origin: true
+}
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(cookieParser());
 

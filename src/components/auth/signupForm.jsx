@@ -5,7 +5,7 @@ import {
     Button,
     Box,
     Link,
-    Heading
+    Heading, Alert
 } from '@chakra-ui/react'
 import {Link as ReactRouterLink, useNavigate} from 'react-router-dom';
 import PasswordInput from './passwordInput';
@@ -24,9 +24,16 @@ const SignupForm = () => {
 
     const trySignup = (e) => {
         e.preventDefault()
+        //confirm password matches
+        if (passwordInputRef.current.value !== confirmPasswordInputRef.current.value) {
+            return
+        }
         const request = {
+            username: usernameInputRef.current.value,
+            password: passwordInputRef.current.value,
             email: emailInputRef.current.value,
-            password: passwordInputRef.current.value
+            firstName: firstNameInputRef.current.value,
+            lastName: lastNameInputRef.current.value
         }
         sendRequest({
             url: `${process.env.REACT_APP_SERVER_URL}/user/signup`,
@@ -35,7 +42,21 @@ const SignupForm = () => {
             body: request
         }, response => {
             if (!error) {
-                navigate('/myRecipes')
+                // sign in user and redirect to myRecipes
+                const signinRequest = {
+                    email: emailInputRef.current.value,
+                    password: passwordInputRef.current.value
+                }
+                sendRequest({
+                    url: `${process.env.REACT_APP_SERVER_URL}/user/login`,
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: signinRequest
+                }, response => {
+                    if (!error) {
+                        navigate('/myRecipes')
+                    }
+                })
             }
         })
     }
@@ -43,6 +64,7 @@ const SignupForm = () => {
     //TODO: field validation
     return (
         <Box>
+            {error && <Alert status="error">An error occurred</Alert>}
             <form onSubmit={trySignup}>
                 <Box m={"auto"}
                      px='4'
@@ -89,7 +111,7 @@ const SignupForm = () => {
                         </FormControl>
                     </Box>
                     <Box>
-                        <Button type="submit" onSubmit={trySignup} borderRadius="10" >Create
+                        <Button type="submit" onSubmit={trySignup} borderRadius="10" disabled={isLoading}>Create
                             Account</Button>
                     </Box>
                     <Box m={6}>
