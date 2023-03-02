@@ -16,7 +16,6 @@ import CreateGroup from "./pages/createGroup";
 import ViewGroup from "./pages/viewGroup";
 
 function App() {
-
   return (
     <ChakraProvider>
       <Router>

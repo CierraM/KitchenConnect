@@ -73,6 +73,7 @@ exports.login = async (req, res, next) => {
     User.findOne({ email })
         .then(user => {
             if (!user) {
+                console.log('user not found')
                 return res.status(401).json({
                     message: "Username or password incorrect"
                 })
@@ -82,6 +83,7 @@ exports.login = async (req, res, next) => {
         })
         .then(matched => {
             if (!matched) {
+                console.log('not a match')
                 return res.status(401).json({
                     message: "Username or password incorrect"
                 })

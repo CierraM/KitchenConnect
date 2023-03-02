@@ -19,21 +19,22 @@ const PORT = process.env.PORT || 8080;
 
 const app = express();
 
-var whitelist = ['https://kitchen-connect-99f2.onrender.com', 'http://localhost:3000']
-var corsOptions = {
-	origin: function (origin, callback) {
-		if (whitelist.indexOf(origin) !== -1) {
-			callback(null, true)
-		} else {
-			callback(new Error('Not allowed by CORS'))
-		}
-	},
-	optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-	credentials: true
-}
+// var whitelist = ['https://kitchen-connect-99f2.onrender.com', 'http://localhost:3000', '*']
+// var corsOptions = {
+// 	origin: function (origin, callback) {
+// 		console.log(origin)
+// 		if (whitelist.indexOf(origin) !== -1) {
+// 			callback(null, true)
+// 		} else {
+// 			callback(new Error('Not allowed by CORS'))
+// 		}
+// 	},
+// 	optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+// 	credentials: true
+// }
 //middlewares
 
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(bodyParser.json());
 app.use(cookieParser());
 
@@ -42,13 +43,6 @@ app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/recipe', recipeRoutes);
 app.use('/api/v1/cookbook', cookbookRoutes);
 app.use('/api/v1/group', groupRoutes);
-
-app.get("/logout", (req, res) => {
-	return res
-		.clearCookie("Authorization")
-		.status(200)
-		.json({ message: "Successfully logged out 😏 🍀" });
-});
 
 app.use('/', (req, res) => {
 	res.sendStatus(200)
