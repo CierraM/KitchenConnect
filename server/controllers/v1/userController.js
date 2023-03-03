@@ -80,7 +80,12 @@ exports.login = async (req, res, next) => {
             }
             loadedUser = user;
             return bcrypt.compare(password, user.hashedPassword);
-        })
+        }).catch(err => {
+            console.log(err)
+            return res.status(500).json({
+                message: "An error ocurred. Please try again later."
+            })
+    })
         .then(matched => {
             if (!matched) {
                 console.log('not a match')
@@ -94,9 +99,15 @@ exports.login = async (req, res, next) => {
             }, process.env.SECRET_KEY)
             res.cookie('Authorization', token).status(200).json({
                 message: 'User authenticated',
+                token: token,
                 _id: loadedUser._id
             })
-        })
+        }).catch(err => {
+            console.log(err)
+            return res.status(500).json({
+                message: "An error ocurred. Please try again later."
+            })
+    })
 
 }
 
@@ -205,7 +216,7 @@ exports.getMyRecipes = (req, res, next) => {
 //fetch all favorite recipes for a user
 exports.getUserFavorites = (req, res, next) => {
     console.log('attempting to retrieve user favorites')
-    
+
     const userId = req.userId;
 
     if (!userId) {
@@ -383,13 +394,13 @@ exports.updateUser = (req, res, next) => {
             message: "You are not allowed to access this resource."
         })
     }
-    
+
     delete changes["hashedPassword"]
 
     if (!userId) {
         return res.status(401).json({
             message: "you must be logged in to update a user"
-        }) 
+        })
     }
 
     User.findById(userId).then(user => {
@@ -399,7 +410,7 @@ exports.updateUser = (req, res, next) => {
                 update: update
             })
         })
-    }) 
+    })
 }
 
 exports.getUser = (req, res, next) => {
@@ -408,9 +419,9 @@ exports.getUser = (req, res, next) => {
     if (!userId) {
         return res.status(401).json({
             message: "you must be logged in to get user data"
-        }) 
+        })
     }
-    
+
     User.findById(userId).then(user => {
         return res.status(200).json({
             user: {

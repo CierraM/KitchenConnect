@@ -1,5 +1,7 @@
 import {useState, useCallback} from 'react'
 import {useNavigate} from "react-router-dom";
+import {useAtom} from "jotai";
+import {userTokenAtom} from "../store/atoms";
 // How to use this hook:
 // This hook returns three things: isLoading, error, and the sendRequest function.
 // call it like this at the top of your component:
@@ -15,6 +17,7 @@ const useHttp = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const[userToken, setUserToken] = useAtom(userTokenAtom)
 
     const sendRequest = useCallback(async (requestConfig, applyData) => {
         setIsLoading(true);
@@ -23,7 +26,10 @@ const useHttp = () => {
             const response = await fetch(
                 requestConfig.url, {
                     method: requestConfig.method ? requestConfig.method : 'GET',
-                    headers: requestConfig.headers ? requestConfig.headers : {},
+                    headers: {
+                        ...requestConfig.headers,
+                        'Authorization': userToken
+                    },
                     body: requestConfig.body ? JSON.stringify(requestConfig.body) : null,
                     credentials: 'include'
                 }

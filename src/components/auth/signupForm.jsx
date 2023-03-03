@@ -11,6 +11,8 @@ import {Link as ReactRouterLink, useNavigate} from 'react-router-dom';
 import PasswordInput from './passwordInput';
 import React, {useRef} from 'react';
 import useHttp from "../../util/use-http";
+import {useAtom} from "jotai";
+import {userTokenAtom} from "../../store/atoms";
 
 const SignupForm = () => {
     const usernameInputRef = useRef();
@@ -21,6 +23,7 @@ const SignupForm = () => {
     const lastNameInputRef = useRef();
     const navigate = useNavigate();
     const {isLoading, error, sendRequest} = useHttp();
+    const [userToken, setUserToken] = useAtom(userTokenAtom);
 
     const trySignup = (e) => {
         e.preventDefault()
@@ -54,6 +57,7 @@ const SignupForm = () => {
                     body: signinRequest
                 }, response => {
                     if (!error) {
+                        setUserToken(response.token)
                         navigate('/myRecipes')
                     }
                 })

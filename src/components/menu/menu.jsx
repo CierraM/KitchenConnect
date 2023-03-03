@@ -16,6 +16,8 @@ import {
 } from '@chakra-ui/react'
 import {Link as ReactRouterLink, useNavigate} from "react-router-dom"
 import useHttp from "../../util/use-http";
+import {useAtom} from "jotai";
+import {userTokenAtom} from "../../store/atoms";
 
 const Menu = () => {
     const {isOpen, onOpen, onClose} = useDisclosure()
@@ -23,16 +25,19 @@ const Menu = () => {
     const navigate = useNavigate();
     const {isLoading, error, sendRequest} = useHttp();
     const [userGroups, setUserGroups] = useState();
+    const [userToken, setUserToken] = useAtom(userTokenAtom)
 
     useEffect(() => {
-        sendRequest({
-            url: `${process.env.REACT_APP_SERVER_URL}/group/userGroups`,
-            headers: {'Content-Type': 'application/json'}
-        }, response => {
-            if (!error) {
-                setUserGroups({groups: response.groups})
-            }
-        })
+        if (userToken) {
+            sendRequest({
+                url: `${process.env.REACT_APP_SERVER_URL}/group/userGroups`,
+                headers: {'Content-Type': 'application/json'}
+            }, response => {
+                if (!error) {
+                    setUserGroups({groups: response.groups})
+                }
+            })
+        }
     }, [sendRequest, error, setUserGroups])
 
     const logout = () => {
@@ -46,6 +51,8 @@ const Menu = () => {
             }
         })
     }
+    const logoutButton= <Button type="button" onClick={logout}>Log Out</Button>
+    const loginButton = <Button as={ReactRouterLink} to={'/login'}>Log In</Button>
 
     return (
         <>
@@ -90,8 +97,7 @@ const Menu = () => {
 
                     </DrawerBody>
                     <DrawerFooter>
-                        <Button type="button" onClick={logout}>Log Out</Button>
-
+                        {userToken ? logoutButton : loginButton}
                     </DrawerFooter>
 
                 </DrawerContent>

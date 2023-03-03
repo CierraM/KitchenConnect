@@ -14,11 +14,14 @@ import React, {useRef, useEffect} from 'react';
 import PasswordInput from './passwordInput';
 import {Link as ReactRouterLink, useNavigate} from 'react-router-dom';
 import useHttp from '../../util/use-http';
+import {useAtom} from "jotai";
+import {userTokenAtom} from "../../store/atoms";
 
 const LoginForm = () => {
     const navigate = useNavigate();
     const emailInputRef = useRef();
     const passwordInputRef = useRef();
+    const [userToken, setUserToken] = useAtom(userTokenAtom);
 
     const {isLoading, error, sendRequest} = useHttp();
     const tryLogin = (e) => {
@@ -34,6 +37,7 @@ const LoginForm = () => {
             body: request
         }, response => {
             if (!error) {
+                setUserToken(response.token)
                 navigate('/myRecipes')
             }
         })

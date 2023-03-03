@@ -4,30 +4,35 @@ import SearchBar from "./searchBar"
 import {useEffect, useState} from "react";
 import useHttp from "../../util/use-http";
 import {Link as ReactRouterLink} from 'react-router-dom';
+import {useAtom} from "jotai";
+import {userTokenAtom} from "../../store/atoms";
 
 const Template = ({children}) => {
     const [recipes, setRecipes] = useState({})
     const {isLoading, error, sendRequest} = useHttp()
     const [filteredRecipes, setFilteredRecipes] = useState([])
+    const [userToken, setUserToken] = useAtom(userTokenAtom)
 
     //Get recipes from server
     useEffect(() => {
-        sendRequest({
-            url: `${process.env.REACT_APP_SERVER_URL}/user/myRecipes`,
-            method: 'GET',
-            headers: {'Content-Type': 'application/json'}
-        }, response => {
-            if (!error) {
-                const cookbookRecipes = [].concat.apply([], response.cookbooks.map(c => c.recipes))
-                const allRecipes = response.recipes.concat(cookbookRecipes)
-                    .filter((v, i, a) => i === a.findIndex(t => (t._id === v._id)))
-                setRecipes(allRecipes)
-            }
-        })
+
+        if (userToken) {
+            sendRequest({
+                url: `${process.env.REACT_APP_SERVER_URL}/user/myRecipes`,
+                method: 'GET',
+                headers: {'Content-Type': 'application/json'}
+            }, response => {
+                if (!error) {
+                    const cookbookRecipes = [].concat.apply([], response.cookbooks.map(c => c.recipes))
+                    const allRecipes = response.recipes.concat(cookbookRecipes)
+                        .filter((v, i, a) => i === a.findIndex(t => (t._id === v._id)))
+                    setRecipes(allRecipes)
+                }
+            })
+        }
     }, [error, sendRequest])
 
     const searchHandler = (e, searchInput) => {
-        console.log(recipes)
         if (searchInput.length === 0) {
             setFilteredRecipes([])
             return;
