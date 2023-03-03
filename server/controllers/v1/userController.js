@@ -54,6 +54,11 @@ exports.signup = async (req, res, next) => {
                         lastName: user.lastName
                     }
                 })
+            }).catch(err => {
+                console.log(err)
+                return res.status(500).json({
+                    message: "An error occurred. Please try again later."
+                })
             })
 
         })

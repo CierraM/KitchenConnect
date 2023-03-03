@@ -34,19 +34,21 @@ function App() {
               <Route path="/group/:id" element={<ViewGroup/>}/>
               <Route path="/" element={<MyRecipes/> } />
               <Route path="*" element={<MyRecipes/> } />
+
+              <Route path="/recipe/:id" element={<ViewRecipe />}/>
+              <Route path="/cookbook/:id" element={<ViewCookbook />}/>
+              <Route path="/error" />
             </Routes>
         ) : (
             <Routes>
               <Route path="/login" element={<Auth isSignup={false}/>} />
               <Route path="/signup" element={<Auth isSignup={true}/>} />
               <Route path="*" element={<Auth/> } />
+              <Route path="/recipe/:id" element={<ViewRecipe />}/>
+              <Route path="/cookbook/:id" element={<ViewCookbook />}/>
+              <Route path="/error" />
             </Routes>
         )}
-        <Routes>
-          <Route path="/recipe/:id" element={<ViewRecipe />}/>
-          <Route path="/cookbook/:id" element={<ViewCookbook />}/>
-          <Route path="/error" />
-        </Routes>
       </Router>
     </ChakraProvider>
   );
