@@ -47,6 +47,7 @@ const Menu = () => {
             headers: {'Content-Type': 'application/json'}
         }, response => {
             if (!error) {
+                setUserToken(null)
                 navigate('/login')
             }
         })

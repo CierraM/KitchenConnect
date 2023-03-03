@@ -14,26 +14,37 @@ import CreateCookbook from "./pages/createCookbook";
 import Profile from "./pages/profile";
 import CreateGroup from "./pages/createGroup";
 import ViewGroup from "./pages/viewGroup";
+import {useAtom} from "jotai";
+import {userTokenAtom} from "./store/atoms";
 
 function App() {
+  const [userToken, setUserToken] = useAtom(userTokenAtom);
   return (
     <ChakraProvider>
       <Router>
+        {userToken ? (
+            <Routes>
+              <Route path="/myRecipes" element={<MyRecipes/> } />
+              <Route path="/profile" element={<Profile/>}/>
+              <Route path="/group/create" element={<CreateGroup/>}/>
+              <Route path="/createCookbook" element={<CreateCookbook editing={false}/>}/>
+              <Route path="/createRecipe" element={<CreateRecipe editing={false}/>}/>
+              <Route path="/cookbook/:id/edit" element={<CreateCookbook editing={true}/>}/>
+              <Route path={"/recipe/:id/edit"} element={<CreateRecipe editing={true}/> }/>
+              <Route path="/group/:id" element={<ViewGroup/>}/>
+              <Route path="/" element={<MyRecipes/> } />
+              <Route path="*" element={<MyRecipes/> } />
+            </Routes>
+        ) : (
+            <Routes>
+              <Route path="/login" element={<Auth isSignup={false}/>} />
+              <Route path="/signup" element={<Auth isSignup={true}/>} />
+              <Route path="*" element={<Auth/> } />
+            </Routes>
+        )}
         <Routes>
-          <Route path="/" element={<MyRecipes/> } />
-          <Route path="/myRecipes" element={<MyRecipes/> } />
-          <Route path="/login" element={<Auth isSignup={false}/>} />
-          <Route path="/signup" element={<Auth isSignup={true}/>} />
           <Route path="/recipe/:id" element={<ViewRecipe />}/>
-          {/*<Route path="/myCookbooks" element={<Cookbooks />}/>*/}
           <Route path="/cookbook/:id" element={<ViewCookbook />}/>
-          <Route path="/profile" element={<Profile/>}/>
-          <Route path="/createRecipe" element={<CreateRecipe editing={false}/>}/>
-          <Route path={"/recipe/:id/edit"} element={<CreateRecipe editing={true}/> }/>
-          <Route path="/createCookbook" element={<CreateCookbook editing={false}/>}/>
-          <Route path="/cookbook/:id/edit" element={<CreateCookbook editing={true}/>}/>
-          <Route path="/group/:id" element={<ViewGroup/>}/>
-          <Route path="/group/create" element={<CreateGroup/>}/>
           <Route path="/error" />
         </Routes>
       </Router>
