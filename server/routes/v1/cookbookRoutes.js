@@ -38,7 +38,7 @@ router.patch(
     '/shareWithUser',
     isAuth,
     body('cookbookId').isString(),
-    body('recipientUserId').isString(),
+    body('recipientId').isString(),
     body('permissionLevel', 'Permission level field allows values \'read\' or \'write\' only').optional().trim().isString(),
     controller.shareWithUser
 )
@@ -46,7 +46,7 @@ router.patch(
     '/shareWithGroup',
     isAuth,
     body('cookbookId').isString(),
-    body('recipientGroupId').isString(),
+    body('recipientId').isString(),
     body('permissionLevel', 'Permission level field allows values \'read\' or \'write\' only').optional().trim().isString(),
     controller.shareWithGroup
 )
@@ -78,9 +78,8 @@ router.patch(
 
 //delete cookbook
 router.delete(
-    '/delete',
+    '/delete/:id',
     isAuth,
-    body('cookbookId').isString(),
     controller.deleteCookbook
 )
 

@@ -1,13 +1,16 @@
-import {Button, Heading, Flex, Link, IconButton} from "@chakra-ui/react";
+import {Button, Heading, Flex, Link, IconButton, useDisclosure} from "@chakra-ui/react";
 import {Link as ReactRouterLink} from "react-router-dom";
 import FilterSection from "../myRecipes/filterButton";
 import List from "../myRecipes/list";
-import {ArrowBackIcon, EditIcon, ExternalLinkIcon} from "@chakra-ui/icons";
+import {ArrowBackIcon, DeleteIcon, EditIcon, ExternalLinkIcon} from "@chakra-ui/icons";
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
+import DeleteDialog from "../ui/deleteDialog";
 
 
-const CookbookTab = ({cookbook}) => {
+const CookbookTab = ({cookbook, id}) => {
+    const {isOpen, onOpen, onClose} = useDisclosure()
+    const navigate = useNavigate();
     const showShareModal = () => {
 
     }
@@ -31,9 +34,17 @@ const CookbookTab = ({cookbook}) => {
                     variant={"link"}
                     onClick={showShareModal}
                 />
+                <IconButton
+                    size={"md"}
+                    aria-label={'delete'}
+                    icon={<DeleteIcon/>}
+                    colorScheme={"red"}
+                    variant={"link"}
+                    onClick={onOpen}/>
             </Flex>
             <FilterSection></FilterSection>
             <List items={cookbook.recipes} type={"recipe"}/>
+            <DeleteDialog isOpen={isOpen} onClose={onClose} deleteUrl={`${process.env.REACT_APP_SERVER_URL}/cookbook/delete/${id}`} title={"Delete Cookbook"}/>
         </>
     )
 }

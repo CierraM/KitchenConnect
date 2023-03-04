@@ -42,28 +42,23 @@ const ViewGroup = () => {
             if (!error) {
                 const group = response.groups.filter(g => g._id === id)[0]
                 setGroupInfo(group)
+                sendRequest({
+                    url: `${process.env.REACT_APP_SERVER_URL}/group/${id}/getRecipes`,
+                    method: 'GET',
+                    headers: {'Content-Type': 'application/json'}
+                }, recipesResponse => {
+                    if (!error) {
+                        console.log(recipesResponse)
+                        const cookbookRecipes = [].concat.apply([], recipesResponse.cookbooks.map(c => c.recipes))
+                        const allRecipes = recipesResponse.recipes.concat(cookbookRecipes)
+                            .filter((v, i, a) => i === a.findIndex(t => (t._id === v._id)))
+                        setRecipes({recipes: allRecipes})
+                        setCookbooks({cookbooks: recipesResponse.cookbooks})
+                    }
+                })
             }
         })
     }, [error, id, sendRequest])
-
-    //Get recipes from server
-    useEffect(() => {
-        if (groupInfo._id) {
-            sendRequest({
-                url: `${process.env.REACT_APP_SERVER_URL}/group/${groupInfo._id}/getRecipes`,
-                method: 'GET',
-                headers: {'Content-Type': 'application/json'}
-            }, response => {
-                if (!error) {
-                    const cookbookRecipes = [].concat.apply([], response.cookbooks.map(c => c.recipes))
-                    const allRecipes = response.recipes.concat(cookbookRecipes)
-                        .filter((v, i, a) => i === a.findIndex(t => (t._id === v._id)))
-                    setRecipes({recipes: allRecipes})
-                    setCookbooks({cookbooks: response.cookbooks})
-                }
-            })
-        }
-    }, [error, sendRequest, setRecipes])
 
     const leaveGroup = () => {
         sendRequest({
@@ -117,7 +112,7 @@ const ViewGroup = () => {
                 <Button ml={3} leftIcon={<BsPersonPlus/>} onClick={onOpen} variant={"outline"}>Invite</Button>
             </Flex>
             <RecipeBrowser recipeTabContent={recipeTabContent} cookbookTabContent={cookbookTabContent}>
-                <GroupRecipeAddButton/>
+                <GroupRecipeAddButton groupInfo={groupInfo}/>
             </RecipeBrowser>
             <NewMemberModal onClose={onClose} isOpen={isOpen} groupInfo={groupInfo}/>
         </Template>

@@ -28,14 +28,14 @@ router.patch(
     '/shareWithUser',
     isAuth,
     body('recipeId').isString(),
-    body('recipientUser').isString(),
+    body('recipientId').isString(),
     controller.shareRecipeWithUser
 );
 router.patch(
     '/shareWithGroup',
     isAuth,
     body('recipeId').isString(),
-    body('recipientGroup').isString(),
+    body('recipientId').isString(),
     controller.shareRecipeWithGroup
 );
     

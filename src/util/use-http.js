@@ -36,7 +36,7 @@ const useHttp = () => {
             );
 
             if (!response.ok) {
-                if (response.status === 401) {
+                if (response.status === 401 || response.status === 403) {
                     console.log('Not authorized')
                     navigate('/login')
                 }

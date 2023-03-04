@@ -135,7 +135,7 @@ exports.shareRecipeWithUser = (req, res, next) => {
     }
 
     const recipeId = req.body.recipeId;
-    const recipientUser = req.body.recipientUserId;
+    const recipientUser = req.body.recipientId;
 
     Recipe.findById(recipeId).then(recipe => {
         if (!permissionToViewRecipe(recipe, userId)) {
@@ -168,11 +168,11 @@ exports.shareRecipeWithUser = (req, res, next) => {
 }
 
 exports.shareRecipeWithGroup = (req, res, next) => {
-    checkForErrors();
+    checkForErrors(req, res);
     const userId = req.userId;
 
     const recipeId = req.body.recipeId;
-    const recipientGroup = req.body.recipientGroupId;
+    const recipientGroup = req.body.recipientId;
 
     if (!recipeId || !recipientGroup) {
         return res.status(400).json({
@@ -222,7 +222,6 @@ exports.deleteRecipe = (req, res, next) => {
         })
     }
     const recipeId = req.params.id;
-
     Recipe.findById(recipeId).then(recipe => {
         if (!recipe) {
             return res.status(404).json({
@@ -238,6 +237,11 @@ exports.deleteRecipe = (req, res, next) => {
             res.status(200).json({
                 message: "recipe successfully deleted"
             })
+        })
+    }).catch(err => {
+        console.log(err)
+        return res.status(400).json({
+            message: "unable to delete recipe"
         })
     })
 }

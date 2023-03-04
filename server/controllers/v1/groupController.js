@@ -171,15 +171,32 @@ exports.getGroupRecipes = (req, res, next) => {
                         }
                     })
                 Cookbook.find()
-                    .populate()
+                    .populate('recipes')
                     .then(cookbooks => {
                         const groupCookbooks = cookbooks
-                            .filter(c => c.groupPermissions.readAccess.includes(groupId))
+                            .filter(c => c.groupPermissions.readAccess.includes(groupId) || c.groupPermissions.writeAccess.includes(groupId))
                             .map(c => {
                                 return {
                                     _id: c._id,
                                     title: c.title,
-                                    recipes: c.recipes
+                                    recipes: c.recipes.map(r => {
+                                        return {
+                                            _id: r._id,
+                                            title: r.title,
+                                            description: r.description,
+                                            tags: r.tags,
+                                            ingredients: r.ingredients,
+                                            steps: r.steps.map(step => {
+                                                return {
+                                                    ordinal: step.ordinal,
+                                                    text: step.text
+                                                }
+                                            }),
+                                            related: r.related,
+                                            private: r.private,
+                                            accessLevel: r.userPermissions.owner == userId ? "owner" : "readonly",
+                                        }
+                                    })
                                 }
                             })
                         return res.status(200).json({

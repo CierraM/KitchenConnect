@@ -157,7 +157,7 @@ exports.shareWithUser = (req, res, next) => {
     }
 
     const cookbookId = req.body.cookbookId;
-    const recipientUserId = req.body.recipientUserId;
+    const recipientUserId = req.body.recipientId;
     let permissionLevel = req.body.permissionLevel.toLowerCase().trim() == 'write' ? 'write' : 'read';
 
     if (!cookbookId || !recipientUserId || !req.body.permissionLevel) {
@@ -226,16 +226,18 @@ exports.shareWithGroup = (req, res, next) => {
     checkForErrors(req, res)
     const userId = req.userId;
     if (!userId) {
+        console.log('unable to share. not authenticated')
         return res.status(401).json({
             message: "You are not allowed to access this resource."
         })
     }
 
     const cookbookId = req.body.cookbookId;
-    const recipientGroupId = req.body.recipientGroupId;
-    let permissionLevel = req.body.permissionLevel.toLowerCase().trim() == 'write' ? 'write' : 'read';
+    const recipientGroupId = req.body.recipientId;
+    let permissionLevel = req.body.permissionLevel?.toLowerCase().trim() == 'write' ? 'write' : 'read';
 
     if (!cookbookId || !recipientGroupId || !req.body.permissionLevel) {
+        console.log('improperly formatted request')
         return res.status(400).json({
             message: "improperly formatted request"
         })
@@ -244,6 +246,7 @@ exports.shareWithGroup = (req, res, next) => {
     Cookbook.findById(cookbookId).then(cookbook => {
         if (!cookbook.userPermissions.writeAccess.includes(userId) && cookbook.userPermissions.owner != userId) {
             if (!cookbook.userPermissions.readAccess.includes(userId)) {
+                console.log('no permission to share')
                 return res.status(401).json({
                     message: "you do not have permission to share this cookbook"
                 })
@@ -253,6 +256,7 @@ exports.shareWithGroup = (req, res, next) => {
         }
 
         if (permissionLevel == 'read') {
+            console.log('group has already been granted permission')
             if (cookbook.groupPermissions?.readAccess.includes(recipientGroupId)) {
                 return res.status(200).json({
                     message: 'group has already been granted read permission'
@@ -262,16 +266,19 @@ exports.shareWithGroup = (req, res, next) => {
             cookbook.save()
                 .then(result => {
                     if (!result) {
+                        console.log('unable to save')
                         return res.status(500).json({
                             message: "unable to save recipe"
                         })
                     }
+                    console.log('read permission granted')
                     return res.status(200).json({
                         message: "read permission granted for this cookbook"
                     })
                 })
         }
         if (permissionLevel == 'write') {
+            console.log('write permission granted')
             if (cookbook.groupPermissions?.writeAccess.includes(recipientGroupId)) {
                 return res.status(200).json({
                     message: 'group has already been granted write permission'
@@ -281,16 +288,26 @@ exports.shareWithGroup = (req, res, next) => {
             cookbook.save()
                 .then(result => {
                     if (!result) {
+                        console.log('unable to save')
                         return res.status(500).json({
                             message: "unable to save recipe"
                         })
                     }
+                    console.log('write permission granted')
                     return res.status(200).json({
                         message: "write permission granted for this cookbook"
                     })
-                })
+                }).catch(err => {
+                    console.log(err)
+                    return res.status(500).json({message: 'unable to share cookbook with group'})
+            })
         }
 
+    }).catch(err => {
+        console.log(err)
+        return res.status(500).json({
+            message: "unable to find cookbook"
+        })
     })
 }
 
@@ -401,10 +418,15 @@ exports.deleteCookbook = (req, res, next) => {
             message: "You are not allowed to access this resource."
         })
     }
-    const cookbookId = req.body.cookbookId;
+    const cookbookId = req.params.id;
 
     Cookbook.findById(cookbookId).then(cookbook => {
-        if (!cookbook.userPermissions.owner == userId) {
+        if (!cookbook) {
+            return res.status(404).json({
+                message: "cookbook not found"
+            })
+        }
+        if (!cookbook?.userPermissions.owner == userId) {
             return res.status(401).json({
                 message: "you do not have permission to delete this cookbook"
             })
@@ -413,6 +435,9 @@ exports.deleteCookbook = (req, res, next) => {
             return res.status(200).json({
                 message: "cookbook deleted"
             })
-        });
+        }).catch(err => {
+            console.log(err);
+            res.status(400).json({message: 'there was an error'})
+        })
     })
 }

@@ -160,7 +160,7 @@ const ViewCookbook = () => {
     )
 
     const cookbookTabContent = (
-        <CookbookTab cookbook={cookbook}/>
+        <CookbookTab cookbook={cookbook} id={id}/>
     )
 
     return (

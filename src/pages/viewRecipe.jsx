@@ -42,7 +42,7 @@ const ViewRecipe = () => {
     return (
         <Template>
             <ViewRecipeHeader isFavorite={recipe.isFavorite}/>
-            <ViewRecipeTitle title={recipe.title}/>
+            <ViewRecipeTitle title={recipe.title} id={id}/>
             <RecipeBody recipe={recipe}/>
 
         </Template>
