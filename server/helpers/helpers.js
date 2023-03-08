@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { validationResult } = require('express-validator');
+
 
 exports.objectIdOfArray = (arr) => {
     if (!arr) {
@@ -58,15 +58,4 @@ exports.getAllCookbookPermissions = cookbook => {
     return permissions.filter((v, q, self) => {
         return i == self.indexOf(v)
     })
-}
-
-exports.checkForErrors = (req, res) => {
-    const errors = validationResult(req)
-    console.log(errors)
-    if (!errors.isEmpty()) {
-        return res.status(400).json({
-            message: "one or more errors ocurred",
-            errors: errors
-        })
-    }
 }

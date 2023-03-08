@@ -1,14 +1,23 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const {validationResult} = require('express-validator');
 
 const User = require('../../models/userSchema');
 const Cookbook = require('../../models/cookbookSchema');
 const Recipe = require('../../models/recipeSchema');
-const {checkForErrors} = require('../../helpers/helpers');
+
 //signup new user
 exports.signup = async (req, res, next) => {
-    checkForErrors(req, res);
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        console.log(errors)
+        return res.status(400).send({
+            message: "one or more errors ocurred",
+            errors: errors
+        })
+    }
+
     console.log('signing up')
     const username = req.body.username;
     const password = req.body.password;
@@ -18,9 +27,10 @@ exports.signup = async (req, res, next) => {
     const avatar = req.body.avatar || '';
 
     User.findOne({
-        $or: [{ username }, { email }]
+        $or: [{username}, {email}]
     }).then((user) => {
         if (user) {
+            console.log('user already exists')
             return res.status(409).json({
                 message: "This user already exists."
             })
@@ -28,7 +38,7 @@ exports.signup = async (req, res, next) => {
 
         bcrypt.hash(password, 2, (err, hashedPassword) => {
             if (err) {
-                return res.status(500).json({ message: "An error ocurred. Please try again later." })
+                return res.status(500).json({message: "An error ocurred. Please try again later."})
             }
             User.create({
                 username,
@@ -62,58 +72,67 @@ exports.signup = async (req, res, next) => {
             })
 
         })
+    }).catch(err => {
+        console.log(err)
+        return res.status(500).json({
+            message: "An error ocurred. Please try again later."
+        })
     })
 
 }
 
 //login
 exports.login = async (req, res, next) => {
-    checkForErrors(req,res);
+    const errors = validationResult(req)
+    console.log(errors)
+    if (!errors.isEmpty()) {
+        return res.status(400).send({
+            message: "one or more errors ocurred",
+            errors: errors
+        })
+    }
+
     console.log('attempting login')
     const email = req.body.email;
     const password = req.body.password;
 
     let loadedUser
 
-    User.findOne({ email })
+    User.findOne({email})
         .then(user => {
             if (!user) {
                 console.log('user not found')
                 return res.status(401).json({
                     message: "Username or password incorrect"
                 })
+                next()
             }
             loadedUser = user;
-            return bcrypt.compare(password, user.hashedPassword);
-        }).catch(err => {
-            console.log(err)
-            return res.status(500).json({
-                message: "An error ocurred. Please try again later."
-            })
-    })
-        .then(matched => {
-            if (!matched) {
-                console.log('not a match')
-                return res.status(401).json({
-                    message: "Username or password incorrect"
+            bcrypt.compare(password, user.hashedPassword)
+                .then(matched => {
+                    console.log(matched)
+                    if (!matched) {
+                        console.log('not a match')
+                        return res.status(401).json({
+                            message: "Username or password incorrect"
+                        })
+                    }
+                    const token = jwt.sign({
+                        email,
+                        userId: loadedUser._id.toString()
+                    }, process.env.SECRET_KEY)
+                    res.cookie('Authorization', token).status(200).json({
+                        message: 'User authenticated',
+                        token: token,
+                        _id: loadedUser._id
+                    })
+                }).catch(err => {
+                console.log(err)
+                return res.status(500).json({
+                    message: "An error ocurred. Please try again later."
                 })
-            }
-            const token = jwt.sign({
-                email,
-                userId: loadedUser._id.toString()
-            }, process.env.SECRET_KEY)
-            res.cookie('Authorization', token).status(200).json({
-                message: 'User authenticated',
-                token: token,
-                _id: loadedUser._id
             })
-        }).catch(err => {
-            console.log(err)
-            return res.status(500).json({
-                message: "An error ocurred. Please try again later."
-            })
-    })
-
+        })
 }
 
 exports.logout = (req, res, next) => {
@@ -221,7 +240,6 @@ exports.getMyRecipes = (req, res, next) => {
 //fetch all favorite recipes for a user
 exports.getUserFavorites = (req, res, next) => {
     console.log('attempting to retrieve user favorites')
-
     const userId = req.userId;
 
     if (!userId) {
@@ -271,9 +289,11 @@ exports.searchForUser = (req, res, next) => {
 
     const filteredQuery = [];
     if (query.split(' ').length > 1) {
-        filteredQuery.push({ firstName: { $regex: query.split(' ')[0], $options: 'i' }, lastName: { $regex: query.split(' ')[1], $options: 'i' } })
-    }
-    else {
+        filteredQuery.push({
+            firstName: {$regex: query.split(' ')[0], $options: 'i'},
+            lastName: {$regex: query.split(' ')[1], $options: 'i'}
+        })
+    } else {
         if (mongoose.isValidObjectId(query)) {
             filteredQuery.push({_id: query})
         }
@@ -298,7 +318,14 @@ exports.searchForUser = (req, res, next) => {
 }
 
 exports.sendConnectionRequest = (req, res, next) => {
-    checkForErrors(req, res)
+    const errors = validationResult(req)
+    console.log(errors)
+    if (!errors.isEmpty()) {
+        return res.status(400).send({
+            message: "one or more errors ocurred",
+            errors: errors
+        })
+    }
     const to = req.body.toUser;
 
     const from = req.userId;
@@ -317,7 +344,7 @@ exports.sendConnectionRequest = (req, res, next) => {
 
     User.findById(to).then(user => {
         if (user.connections.includes(from)) {
-             return res.status(200).json({
+            return res.status(200).json({
                 message: "request not sent. User already included in connections"
             })
         }
@@ -326,7 +353,7 @@ exports.sendConnectionRequest = (req, res, next) => {
                 message: "A request has already been sent. Not sending another one."
             })
         }
-        User.findOneAndUpdate({ _id: to }, {
+        User.findOneAndUpdate({_id: to}, {
             '$push': {connectionRequests: from}
         }).then((user) => {
             if (!user) {
@@ -360,8 +387,8 @@ exports.respondToConnectionRequest = (req, res, next) => {
         })
     }
 
-    User.findOneAndUpdate({ _id: userId }, {
-        '$pull': { connectionRequests: respondingTo}
+    User.findOneAndUpdate({_id: userId}, {
+        '$pull': {connectionRequests: respondingTo}
     }).then(updatedUser => {
         if (updatedUser.connections.includes(respondingTo)) {
             return res.status(200).json({

@@ -1,20 +1,14 @@
-import {Flex, IconButton, Button, Spacer, Icon} from "@chakra-ui/react";
+import {Flex, IconButton, Button, Spacer, Icon, useDisclosure} from "@chakra-ui/react";
 import {ArrowBackIcon, DeleteIcon, EditIcon, ExternalLinkIcon} from "@chakra-ui/icons";
 import {useNavigate} from "react-router-dom";
 import {FaHeart, FaRegHeart} from "react-icons/fa";
 import {useState} from "react";
 
-const ViewRecipeHeader = ({isFavorite}) => {
+const ViewRecipeHeader = ({isFavorite, showShareModal}) => {
     const navigate = useNavigate();
     const [showAsFavorite, setShowAsFavorite] = useState(isFavorite)
     const goBack = () => {
         navigate(-1)
-    }
-
-
-
-    const showShareModal = () => {
-
     }
 
     const toggleFavorite = () => {
@@ -39,8 +33,6 @@ const ViewRecipeHeader = ({isFavorite}) => {
                 variant={"link"}
                 onClick={showShareModal}
             />
-
-
         </Flex>
     )
 }

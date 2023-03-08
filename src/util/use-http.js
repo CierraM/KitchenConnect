@@ -36,14 +36,15 @@ const useHttp = () => {
             );
 
             if (!response.ok) {
+                setError('Something went wrong!');
                 if (response.status === 401 || response.status === 403) {
                     console.log('Not authorized')
                     navigate('/login')
                 }
-                throw new Error('Request failed!');
             }
 
             const data = await response.json();
+            data.status = response.status
             applyData(data)
 
         } catch (err) {

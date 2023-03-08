@@ -7,140 +7,14 @@ import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import useHttp from "../util/use-http";
 import NewButton from "../components/myRecipes/newButton";
+import {useToast} from "@chakra-ui/react";
 
-const recipes = {
-    "recipes": [
-        {
-            "_id": "63c1c4f03ead35dcb96a425c",
-            "title": "Old recipe",
-            "description": "this is a recipe",
-            "tags": [],
-            "ingredients": [
-                "5 apples",
-                "3 bananas",
-                "1 cup of marshmallow sauce"
-            ],
-            "steps": [
-                {
-                    "ordinal": 1,
-                    "text": "mix all ingredients together",
-                    "_id": "63c1c4f03ead35dcb96a425d"
-                }
-            ],
-            "related": [],
-            "private": false
-        },
-        {
-            "_id": "63d463cbaf850a456504a801",
-            "title": "Crepes",
-            "description": "my favorite crepes",
-            "image": "",
-            "tags": [
-                "breakfast",
-                "eggs"
-            ],
-            "ingredients": [
-                "2 cups of flour",
-                "3 eggs",
-                "1/2 tsp salt"
-            ],
-            "steps": [
-                {
-                    "ordinal": 1,
-                    "text": "whisk all ingredients together",
-                    "_id": "63d463cbaf850a456504a802"
-                }
-            ],
-            "related": [],
-            "private": false
-        },
-        {
-            "_id": "63d464431d51d734a48f39a1",
-            "title": "chocolate crepes",
-            "description": "my other favorite crepes",
-            "image": "",
-            "tags": [
-                "breakfast",
-                "eggs",
-                "dessert"
-            ],
-            "ingredients": [
-                "2 cups of flour",
-                "3 eggs",
-                "1/2 tsp salt",
-                "1 cup melted chocolate chips"
-            ],
-            "steps": [
-                {
-                    "ordinal": 1,
-                    "text": "whisk all ingredients together",
-                    "_id": "63d464431d51d734a48f39a2"
-                }
-            ],
-            "related": [],
-            "private": false
-        }
-    ],
-    "cookbooks": [
-        {
-            "_id": "0",
-            "title": "My Second Cookbook",
-            "recipes": [
-                {
-                    "_id": "63c1c4f03ead35dcb96a425c",
-                    "title": "Old recipe",
-                    "description": "this is a recipe",
-                    "tags": [],
-                    "ingredients": [
-                        "5 apples",
-                        "3 bananas",
-                        "1 cup of marshmallow sauce"
-                    ],
-                    "steps": [
-                        {
-                            "ordinal": 1,
-                            "text": "mix all ingredients together"
-                        }
-                    ],
-                    "related": [],
-                    "private": false,
-                    "accessLevel": "readonly",
-                    "isFavorite": false
-                },
-                {
-                    "_id": "63d464431d51d734a48f39a1",
-                    "title": "chocolate crepes",
-                    "description": "my other favorite crepes",
-                    "tags": [
-                        "breakfast",
-                        "eggs",
-                        "dessert"
-                    ],
-                    "ingredients": [
-                        "2 cups of flour",
-                        "3 eggs",
-                        "1/2 tsp salt",
-                        "1 cup melted chocolate chips"
-                    ],
-                    "steps": [
-                        {
-                            "ordinal": 1,
-                            "text": "whisk all ingredients together"
-                        }
-                    ],
-                    "related": [],
-                    "private": false,
-                    "accessLevel": "readonly",
-                    "isFavorite": false
-                }
-            ]
-        }
-    ]
-}
 const ViewCookbook = () => {
     const {id} = useParams()
+    const toast = useToast()
     const {isLoading, error, sendRequest} = useHttp()
     const [cookbook, setCookbook] = useState({})
+    const [recipes, setRecipes] = useState({})
 
     useEffect(() => {
         sendRequest({
@@ -152,6 +26,22 @@ const ViewCookbook = () => {
         })
     }, [id, sendRequest])
 
+    //Get recipes from server
+    useEffect(() => {
+        sendRequest({
+            url: `${process.env.REACT_APP_SERVER_URL}/user/myRecipes`,
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'}
+        }, response => {
+            if (!error) {
+                const cookbookRecipes = [].concat.apply([], response.cookbooks.map(c => c.recipes))
+                const allRecipes = response.recipes.concat(cookbookRecipes)
+                    .filter((v, i, a) => i === a.findIndex(t => (t._id === v._id)))
+                setRecipes({recipes: allRecipes})
+            }
+        })
+    }, [error, sendRequest, setRecipes])
+
     const recipeTabContent = (
         <>
             <FilterSection></FilterSection>
@@ -162,6 +52,19 @@ const ViewCookbook = () => {
     const cookbookTabContent = (
         <CookbookTab cookbook={cookbook} id={id}/>
     )
+
+    useEffect(() => {
+        if (error) {
+            toast({
+                title: "An error occurred.",
+                description: "We're sorry, but an error occurred. Please try again.",
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+                position: "top-right"
+            })
+        }
+    }, [error])
 
     return (
         <Template>

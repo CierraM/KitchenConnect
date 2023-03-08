@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const isAuth = require('../../auth/auth')
+const { validationResult } = require('express-validator');
 
 const Cookbook = require('../../models/cookbookSchema');
 const Recipe = require('../../models/recipeSchema');
@@ -7,11 +8,17 @@ const Group = require('../../models/groupSchema');
 const {
     objectIdOfArray,
     permissionToViewRecipe,
-    checkForErrors
 } = require('../../helpers/helpers');
 
 exports.createRecipe = (req, res, next) => {
-    checkForErrors(req, res);
+    const errors = validationResult(req)
+    console.log(errors)
+    if (!errors.isEmpty()) {
+        return res.status(400).send({
+            message: "one or more errors ocurred",
+            errors: errors
+        })
+    }
     const userId = req.userId;
     console.log('Attempting create recipe')
     if (!userId) {
@@ -126,7 +133,14 @@ exports.getRecipeById = (req, res, next) => {
 }
 
 exports.shareRecipeWithUser = (req, res, next) => {
-    checkForErrors();
+    const errors = validationResult(req)
+    console.log(errors)
+    if (!errors.isEmpty()) {
+        return res.status(400).send({
+            message: "one or more errors ocurred",
+            errors: errors
+        })
+    }
     const userId = req.userId;
     if (!userId) {
         return res.status(401).json({
@@ -168,7 +182,14 @@ exports.shareRecipeWithUser = (req, res, next) => {
 }
 
 exports.shareRecipeWithGroup = (req, res, next) => {
-    checkForErrors(req, res);
+    const errors = validationResult(req)
+    console.log(errors)
+    if (!errors.isEmpty()) {
+        return res.status(400).send({
+            message: "one or more errors ocurred",
+            errors: errors
+        })
+    }
     const userId = req.userId;
 
     const recipeId = req.body.recipeId;
@@ -207,6 +228,11 @@ exports.shareRecipeWithGroup = (req, res, next) => {
                 }
                 res.status(201).json({
                     message: `Recipe shared`,
+                })
+            }).catch(err => {
+                console.log(err)
+                return res.status(400).json({
+                    message: "unable to save recipe"
                 })
             })
 
@@ -249,7 +275,14 @@ exports.deleteRecipe = (req, res, next) => {
 exports.removeFromUser = (req, res, next) => {
     //so far this only lets a user remove the recipe from their own account
     //maybe someday there will be a need to allow other users to remove a recipe from someone
-    checkForErrors();
+    const errors = validationResult(req)
+    console.log(errors)
+    if (!errors.isEmpty()) {
+        return res.status(400).send({
+            message: "one or more errors ocurred",
+            errors: errors
+        })
+    }
     const userId = req.userId;
     if (!userId) {
         return res.status(401).json({
@@ -319,7 +352,14 @@ exports.getAllPublicRecipes = (req, res, next) => {
 }
 
 exports.updateRecipe = (req, res, next) => {
-    checkForErrors(req, res);
+    const errors = validationResult(req)
+    console.log(errors)
+    if (!errors.isEmpty()) {
+        return res.status(400).send({
+            message: "one or more errors ocurred",
+            errors: errors
+        })
+    }
     const userId = req.userId;
     if (!userId) {
         return res.status(401).json({

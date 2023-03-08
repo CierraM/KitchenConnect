@@ -23,7 +23,9 @@ const ShareModal = ({isOpen, closeHandler, title, resourceList, shareResource}) 
 
     const handleSearch = (e, value) => {
         e.preventDefault();
-        setSearchResults({searchResults: resourceList.filter(r => r.title.toLowerCase().includes(value.toLowerCase()))})
+        setSearchResults({searchResults: resourceList
+                .filter(r => r.title?.toLowerCase()
+                                        .includes(value.toLowerCase()) || r.name?.toLowerCase().includes(value.toLowerCase()))})
     }
 
     const onClose = () => {
@@ -67,7 +69,7 @@ const ShareModal = ({isOpen, closeHandler, title, resourceList, shareResource}) 
                                         }}
                                         onClick={() => removeResource(item)}
                                     >
-                                        <Text>{item.title}</Text>
+                                        <Text>{item.title || item.name}</Text>
                                         <Spacer/>
                                         <CloseIcon pl={1} size={"sm"}/>
                                     </Flex>
@@ -95,7 +97,7 @@ const ShareModal = ({isOpen, closeHandler, title, resourceList, shareResource}) 
                                         }
                                     }}
                                 >
-                                    <Text>{item.title}</Text>
+                                    <Text>{item.title || item.name}</Text>
                                     <Spacer/>
                                     {alreadyAdded && <CloseIcon/>}
                                 </Flex>

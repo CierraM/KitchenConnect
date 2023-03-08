@@ -5,11 +5,11 @@ import {
     Button,
     Box,
     Link,
-    Heading, Alert
+    Heading, Alert, useToast, FormErrorMessage
 } from '@chakra-ui/react'
 import {Link as ReactRouterLink, useNavigate} from 'react-router-dom';
 import PasswordInput from './passwordInput';
-import React, {useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import useHttp from "../../util/use-http";
 import {useAtom} from "jotai";
 import {userTokenAtom} from "../../store/atoms";
@@ -24,12 +24,27 @@ const SignupForm = () => {
     const navigate = useNavigate();
     const {isLoading, error, sendRequest} = useHttp();
     const [userToken, setUserToken] = useAtom(userTokenAtom);
+    const toast = useToast();
+    const [usernameError, setUsernameError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const [duplicateUserError, setDuplicateUserError] = useState('');
 
     const trySignup = (e) => {
+        setUsernameError('');
+        setPasswordError('');
         e.preventDefault()
         //confirm password matches
         if (passwordInputRef.current.value !== confirmPasswordInputRef.current.value) {
+            setPasswordError('Passwords do not match');
             return
+        }
+        if (passwordInputRef.current.value.length < 8) {
+            setPasswordError('Password must be at least 8 characters');
+            return
+        }
+        if (usernameInputRef.current.value.length < 3) {
+            setUsernameError('Username must be at least 3 characters');
+            return;
         }
         const request = {
             username: usernameInputRef.current.value,
@@ -44,6 +59,10 @@ const SignupForm = () => {
             headers: {'Content-Type': 'application/json'},
             body: request
         }, response => {
+            if (response.status === 409) {
+                setDuplicateUserError('Username or email already exists');
+                return;
+            }
             if (!error) {
                 // sign in user and redirect to myRecipes
                 const signinRequest = {
@@ -65,10 +84,21 @@ const SignupForm = () => {
         })
     }
 
+    useEffect(() => {
+        if (error) {
+            toast({
+                title: "An error occurred.",
+                description: "Please try again.",
+                status: "error",
+                duration: 9000,
+                isClosable: true,
+            })
+        }
+    })
+
     //TODO: field validation
     return (
         <Box>
-            {error && <Alert status="error">An error occurred</Alert>}
             <form onSubmit={trySignup}>
                 <Box m={"auto"}
                      px='4'
@@ -91,25 +121,29 @@ const SignupForm = () => {
                         </FormControl>
                     </Box>
                     <Box m={3}>
-                        <FormControl isRequired>
+                        <FormControl isRequired isInvalid={duplicateUserError}>
                             <FormLabel mb={0}> Email </FormLabel>
-                            <Input placeholder='example@example.com' ref={emailInputRef}/>
+                            <Input placeholder='example@example.com' ref={emailInputRef} type="email"/>
+                            {duplicateUserError && <FormErrorMessage>{duplicateUserError}</FormErrorMessage>}
                         </FormControl>
                     </Box>
                     <Box m={3}>
-                        <FormControl isRequired>
+                        <FormControl isRequired isInvalid={usernameError || duplicateUserError}>
                             <FormLabel mb={0}> Username </FormLabel>
                             <Input placeholder='Username' ref={usernameInputRef}/>
+                            {usernameError && <FormErrorMessage>{usernameError}</FormErrorMessage>}
+                            {duplicateUserError && <FormErrorMessage>{duplicateUserError}</FormErrorMessage>}
                         </FormControl>
                     </Box>
                     <Box m={3}>
-                        <FormControl isRequired>
+                        <FormControl isRequired isInvalid={passwordError}>
                             <FormLabel mb={0}>Password</FormLabel>
                             <PasswordInput ref={passwordInputRef}></PasswordInput>
+                            {passwordError && <FormErrorMessage>{passwordError}</FormErrorMessage>}
                         </FormControl>
                     </Box>
                     <Box m={3}>
-                        <FormControl isRequired>
+                        <FormControl isRequired isInvalid={passwordError}>
                             <FormLabel mb={0}>Confirm Password</FormLabel>
                             <PasswordInput ref={confirmPasswordInputRef}></PasswordInput>
                         </FormControl>

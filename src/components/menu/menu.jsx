@@ -12,7 +12,7 @@ import {
     Button,
     Input,
     IconButton,
-    Link, Flex, UnorderedList, ListItem, Heading, Text
+    Link, Flex, UnorderedList, ListItem, Heading, Text, VStack
 } from '@chakra-ui/react'
 import {Link as ReactRouterLink, useNavigate} from "react-router-dom"
 import useHttp from "../../util/use-http";
@@ -71,7 +71,7 @@ const Menu = () => {
 
                     <DrawerBody>
                         <Flex flexDirection={"column"}>
-                            <Link as={ReactRouterLink} to={"/profile"}>My Profile</Link>
+
                             <Link as={ReactRouterLink} to={"/"}>My Recipes</Link>
                             <Heading size={"sm"} fontWeight={"medium"} pt={2}>Groups:</Heading>
                             {/*<Link as={ReactRouterLink} to={"/myCookbooks"}>My Cookbooks</Link>*/}
@@ -98,7 +98,10 @@ const Menu = () => {
 
                     </DrawerBody>
                     <DrawerFooter>
-                        {userToken ? logoutButton : loginButton}
+                        <VStack>
+                        <Link as={ReactRouterLink} to={"/profile"}>My Profile</Link>
+                            {userToken ? logoutButton : loginButton}
+                        </VStack>
                     </DrawerFooter>
 
                 </DrawerContent>

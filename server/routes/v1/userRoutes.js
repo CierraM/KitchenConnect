@@ -8,7 +8,7 @@ const { body } = require('express-validator');
 router.post(
     '/signup',
     body('username').isAlphanumeric(),
-    body('password', 'Password must contain at least 8 characters, 1 lowercase letter, 1 capital letter, and a number').isStrongPassword({ minSymbols: 0 }),
+    body('password'),
     body('email').isEmail().normalizeEmail(),
     body('firstName').optional().isString(),
     body('lastName').optional().isString(),
@@ -52,7 +52,6 @@ router.patch(
 router.patch(
     '/update',
     isAuth,
-    body('changes').isJSON(),
     controller.updateUser
 )
 

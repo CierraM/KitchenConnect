@@ -1,19 +1,79 @@
-import {Button, Heading, Flex, Link, IconButton, useDisclosure} from "@chakra-ui/react";
+import {Button, Heading, Flex, Link, IconButton, useDisclosure, useToast} from "@chakra-ui/react";
 import {Link as ReactRouterLink} from "react-router-dom";
 import FilterSection from "../myRecipes/filterButton";
 import List from "../myRecipes/list";
 import {ArrowBackIcon, DeleteIcon, EditIcon, ExternalLinkIcon} from "@chakra-ui/icons";
 import {useNavigate} from "react-router-dom";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import DeleteDialog from "../ui/deleteDialog";
+import ShareModal from "../ui/shareModal";
+import useHttp from "../../util/use-http";
 
 
 const CookbookTab = ({cookbook, id}) => {
-    const {isOpen, onOpen, onClose} = useDisclosure()
+    const {
+        isOpen: deleteModalIsOpen,
+        onOpen: deleteModalOnOpen,
+        onClose: deleteModalOnClose} = useDisclosure()
+    const {
+        isOpen: shareModalIsOpen,
+        onOpen: shareModalOnOpen,
+        onClose: shareModalOnClose} = useDisclosure()
     const navigate = useNavigate();
-    const showShareModal = () => {
+    const [groups, setGroups] = useState([])
+    const toast = useToast()
+    const {sendRequest, isLoading, error} = useHttp()
 
+    const shareCookbookWithGroupHandler = (groups) => {
+        groups.forEach(group => {
+            sendRequest(
+                 {
+                url: `${process.env.REACT_APP_SERVER_URL}/cookbook/shareWithGroup`,
+                method: 'PATCH',
+                headers: {'Content-Type': 'application/json'},
+                body: {
+                    cookbookId: id,
+                    recipientId: group._id,
+                    permissionLevel: 'write'
+                }
+
+            }, response => {
+                    if (response.ok) {
+                        toast({
+                            title: "Cookbook shared successfully",
+                            status: "success",
+                            duration: 3000,
+                            isClosable: true,
+                        })
+                        shareModalOnClose()
+                    }
+            })
+        })
     }
+
+    useEffect(() => {
+        if (error) {
+            toast({
+                title: "An error occurred",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+            })
+        }
+    }, [error, toast])
+
+    //get groups
+    useEffect(() => {
+        sendRequest({
+            url: `${process.env.REACT_APP_SERVER_URL}/group/userGroups`,
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'}
+        }, response => {
+            if (!error) {
+                setGroups(response.groups)
+            }
+        })
+    }, [sendRequest, error, setGroups])
 
     return (
         <>
@@ -32,7 +92,7 @@ const CookbookTab = ({cookbook, id}) => {
                     aria-label={'share'}
                     icon={<ExternalLinkIcon/>}
                     variant={"link"}
-                    onClick={showShareModal}
+                    onClick={shareModalOnOpen}
                 />
                 <IconButton
                     size={"md"}
@@ -40,11 +100,18 @@ const CookbookTab = ({cookbook, id}) => {
                     icon={<DeleteIcon/>}
                     colorScheme={"red"}
                     variant={"link"}
-                    onClick={onOpen}/>
+                    onClick={deleteModalOnOpen}/>
             </Flex>
             <FilterSection></FilterSection>
             <List items={cookbook.recipes} type={"recipe"}/>
-            <DeleteDialog isOpen={isOpen} onClose={onClose} deleteUrl={`${process.env.REACT_APP_SERVER_URL}/cookbook/delete/${id}`} title={"Delete Cookbook"}/>
+            <DeleteDialog isOpen={deleteModalIsOpen} onClose={deleteModalOnClose} deleteUrl={`${process.env.REACT_APP_SERVER_URL}/cookbook/delete/${id}`} title={"Delete Cookbook"}/>
+            <ShareModal
+                isOpen={shareModalIsOpen}
+                closeHandler={shareModalOnClose}
+                title={"Share Cookbook With a Group"}
+                shareResource={shareCookbookWithGroupHandler}
+                resourceList={groups}
+            />
         </>
     )
 }

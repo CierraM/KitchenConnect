@@ -1,11 +1,19 @@
 const mongoose = require('mongoose');
+const { validationResult } = require('express-validator');
 
 const Cookbook = require('../../models/cookbookSchema');
 const Group = require('../../models/groupSchema');
-const {objectIdOfArray, checkForErrors} = require('../../helpers/helpers');
+const {objectIdOfArray} = require('../../helpers/helpers');
 
 exports.createCookbook = (req, res, next) => {
-    checkForErrors(req, res)
+    const errors = validationResult(req)
+    console.log(errors)
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            message: "one or more errors ocurred",
+            errors: errors
+        })
+    }
     console.log('Attempting create cookbook')
     const userId = req.userId;
     if (!userId) {
@@ -77,7 +85,14 @@ exports.getCookbook = (req, res, next) => {
 }
 
 exports.addRecipe = (req, res, next) => {
-    checkForErrors(req, res)
+    const errors = validationResult(req)
+    console.log(errors)
+    if (!errors.isEmpty()) {
+        return res.status(400).send({
+            message: "one or more errors ocurred",
+            errors: errors
+        })
+    }
     const userId = req.userId;
     if (!userId) {
         return res.status(401).json({
@@ -111,7 +126,14 @@ exports.addRecipe = (req, res, next) => {
 }
 
 exports.removeRecipe = (req, res, next) => {
-    checkForErrors();
+    const errors = validationResult(req)
+    console.log(errors)
+    if (!errors.isEmpty()) {
+        return res.status(400).send({
+            message: "one or more errors ocurred",
+            errors: errors
+        })
+    }
     const userId = req.userId;
     if (!userId) {
         return res.status(401).json({
@@ -143,7 +165,14 @@ exports.removeRecipe = (req, res, next) => {
 }
 
 exports.shareWithUser = (req, res, next) => {
-    checkForErrors(req, res)
+    const errors = validationResult(req)
+    console.log(errors)
+    if (!errors.isEmpty()) {
+        return res.status(400).send({
+            message: "one or more errors ocurred",
+            errors: errors
+        })
+    }
     //This one is a little different.
     //To share a cookbook, you can specify read or write access
     //anyone with read access can share the cookbook for someone else to read it
@@ -223,7 +252,14 @@ exports.shareWithUser = (req, res, next) => {
 }
 
 exports.shareWithGroup = (req, res, next) => {
-    checkForErrors(req, res)
+    const errors = validationResult(req)
+    console.log(errors)
+    if (!errors.isEmpty()) {
+        return res.status(400).send({
+            message: "one or more errors ocurred",
+            errors: errors
+        })
+    }
     const userId = req.userId;
     if (!userId) {
         console.log('unable to share. not authenticated')
@@ -312,7 +348,14 @@ exports.shareWithGroup = (req, res, next) => {
 }
 
 exports.updateCookbook = (req, res, next) => {
-    checkForErrors(req, res)
+    const errors = validationResult(req)
+    console.log(errors)
+    if (!errors.isEmpty()) {
+        return res.status(400).send({
+            message: "one or more errors ocurred",
+            errors: errors
+        })
+    }
     //TODO: test this
     const userId = req.userId;
     if (!userId) {
@@ -347,7 +390,14 @@ exports.updateCookbook = (req, res, next) => {
 }
 
 exports.unlinkCookbookFromGroup = (req, res, next) => {
-    checkForErrors(req, res)
+    const errors = validationResult(req)
+    console.log(errors)
+    if (!errors.isEmpty()) {
+        return res.status(400).send({
+            message: "one or more errors ocurred",
+            errors: errors
+        })
+    }
     //the recipe can be removed by group admins or cookbook owner
 
     const userId = req.userId;
@@ -383,7 +433,14 @@ exports.unlinkCookbookFromGroup = (req, res, next) => {
 }
 
 exports.unlinkCookbookFromUser = (req, res, next) => {
-    checkForErrors(req, res)
+    const errors = validationResult(req)
+    console.log(errors)
+    if (!errors.isEmpty()) {
+        return res.status(400).send({
+            message: "one or more errors ocurred",
+            errors: errors
+        })
+    }
     //TODO: test this
     //so far this only lets a user remove the recipe from their own account
     //maybe someday there will be a need to allow other users to remove a recipe from someone
@@ -411,7 +468,14 @@ exports.unlinkCookbookFromUser = (req, res, next) => {
 }
 
 exports.deleteCookbook = (req, res, next) => {
-    checkForErrors(req, res)
+    const errors = validationResult(req)
+    console.log(errors)
+    if (!errors.isEmpty()) {
+        return res.status(400).send({
+            message: "one or more errors ocurred",
+            errors: errors
+        })
+    }
     const userId = req.userId;
     if (!userId) {
         return res.status(401).json({

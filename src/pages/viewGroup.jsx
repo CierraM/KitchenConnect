@@ -48,7 +48,6 @@ const ViewGroup = () => {
                     headers: {'Content-Type': 'application/json'}
                 }, recipesResponse => {
                     if (!error) {
-                        console.log(recipesResponse)
                         const cookbookRecipes = [].concat.apply([], recipesResponse.cookbooks.map(c => c.recipes))
                         const allRecipes = recipesResponse.recipes.concat(cookbookRecipes)
                             .filter((v, i, a) => i === a.findIndex(t => (t._id === v._id)))
