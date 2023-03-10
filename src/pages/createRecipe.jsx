@@ -14,7 +14,7 @@ import {
     CheckboxGroup,
     Wrap,
     InputGroup,
-    InputLeftElement, Text
+    InputLeftElement, Text, useToast
 } from '@chakra-ui/react'
 import Ingredients from "../components/createRecipe/ingredients/ingredients";
 import Steps from "../components/createRecipe/steps/steps";
@@ -45,6 +45,7 @@ const CreateRecipe = ({editing}) => {
     const navigate = useNavigate();
     const {isLoading, error, sendRequest} = useHttp()
     const {id} = useParams()
+    const toast = useToast()
 
     useEffect(() => {
         sendRequest({
@@ -118,7 +119,7 @@ const CreateRecipe = ({editing}) => {
                 headers: {'Content-Type': 'application/json'}
             }, (result) => {
                 if (!error) {
-                    navigate("/")
+                    navigate(`/recipe/${id}`)
                 }
             })
         } else {
@@ -129,7 +130,14 @@ const CreateRecipe = ({editing}) => {
                 headers: {'Content-Type': 'application/json'}
             }, (result) => {
                 if (!error) {
-                    navigate("/")
+                    navigate(`/recipe/${result._id}`)
+                    toast({
+                        title: "Success!",
+                        description: "Recipe Successfully Updated",
+                        status: "success",
+                        duration: 9000,
+                        isClosable: true,
+                    })
                 }
             })
 
@@ -221,7 +229,20 @@ const CreateRecipe = ({editing}) => {
         setRelatedRecipes(temp);
     }
 
+    useEffect(() => {
+        if (error) {
+            toast({
+                title: "An error occurred.",
+                description: error,
+                status: "error",
+                duration: 9000,
+                isClosable: true,
+            })
+        }
+    })
+
     return (
+        <Template>
             <Box p={3}>
                 <Heading>{editing ? 'Edit Recipe' : 'New Recipe'}</Heading>
                 <form onSubmit={handleSubmit}>
@@ -303,12 +324,14 @@ const CreateRecipe = ({editing}) => {
                             })}
                         </Box>
                     </FormControl>
-                    <Button type={"submit"} colorScheme="blue" disabled={isLoading}>{editing ? 'Update Recipe' : 'Create Recipe'}</Button>
+                    <Button type={"submit"} colorScheme="blue"
+                            disabled={isLoading}>{editing ? 'Update Recipe' : 'Create Recipe'}</Button>
                     <Button type="button" colorScheme="red" onClick={() => {
                         navigate(-1)
                     }}>Cancel</Button>
                 </form>
             </Box>
+        </Template>
     )
 }
 

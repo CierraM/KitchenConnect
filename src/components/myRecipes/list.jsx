@@ -6,7 +6,7 @@ const List = ({items, type}) => {
     return (
         <VStack>
             {items?.map((item, index) => {
-                return <RecipeCard key={index} item={item} type={type}/>
+                return <RecipeCard key={index} item={item} type={type} showTags={type === 'recipe' ? true : false}/>
             })}
         </VStack>
     )

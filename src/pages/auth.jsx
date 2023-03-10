@@ -5,6 +5,7 @@ import {useAtom} from "jotai";
 import {userTokenAtom} from "../store/atoms";
 import {useNavigate} from "react-router-dom";
 import {useEffect} from "react";
+import {Heading} from "@chakra-ui/react";
 
 const Auth = ({isSignup}) => {
     const [userToken, setUserToken] = useAtom(userTokenAtom);
@@ -17,14 +18,15 @@ const Auth = ({isSignup}) => {
     })
 
     return (
-        <Template>
+        <>
+            <Heading align={"center"} my={5}>Kitchen Connect</Heading>
             {   isSignup ?
                 <SignupForm />
                 :
                 <LoginForm />
 
             }
-        </Template>
+        </>
     )
 }
 

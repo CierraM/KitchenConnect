@@ -20,23 +20,21 @@ import CustomCheckbox from "./customCheckbox"
 import {useState} from "react";
 
 
-const FilterSection = ({tags}) => {
-    const handleChange = () => {console.log(value)}
+const FilterSection = ({tags, filterHandler}) => {
     const clearFilters = () => {}
     const [showAll, setShowAll] = useState(false)
 
     const { value, getCheckboxProps } = useCheckboxGroup({
-        onChange: handleChange,
+        onChange: filterHandler,
     })
-    tags = ['dessert', 'cookies', 'ice cream', 'breakfast', 'mom', 'favorites', 'orange']
     return (
         <Wrap py={2}>
-            {tags.map((tag, index) => {
+            {tags?.map((tag, index) => {
                 if (!showAll) {
-                    if (index == 2) {
+                    if (index == 5) {
                         return <Tag cursor="pointer" key="-1" onClick={setShowAll} colorScheme={"orange"} variant={"outline"}>...</Tag>
                     }
-                    else if (index > 2) {
+                    else if (index > 5) {
                         return;
                     }
                 }

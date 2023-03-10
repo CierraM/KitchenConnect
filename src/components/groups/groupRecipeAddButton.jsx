@@ -4,15 +4,15 @@ import {
     MenuList,
     MenuItem,
     Link,
-    Button, useDisclosure
+    Button, useDisclosure, useToast
 } from '@chakra-ui/react'
 import {Link as ReactRouterLink, useNavigate} from "react-router-dom";
 import {AddIcon} from "@chakra-ui/icons"
 import ShareModal from "../ui/shareModal";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import useHttp from "../../util/use-http";
 
-const GroupRecipeAddButton = ({groupInfo}) => {
+const GroupRecipeAddButton = ({groupInfo, reload}) => {
     const navigate = useNavigate();
     const {isOpen, onOpen, onClose} = useDisclosure()
     const [shareModalProps, setShareModalProps] = useState(
@@ -22,6 +22,19 @@ const GroupRecipeAddButton = ({groupInfo}) => {
             shareResource: () => {},
         })
     const {sendRequest, isLoading, error} = useHttp()
+    const toast = useToast()
+
+    useEffect(() => {
+        if (error) {
+            toast({
+                title: "An error occurred.",
+                description: error,
+                status: "error",
+                duration: 9000,
+                isClosable: true,
+            })
+        }
+    })
 
     const shareRecipeHandler = (recipes) => {
         recipes.forEach(recipe => {
@@ -35,7 +48,14 @@ const GroupRecipeAddButton = ({groupInfo}) => {
                 }
             }, response => {
                 if (!error) {
-                    navigate(0)
+                    reload()
+                    toast({
+                        title: "Recipe shared",
+                        description: "Recipe has been shared with group",
+                        status: "success",
+                        duration: 5000,
+                        isClosable: true,
+                    })
                 }
             })
         })
@@ -54,7 +74,14 @@ const GroupRecipeAddButton = ({groupInfo}) => {
                 }
             }, response => {
                 if (!error) {
-                    navigate(0)
+                    reload()
+                    toast({
+                        title: "Cookbook shared",
+                        description: "Cookbook has been shared with group",
+                        status: "success",
+                        duration: 5000,
+                        isClosable: true,
+                    })
                 }
             })
         })

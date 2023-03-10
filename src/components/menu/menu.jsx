@@ -99,7 +99,7 @@ const Menu = () => {
                     </DrawerBody>
                     <DrawerFooter>
                         <VStack>
-                        <Link as={ReactRouterLink} to={"/profile"}>My Profile</Link>
+                        {/*<Link as={ReactRouterLink} to={"/profile"}>My Profile</Link>*/}
                             {userToken ? logoutButton : loginButton}
                         </VStack>
                     </DrawerFooter>

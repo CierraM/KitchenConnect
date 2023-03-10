@@ -6,7 +6,7 @@ import List from "./list";
 import NewButton from "./newButton";
 
 
-const RecipeBrowser = ({recipeTabContent, cookbookTabContent, filter, defaultIndex, children}) => {
+const RecipeBrowser = ({recipeTabContent, cookbookTabContent, defaultIndex, children}) => {
 
     return (
         <>
@@ -15,7 +15,6 @@ const RecipeBrowser = ({recipeTabContent, cookbookTabContent, filter, defaultInd
                     <Tab>Recipes</Tab>
                     <Tab>Cookbooks</Tab>
                     <Spacer/>
-                    <SortButton/>
                 </TabList>
                 <TabPanels>
                     <TabPanel>

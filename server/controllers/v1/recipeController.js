@@ -6,7 +6,6 @@ const Cookbook = require('../../models/cookbookSchema');
 const Recipe = require('../../models/recipeSchema');
 const Group = require('../../models/groupSchema');
 const {
-    objectIdOfArray,
     permissionToViewRecipe,
 } = require('../../helpers/helpers');
 
@@ -33,16 +32,17 @@ exports.createRecipe = (req, res, next) => {
         tags: req.body.tags,
         ingredients: req.body.ingredients,
         steps: req.body.steps,
-        related: objectIdOfArray(req.body.related),
+        related: req.body.related,
         private: req.body.private || false,
         userPermissions: {
             owner: mongoose.Types.ObjectId(userId),
-            readonly: objectIdOfArray(req.body.userPermissions?.readonly),
+            readonly: req.body.userPermissions?.readonly,
         },
         groupPermissions: {
-            readonly: objectIdOfArray(req.body.groupPermissions?.readonly)
+            readonly: req.body.groupPermissions?.readonly
         }
     }
+    console.log(recipe)
     const cookbookIds = req.body.cookbookIds || [];
 
     Recipe.create(recipe)

@@ -7,7 +7,7 @@ import {
     Heading,
     Input,
     InputGroup,
-    InputLeftElement, Text,
+    InputLeftElement, Text, useToast,
     Wrap
 } from "@chakra-ui/react";
 import {useEffect, useState, useRef} from "react";
@@ -22,11 +22,22 @@ const CreateCookbook = ({editing}) => {
     const navigate = useNavigate();
     const [filteredRecipes, setFilteredRecipes] = useState([]);
     const {id} = useParams()
+    const toast = useToast()
 
     const titleInputRef = useRef();
     const [relatedRecipes, setRelatedRecipes] = useState([]);
 
-
+    useEffect(() => {
+        if (error) {
+            toast({
+                title: "An error occurred.",
+                description: error,
+                status: "error",
+                duration: 9000,
+                isClosable: true,
+            })
+        }
+    })
 
     useEffect(() => {
 
@@ -76,6 +87,13 @@ const CreateCookbook = ({editing}) => {
             }, (result) => {
                 if (!error) {
                     navigate(`/cookbook/${id}`)
+                    toast({
+                        title: "Cookbook updated.",
+                        description: "Your cookbook has been updated.",
+                        status: "success",
+                        duration: 9000,
+                        isClosable: true,
+                    })
                 }
             })
         } else {
@@ -90,6 +108,13 @@ const CreateCookbook = ({editing}) => {
             }, (result) => {
                 if (!error) {
                     navigate('/')
+                    toast({
+                        title: "Cookbook created.",
+                        description: "Your cookbook has been created.",
+                        status: "success",
+                        duration: 9000,
+                        isClosable: true,
+                    })
                 }
             })
         }
@@ -119,43 +144,46 @@ const CreateCookbook = ({editing}) => {
     }
 
     return (
-        <Box p={3}>
-            <Heading>{editing ? "Update Cookbook" : "Create Cookbook"}</Heading>
-            <form onSubmit={handleSubmit}>
-                <FormControl mb={2}>
-                    <FormLabel mb={0}>Title</FormLabel>
-                    <Input type={"text"} ref={titleInputRef}/>
-                </FormControl>
-                <FormControl mb={2} mt={4}>
-                    <FormLabel mb={0}>Add Recipes</FormLabel>
-                    <Wrap my={relatedRecipes.length > 0 && 3}>
-                        {relatedRecipes.map((recipe, index) => {
-                            return <RelatedRecipeTag key={index} recipe={recipe} relatedRecipes={relatedRecipes}
-                                                     clickHandler={toggleRelatedRecipeSelect}/>
-                        })}
-                    </Wrap>
-                    <InputGroup>
-                        <Input placeholder="search for a recipe to link" onChange={handleSearch}
-                               borderRadius={"none"}/>
-                        <InputLeftElement children={<Search2Icon/>}/>
-                    </InputGroup>
-                    <Wrap border={"1px solid lightgrey"} p={3}>
-                        {filteredRecipes.length == 0 && <Text>Nothing to show</Text>}
-                        {filteredRecipes.map((recipe, index) => {
-                            return (
-                                <RelatedRecipeTag key={index} recipe={recipe}
-                                                  clickHandler={toggleRelatedRecipeSelect}
-                                                  relatedRecipes={relatedRecipes}/>
-                            )
-                        })}
-                    </Wrap>
-                </FormControl>
-                <Button type={"submit"} colorScheme="blue" disabled={isLoading}>{editing ? "Update Cookbook" : "Create Cookbook"}</Button>
-                <Button type="button" colorScheme="red" onClick={() => {
-                    navigate(-1)
-                }}>Cancel</Button>
-            </form>
-        </Box>
+        <Template>
+            <Box p={3}>
+                <Heading>{editing ? "Update Cookbook" : "Create Cookbook"}</Heading>
+                <form onSubmit={handleSubmit}>
+                    <FormControl mb={2}>
+                        <FormLabel mb={0}>Title</FormLabel>
+                        <Input type={"text"} ref={titleInputRef}/>
+                    </FormControl>
+                    <FormControl mb={2} mt={4}>
+                        <FormLabel mb={0}>Add Recipes</FormLabel>
+                        <Wrap my={relatedRecipes.length > 0 && 3}>
+                            {relatedRecipes.map((recipe, index) => {
+                                return <RelatedRecipeTag key={index} recipe={recipe} relatedRecipes={relatedRecipes}
+                                                         clickHandler={toggleRelatedRecipeSelect}/>
+                            })}
+                        </Wrap>
+                        <InputGroup>
+                            <Input placeholder="search for a recipe to link" onChange={handleSearch}
+                                   borderRadius={"none"}/>
+                            <InputLeftElement children={<Search2Icon/>}/>
+                        </InputGroup>
+                        <Wrap border={"1px solid lightgrey"} p={3}>
+                            {filteredRecipes.length == 0 && <Text>Nothing to show</Text>}
+                            {filteredRecipes.map((recipe, index) => {
+                                return (
+                                    <RelatedRecipeTag key={index} recipe={recipe}
+                                                      clickHandler={toggleRelatedRecipeSelect}
+                                                      relatedRecipes={relatedRecipes}/>
+                                )
+                            })}
+                        </Wrap>
+                    </FormControl>
+                    <Button type={"submit"} colorScheme="blue"
+                            disabled={isLoading}>{editing ? "Update Cookbook" : "Create Cookbook"}</Button>
+                    <Button type="button" colorScheme="red" onClick={() => {
+                        navigate(-1)
+                    }}>Cancel</Button>
+                </form>
+            </Box>
+        </Template>
     )
 }
 

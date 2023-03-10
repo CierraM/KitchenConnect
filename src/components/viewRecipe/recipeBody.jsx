@@ -1,9 +1,9 @@
 import {Text, Box, Heading, UnorderedList, ListItem, VStack, Flex, OrderedList} from "@chakra-ui/react";
 import RecipeCard from "../myRecipes/recipeCard";
+import List from "../myRecipes/list";
 
 
 const RecipeBody = ({recipe}) => {
-
     return (
         <Box my={3}>
             <Text fontStyle={"italic"}>
@@ -28,10 +28,7 @@ const RecipeBody = ({recipe}) => {
             </>}
             {recipe.related?.length > 0 && <>
                 <Heading as={"h3"} size={"sm"} mt={"3"}>Related:</Heading>
-                {recipe.related.map((recipe, key) => {
-                    return <RecipeCard item={recipe} key={key} type={"recipe"}/>
-                })}
-
+                <List items={recipe.related} type={"recipe"}></List>
             </>}
         </Box>
 

@@ -8,21 +8,33 @@ import {
     ModalCloseButton,
     ModalContent, ModalFooter,
     ModalHeader,
-    ModalOverlay, Spacer, Text, VStack
+    ModalOverlay, Spacer, Text, useToast, VStack
 } from "@chakra-ui/react";
 import {CloseIcon, Search2Icon} from "@chakra-ui/icons";
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import useHttp from "../../util/use-http";
 import {useNavigate} from "react-router-dom";
 
 
-
-const NewMemberModal = ({isOpen, onClose, groupInfo}) => {
+const NewMemberModal = ({isOpen, onClose, groupInfo, reload}) => {
     const navigate = useNavigate();
     const searchRef = useRef();
     const [members, setMembers] = useState({members: []})
     const [searchResults, setSearchResults] = useState({})
     const {isLoading, error, sendRequest} = useHttp();
+    const toast = useToast()
+
+    useEffect(() => {
+        if (error) {
+            toast({
+                title: "An error occurred.",
+                description: error,
+                status: "error",
+                duration: 9000,
+                isClosable: true,
+            })
+        }
+    })
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -38,7 +50,13 @@ const NewMemberModal = ({isOpen, onClose, groupInfo}) => {
             if (!error){
                 setMembers({members: []})
                 onClose()
-                navigate(0)
+                toast({
+                    title: "Members added.",
+                    description: "Members have been added to the group.",
+                    status: "success",
+                    duration: 9000,
+                    isClosable: true,
+                })
             }
         })
     }

@@ -37,7 +37,7 @@ const useHttp = () => {
 
             if (!response.ok) {
                 setError('Something went wrong!');
-                if (response.status === 401 || response.status === 403) {
+                if (!userToken && (response.status === 401 || response.status === 403)) {
                     console.log('Not authorized')
                     navigate('/login')
                 }

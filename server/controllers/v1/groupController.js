@@ -36,6 +36,7 @@ exports.createGroup = (req, res, next) => {
                 message: "unable to create group"
             })
         }
+        console.log(group)
         return res.status(201).json({
             message: "group created successfully",
             name: group.name,
