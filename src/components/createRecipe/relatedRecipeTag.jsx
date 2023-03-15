@@ -11,8 +11,8 @@ const RelatedRecipeTag = ({relatedRecipes, recipe, clickHandler}) => {
         <Button
             cursor="pointer"
             variant={"outline"}
-            borderColor={selected ? "orange.400" : "grey"}
-            color={selected ? "orange.400" : "black"}
+            borderColor={selected ? "accent.500" : "grey"}
+            color={selected ? "accent.500" : "black"}
             borderWidth={selected ? 2 : 1}
             borderRadius={0}
             my={3} mx={0}

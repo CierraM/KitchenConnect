@@ -1,15 +1,14 @@
-import {Flex, IconButton, Button, Spacer, Icon, useDisclosure} from "@chakra-ui/react";
+import {Flex, IconButton, Button, Spacer, Icon, useDisclosure, Link} from "@chakra-ui/react";
 import {ArrowBackIcon, DeleteIcon, EditIcon, ExternalLinkIcon} from "@chakra-ui/icons";
 import {useNavigate} from "react-router-dom";
 import {FaHeart, FaRegHeart} from "react-icons/fa";
 import {useState} from "react";
+import {Link as ReactRouterLink} from "react-router-dom";
 
 const ViewRecipeHeader = ({isFavorite, showShareModal}) => {
     const navigate = useNavigate();
     const [showAsFavorite, setShowAsFavorite] = useState(isFavorite)
-    const goBack = () => {
-        navigate(-1)
-    }
+
 
     const toggleFavorite = () => {
         setShowAsFavorite(!showAsFavorite)
@@ -17,7 +16,7 @@ const ViewRecipeHeader = ({isFavorite, showShareModal}) => {
     let favoriteIcon = showAsFavorite ? FaHeart : FaRegHeart;
     return (
         <Flex py={3}>
-            <Button aria-label={'back'} variant={"link"} onClick={goBack}><ArrowBackIcon/> Back </Button>
+            <Link aria-label={'back'} as={ReactRouterLink} to="/myRecipes"><ArrowBackIcon/> Back </Link>
             <Spacer></Spacer>
 
             <IconButton

@@ -7,6 +7,8 @@ import ViewRecipeHeader from "../components/viewRecipe/viewRecipeHeader";
 import ViewRecipeTitle from "../components/viewRecipe/viewRecipeTitle";
 import RecipeBody from "../components/viewRecipe/recipeBody";
 import ShareModal from "../components/ui/shareModal";
+import {userTokenAtom} from "../store/atoms";
+import {useAtom} from "jotai";
 
 const ViewRecipe = () => {
 
@@ -15,6 +17,7 @@ const ViewRecipe = () => {
     const [recipe, setRecipe] = useState({})
     const {isOpen, onOpen, onClose} = useDisclosure()
     const [groups, setGroups] = useState([])
+    const [userToken, setUserToken] = useAtom(userTokenAtom);
     const toast = useToast()
 
     const shareRecipeWithGroupHandler = (groups) => {
@@ -53,15 +56,17 @@ const ViewRecipe = () => {
         }, response => {
             if (!error) {
                 setRecipe(response.recipe)
-                sendRequest({
-                    url: `${process.env.REACT_APP_SERVER_URL}/group/userGroups`,
-                    method: 'GET',
-                    headers: {'Content-Type': 'application/json'}
-                }, response => {
-                    if (!error) {
-                        setGroups(response.groups)
-                    }
-                })
+                if (userToken) {
+                    sendRequest({
+                        url: `${process.env.REACT_APP_SERVER_URL}/group/userGroups`,
+                        method: 'GET',
+                        headers: {'Content-Type': 'application/json'}
+                    }, response => {
+                        if (!error) {
+                            setGroups(response.groups)
+                        }
+                    })
+                }
             }
         })
     }, [error, id, sendRequest, setGroups])
@@ -91,7 +96,7 @@ const ViewRecipe = () => {
     return (
         <Template>
             <ViewRecipeHeader isFavorite={recipe.isFavorite} showShareModal={onOpen}/>
-            <ViewRecipeTitle title={recipe.title} id={id}/>
+            <ViewRecipeTitle title={recipe.title} id={id} isOwner={recipe.isOwner}/>
             <RecipeBody recipe={recipe}/>
             <ShareModal
                 isOpen={isOpen}

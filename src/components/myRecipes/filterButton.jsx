@@ -32,7 +32,13 @@ const FilterSection = ({tags, filterHandler}) => {
             {tags?.map((tag, index) => {
                 if (!showAll) {
                     if (index == 5) {
-                        return <Tag cursor="pointer" key="-1" onClick={setShowAll} colorScheme={"orange"} variant={"outline"}>...</Tag>
+                        return <Tag
+                            cursor="pointer"
+                            key="-1"
+                            onClick={setShowAll}
+                            colorScheme={"accent"}
+                            variant={"outline"}
+                        >...</Tag>
                     }
                     else if (index > 5) {
                         return;

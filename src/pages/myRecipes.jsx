@@ -6,7 +6,7 @@ import {useState, useEffect, useCallback} from "react";
 import useHttp from "../util/use-http";
 import NewButton from "../components/myRecipes/newButton";
 import SortAndFilter from "../components/myRecipes/sortAndFilter";
-import {Box, Heading} from "@chakra-ui/react";
+import {Box, Heading, useToast} from "@chakra-ui/react";
 
 
 const MyRecipes = () => {
@@ -17,6 +17,7 @@ const MyRecipes = () => {
     const [filteredRecipes, setFilteredRecipes] = useState({recipes: []})
     const [displayRecipes, setDisplayRecipes] = useState([{heading: '', recipes: []}])
     const [sortType, setSortType] = useState("asc")
+    const toast = useToast()
 
     //Get recipes from server
     useEffect(() => {
@@ -100,14 +101,26 @@ const MyRecipes = () => {
         }
     }
 
+    useEffect(() => {
+        if (error) {
+            toast({
+                title: "Error",
+                description: "Something went wrong",
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+            })
+        }
+    }, [error, toast])
+
 
     const recipeTabContent = (
         <>
             <SortAndFilter tags={tags} filterHandler={filterDisplayRecipesByTags} sortHandler={setSortType}/>
             {displayRecipes.map((r, index) => {
                 return (
-                    <Box key={index}>
-                        <Heading>{r.heading}</Heading>
+                    <Box key={index} mb={4} >
+                        <Heading color={"main.500"} fontSize="lg">{r.heading}</Heading>
                         <List items={r.recipes} type={"recipe"}/>
                     </Box>
                 )

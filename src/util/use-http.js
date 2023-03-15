@@ -52,7 +52,7 @@ const useHttp = () => {
             console.log(err)
         }
         setIsLoading(false);
-    }, []);
+    }, [userToken]);
     return {
         isLoading: isLoading,
         error: error,

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const isAuth = require('../../auth/auth')
+const {isAuth} = require('../../auth/auth')
 const { validationResult } = require('express-validator');
 
 const Cookbook = require('../../models/cookbookSchema');
@@ -8,6 +8,7 @@ const Group = require('../../models/groupSchema');
 const {
     permissionToViewRecipe,
 } = require('../../helpers/helpers');
+const {getToken} = require("../../auth/getToken");
 
 exports.createRecipe = (req, res, next) => {
     const errors = validationResult(req)
@@ -19,7 +20,6 @@ exports.createRecipe = (req, res, next) => {
         })
     }
     const userId = req.userId;
-    console.log('Attempting create recipe')
     if (!userId) {
         return res.status(401).json({
             message: "You must be logged in to create a recipe."
@@ -42,19 +42,18 @@ exports.createRecipe = (req, res, next) => {
             readonly: req.body.groupPermissions?.readonly
         }
     }
-    console.log(recipe)
     const cookbookIds = req.body.cookbookIds || [];
 
     Recipe.create(recipe)
-        .then(recipe => {
+        .then(async recipe => {
             if (!recipe) {
                 return res.status(500).json({
                     message: "Recipe was not able to be saved."
                 })
             }
             //add recipe to each cookbook
-            cookbookIds.forEach(cb => {
-                Cookbook.findOneAndUpdate({ _id: cb }, {
+             await cookbookIds.forEach(async cb => {
+               await  Cookbook.findOneAndUpdate({ _id: cb }, {
                     '$push': { recipes: recipe }
                 })
             })
@@ -82,6 +81,7 @@ exports.getRecipeById = (req, res, next) => {
                 })
             }
 
+
             if (recipe.private) {
                 //check for JWT and get userId
                 isAuth(req, res, () => {
@@ -92,8 +92,11 @@ exports.getRecipeById = (req, res, next) => {
                     }
                     return;
                 })
-
             }
+            const userId = getToken(req);
+
+            const isOwner = recipe.userPermissions.owner.toString() === userId?.toString();
+
 
             return res.status(200).json({
                 recipe: {
@@ -123,7 +126,8 @@ exports.getRecipeById = (req, res, next) => {
                             })
                         }
                     }),
-                    private: recipe.private
+                    private: recipe.private,
+                    isOwner: isOwner
                 }
             })
         }).catch(err => {

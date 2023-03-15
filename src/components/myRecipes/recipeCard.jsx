@@ -8,9 +8,16 @@ const RecipeCard = ({item, type, showTags = false}) => {
               _hover={{textDecoration: "none", shadow: "md"}}>
             <Card shadow={"sm"} variant={"outline"}>
                 <CardBody>
-                    <Text>{item.title}</Text>
+                    <Text fontWeight={"bold"}>{item.title}</Text>
                     {showTags && item.tags.map((tag, index) => {
-                        return <Tag key={index}>{tag}</Tag>
+                        return <Tag
+                            key={index}
+                            variant={"outline"}
+                            colorScheme="accent"
+                            mr={.5}
+                            mt={.5}
+                            borderRadius={"full"}
+                        >{tag}</Tag>
                     })}
                 </CardBody>
             </Card>

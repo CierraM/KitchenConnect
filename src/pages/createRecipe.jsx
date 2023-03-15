@@ -119,6 +119,13 @@ const CreateRecipe = ({editing}) => {
                 headers: {'Content-Type': 'application/json'}
             }, (result) => {
                 if (!error) {
+                    toast({
+                        title: "Success!",
+                        description: "Recipe Successfully Updated",
+                        status: "success",
+                        duration: 9000,
+                        isClosable: true,
+                    })
                     navigate(`/recipe/${id}`)
                 }
             })
@@ -288,7 +295,7 @@ const CreateRecipe = ({editing}) => {
                     </FormControl>
 
                     {
-                        cookbooks.length > 0 &&
+                        !editing &&
                         <FormControl mb={2}>
                             <FormLabel mb={0}>Add to a Cookbook</FormLabel>
                             <CheckboxGroup onChange={setSelectedCookbooks}>

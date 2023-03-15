@@ -50,8 +50,8 @@ const SignupForm = () => {
             username: usernameInputRef.current.value,
             password: passwordInputRef.current.value,
             email: emailInputRef.current.value,
-            firstName: firstNameInputRef.current.value,
-            lastName: lastNameInputRef.current.value
+            // firstName: firstNameInputRef.current.value,
+            // lastName: lastNameInputRef.current.value
         }
         sendRequest({
             url: `${process.env.REACT_APP_SERVER_URL}/user/signup`,
@@ -108,18 +108,18 @@ const SignupForm = () => {
                      justifyContent='center'
                      textAlign='center'>
                     <Heading mb={'lg'}>Create Your Account</Heading>
-                    <Box m={3}>
-                        <FormControl>
-                            <FormLabel mb={0}> First Name </FormLabel>
-                            <Input placeholder='John' ref={firstNameInputRef}/>
-                        </FormControl>
-                    </Box>
-                    <Box m={3}>
-                        <FormControl>
-                            <FormLabel mb={0}> Last Name </FormLabel>
-                            <Input placeholder='Doe' ref={lastNameInputRef}/>
-                        </FormControl>
-                    </Box>
+                    {/*<Box m={3}>*/}
+                    {/*    <FormControl>*/}
+                    {/*        <FormLabel mb={0}> First Name </FormLabel>*/}
+                    {/*        <Input placeholder='John' ref={firstNameInputRef}/>*/}
+                    {/*    </FormControl>*/}
+                    {/*</Box>*/}
+                    {/*<Box m={3}>*/}
+                    {/*    <FormControl>*/}
+                    {/*        <FormLabel mb={0}> Last Name </FormLabel>*/}
+                    {/*        <Input placeholder='Doe' ref={lastNameInputRef}/>*/}
+                    {/*    </FormControl>*/}
+                    {/*</Box>*/}
                     <Box m={3}>
                         <FormControl isRequired isInvalid={duplicateUserError}>
                             <FormLabel mb={0}> Email </FormLabel>

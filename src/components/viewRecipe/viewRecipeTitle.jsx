@@ -4,27 +4,31 @@ import {Link as ReactRouterLink} from "react-router-dom";
 import DeleteDialog from "../ui/deleteDialog";
 
 
-const ViewRecipeTitle = ({title, id}) => {
+const ViewRecipeTitle = ({title, id, isOwner}) => {
     const {isOpen, onOpen, onClose} = useDisclosure()
     return (
         <>
             <Flex my={3} alignItems={"center"}>
                 <Heading as={"h2"}>{title}</Heading>
-                <IconButton
-                    size={"md"}
-                    aria-label={'delete'}
-                    icon={<DeleteIcon/>}
-                    colorScheme={"red"}
-                    variant={"link"}
-                    onClick={onOpen}/>
-                <Link as={ReactRouterLink} to={'./edit'}>
-                    <IconButton
-                        size={"md"}
-                        aria-label={'edit'}
-                        icon={<EditIcon/>}
-                        variant={"link"}
-                    />
-                </Link>
+                {isOwner &&
+                    <>
+                        <IconButton
+                            size={"md"}
+                            aria-label={'delete'}
+                            icon={<DeleteIcon/>}
+                            colorScheme={"red"}
+                            variant={"link"}
+                            onClick={onOpen}/>
+                        <Link as={ReactRouterLink} to={'./edit'}>
+                            <IconButton
+                                size={"md"}
+                                aria-label={'edit'}
+                                icon={<EditIcon/>}
+                                variant={"link"}
+                            />
+                        </Link>
+                    </>
+                }
             </Flex>
             <DeleteDialog
                 isOpen={isOpen}

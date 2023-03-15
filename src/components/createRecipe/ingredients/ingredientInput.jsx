@@ -6,6 +6,13 @@ import {useState} from "react";
 const IngredientInput = ({addIngredient}) => {
     const [inputValue, setInputValue] = useState("");
 
+    const keyUpHandler = (e) => {
+        if (e.key === 'Enter') {
+            submit()
+            e.stopPropagation()
+        }
+    }
+
     const submit = () => {
         addIngredient(inputValue);
         setInputValue('')
@@ -13,7 +20,12 @@ const IngredientInput = ({addIngredient}) => {
 
     return (
         <Flex>
-            <Input value={inputValue} onChange={e => {setInputValue(e.target.value)}}/>
+            <Input
+                value={inputValue}
+                onChange={e => {setInputValue(e.target.value)}}
+                onBlur={submit}
+                onKeyUp={keyUpHandler}
+            />
             <IconButton aria-label={'add ingredient'} icon={<AddIcon/>} onClick={submit} />
         </Flex>
     )

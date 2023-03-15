@@ -10,17 +10,17 @@ const RecipeBrowser = ({recipeTabContent, cookbookTabContent, defaultIndex, chil
 
     return (
         <>
-            <Tabs colorScheme={"orange"} defaultIndex={defaultIndex}>
+            <Tabs colorScheme={"accent.500"} defaultIndex={defaultIndex} h={"full"}>
                 <TabList>
                     <Tab>Recipes</Tab>
                     <Tab>Cookbooks</Tab>
                     <Spacer/>
                 </TabList>
-                <TabPanels>
-                    <TabPanel>
+                <TabPanels bg={"secondary.500"} h={"full"}>
+                    <TabPanel h={"full"}>
                         {recipeTabContent}
                     </TabPanel>
-                    <TabPanel>
+                    <TabPanel h={"full"}>
                         {cookbookTabContent}
                     </TabPanel>
                 </TabPanels>

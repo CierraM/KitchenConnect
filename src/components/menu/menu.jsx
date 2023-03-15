@@ -29,6 +29,7 @@ const Menu = () => {
 
     useEffect(() => {
         if (userToken) {
+            console.log(userToken)
             sendRequest({
                 url: `${process.env.REACT_APP_SERVER_URL}/group/userGroups`,
                 headers: {'Content-Type': 'application/json'}

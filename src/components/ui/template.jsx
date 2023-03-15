@@ -51,8 +51,8 @@ const Template = ({children}) => {
     }
 
     return (
-        <Box p={3} h={"100%"}>
-            <HStack align="top">
+        <Flex p={0} h={"100%"} minH={"100vh"} flexDir={"column"}>
+            <HStack align="top" p={3}>
                 <Menu/>
                 <Flex w={"full"} flexDirection={"column"}>
                     <SearchBar searchHandler={searchHandler}/>
@@ -80,7 +80,9 @@ const Template = ({children}) => {
                                                 textDecoration: "none",
                                                 fontWeight: "bold"
                                             }}
-                                            onClick={() => {setFilteredRecipes([])}}
+                                            onClick={() => {
+                                                setFilteredRecipes([])
+                                            }}
                                         >
                                             {recipe.title}
                                             <Wrap my={1}>
@@ -97,8 +99,10 @@ const Template = ({children}) => {
                     </Box>
                 </Flex>
             </HStack>
-            {children}
-        </Box>
+            <Box flexGrow={1} h={"full"}>
+                {children}
+            </Box>
+        </Flex>
     )
 }
 

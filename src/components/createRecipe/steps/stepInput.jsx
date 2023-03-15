@@ -6,6 +6,13 @@ import {useState} from "react";
 const StepInput = ({addStep}) => {
     const [inputValue, setInputValue] = useState("");
 
+    const keyUpHandler = (e) => {
+        if (e.key === 'Enter') {
+            submit()
+            e.stopPropagation()
+        }
+    }
+
     const submit = () => {
         addStep(inputValue);
         setInputValue('')
@@ -13,7 +20,12 @@ const StepInput = ({addStep}) => {
 
     return (
         <Flex>
-            <Textarea value={inputValue} onChange={e => {setInputValue(e.target.value)}}/>
+            <Textarea
+                value={inputValue}
+                onChange={e => {setInputValue(e.target.value)}}
+                onBlur={submit}
+                onKeyUp={keyUpHandler}
+            />
             <IconButton aria-label={'add step'} icon={<AddIcon/>} onClick={submit} />
         </Flex>
     )
