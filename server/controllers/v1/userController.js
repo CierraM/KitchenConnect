@@ -259,6 +259,7 @@ exports.getUserFavorites = (req, res, next) => {
             return res.status(200).json({
                 favorites: user.favoriteRecipes.map(r => {
                     return {
+                        _id: r._id,
                         title: r.title,
                         description: r.description,
                         image: r.image,
@@ -427,14 +428,13 @@ exports.updateUser = (req, res, next) => {
         })
     }
 
-    delete changes["hashedPassword"]
+    // delete changes["hashedPassword"]
 
     if (!userId) {
         return res.status(401).json({
             message: "you must be logged in to update a user"
         })
     }
-
     User.findById(userId).then(user => {
         user.updateOne(changes).then(update => {
             return res.status(200).json({

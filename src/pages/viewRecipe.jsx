@@ -14,6 +14,7 @@ const ViewRecipe = () => {
 
     const {id} = useParams()
     const {isLoading, error, sendRequest} = useHttp()
+    const {isLoading: favoriteIsLoading, error: favoriteError, sendRequest: sendFavoriteRequest} = useHttp()
     const [recipe, setRecipe] = useState({})
     const {isOpen, onOpen, onClose} = useDisclosure()
     const [groups, setGroups] = useState([])
@@ -57,6 +58,19 @@ const ViewRecipe = () => {
             if (!error) {
                 setRecipe(response.recipe)
                 if (userToken) {
+                    //get user favorites
+                    sendFavoriteRequest({
+                        url: `${process.env.REACT_APP_SERVER_URL}/user/favorites`,
+                        method: 'GET',
+                        headers: {'Content-Type': 'application/json'}
+                    }, response => {
+                        if (!error) {
+                            setRecipe(prevState => ({
+                                ...prevState,
+                                isFavorite: response.favorites.map(r => r._id).includes(id)
+                            }))
+                        }
+                    })
                     sendRequest({
                         url: `${process.env.REACT_APP_SERVER_URL}/group/userGroups`,
                         method: 'GET',
@@ -93,9 +107,37 @@ const ViewRecipe = () => {
             </Template>
         )
     }
+
+    const toggleFavorite = () => {
+        let body = {}
+        if (recipe.isFavorite) {
+            body = {
+                '$pull': { favoriteRecipes: recipe._id }
+            }
+        } else {
+            body = {
+                '$push': { favoriteRecipes: recipe._id }
+            }
+        }
+            sendFavoriteRequest({
+            url: `${process.env.REACT_APP_SERVER_URL}/user/update`,
+            method: 'PATCH',
+            headers: {'Content-Type': 'application/json'},
+            body: {
+                changes: body
+            }
+        }, response => {
+            if (!error) {
+                setRecipe(prevState => ({
+                    ...prevState,
+                    isFavorite: !prevState.isFavorite
+                }))
+            }
+        }) }
+
     return (
         <Template>
-            <ViewRecipeHeader isFavorite={recipe.isFavorite} showShareModal={onOpen}/>
+            <ViewRecipeHeader isFavorite={recipe.isFavorite} showShareModal={onOpen} toggleFavorite={toggleFavorite} favoriteLoading={favoriteIsLoading}/>
             <ViewRecipeTitle title={recipe.title} id={id} isOwner={recipe.isOwner}/>
             <RecipeBody recipe={recipe}/>
             <ShareModal
