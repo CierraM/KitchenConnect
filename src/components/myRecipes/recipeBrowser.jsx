@@ -4,9 +4,10 @@ import SortButton from "./sortButton";
 import FilterSection from "./filterButton";
 import List from "./list";
 import NewButton from "./newButton";
+import FavoritesButton from "./favoritesButton";
 
 
-const RecipeBrowser = ({recipeTabContent, cookbookTabContent, defaultIndex, children}) => {
+const RecipeBrowser = ({recipeTabContent, cookbookTabContent, defaultIndex, children, showFavorites}) => {
 
     return (
         <>
@@ -15,6 +16,7 @@ const RecipeBrowser = ({recipeTabContent, cookbookTabContent, defaultIndex, chil
                     <Tab>Recipes</Tab>
                     <Tab>Cookbooks</Tab>
                     <Spacer/>
+                    {showFavorites && <FavoritesButton/>}
                 </TabList>
                 <TabPanels bg={"secondary.500"} h={"full"}>
                     <TabPanel h={"full"}>

@@ -73,6 +73,7 @@ const Menu = () => {
                         <Flex flexDirection={"column"}>
 
                             <Link as={ReactRouterLink} to={"/"}>My Recipes</Link>
+                            <Link as={ReactRouterLink} to={"/favorites"}>Favorites</Link>
                             <Heading size={"sm"} fontWeight={"medium"} pt={2}>Groups:</Heading>
                             {/*<Link as={ReactRouterLink} to={"/myCookbooks"}>My Cookbooks</Link>*/}
                             <UnorderedList listStyleType={"none"}>

@@ -17,6 +17,7 @@ import CreateGroup from "./pages/createGroup";
 import ViewGroup from "./pages/viewGroup";
 import {useAtom} from "jotai";
 import {userTokenAtom} from "./store/atoms";
+import Favorites from "./pages/favorites";
 
 function App() {
     const theme = extendTheme({
@@ -62,6 +63,7 @@ function App() {
                         <Route path="/cookbook/:id/edit" element={<CreateCookbook editing={true}/>}/>
                         <Route path={"/recipe/:id/edit"} element={<CreateRecipe editing={true}/>}/>
                         <Route path="/group/:id" element={<ViewGroup/>}/>
+                        <Route path="/favorites" element={<Favorites/>}/>
                         <Route path="/" element={<MyRecipes/>}/>
                         <Route path="*" element={<MyRecipes/>}/>
 

@@ -266,6 +266,7 @@ exports.getUserFavorites = (req, res, next) => {
                         ingredients: r.ingredients,
                         steps: r.steps,
                         notes: r.notes,
+                        tags: r.tags,
                         related: r.related,
                         private: r.private,
                         owner: r.userPermissions.owner

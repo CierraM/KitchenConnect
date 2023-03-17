@@ -133,7 +133,12 @@ const MyRecipes = () => {
     )
     return (
         <Template>
-            <RecipeBrowser recipeTabContent={recipeTabContent} cookbookTabContent={cookbookTabContent} defaultIndex={0}>
+            <RecipeBrowser
+                recipeTabContent={recipeTabContent}
+                cookbookTabContent={cookbookTabContent}
+                defaultIndex={0}
+                showFavorites={true}
+            >
                 <NewButton/>
             </RecipeBrowser>
         </Template>

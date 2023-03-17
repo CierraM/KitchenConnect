@@ -94,7 +94,7 @@ const SignupForm = () => {
                 isClosable: true,
             })
         }
-    })
+    }, [error])
 
     //TODO: field validation
     return (
