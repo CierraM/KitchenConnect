@@ -177,6 +177,18 @@ const CreateRecipe = ({editing}) => {
         setIngredients({ingredients: result})
     }
 
+    const editIngredient =  (ingredient, index) => {
+        let temp = ingredients.ingredients;
+        temp[index] = ingredient
+        setIngredients({ingredients: temp})
+    }
+
+    const editStep = (step, index) => {
+        let temp = steps.steps;
+        temp[index] = step
+        setSteps({steps: temp})
+    }
+
     const addStep = (step) => {
         if (!step) {
             return;
@@ -251,12 +263,12 @@ const CreateRecipe = ({editing}) => {
                     <FormControl mb={2}>
                         <FormLabel mb={0}>Ingredients</FormLabel>
                         <Ingredients addIngredient={addIngredient} removeIngredient={removeIngredient}
-                                     ingredients={ingredients.ingredients}/>
+                                     ingredients={ingredients.ingredients} editIngredient={editIngredient}/>
                     </FormControl>
 
                     <FormControl mb={2}>
                         <FormLabel mb={0}>Steps</FormLabel>
-                        <Steps addStep={addStep} removeStep={removeStep} steps={steps.steps}/>
+                        <Steps addStep={addStep} removeStep={removeStep} steps={steps.steps} editStep={editStep}/>
                     </FormControl>
 
 

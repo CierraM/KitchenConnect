@@ -1,12 +1,12 @@
-import {Flex, IconButton, ListItem, OrderedList, Spacer, TagCloseButton, Text, Tag} from "@chakra-ui/react";
+import {Flex, IconButton, ListItem, OrderedList, Spacer, TagCloseButton, Text, Tag, Wrap} from "@chakra-ui/react";
 import {SmallCloseIcon} from "@chakra-ui/icons";
 
 
 const TagList = ({tags, removeTag}) => {
-    return (<>
+    return (<Wrap mt={2}>
             {tags.map((tag, index) => {
                 return (
-                    <Tag key={index} mr={2} mt={2} colorScheme="primary">
+                    <Tag key={index} mr={2} colorScheme="primary">
                         <Flex alignItems={"center"}>
                             <Text>{tag}</Text>
                             <Spacer/>
@@ -17,7 +17,7 @@ const TagList = ({tags, removeTag}) => {
                     </Tag>
                 )
             })}
-        </>
+        </Wrap>
     )
 }
 

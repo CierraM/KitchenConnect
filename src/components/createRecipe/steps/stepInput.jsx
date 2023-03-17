@@ -1,4 +1,4 @@
-import {Flex, FormControl, IconButton, Input, Textarea} from "@chakra-ui/react";
+import {Flex, FormControl, IconButton, Input, InputGroup, InputRightAddon, Textarea} from "@chakra-ui/react";
 import {AddIcon} from "@chakra-ui/icons";
 import {useState} from "react";
 
@@ -20,7 +20,7 @@ const StepInput = ({addStep}) => {
     }
 
     return (
-        <Flex alignItems={"start"}>
+        <InputGroup >
             <Textarea
                 value={inputValue}
                 onChange={e => {setInputValue(e.target.value)}}
@@ -29,14 +29,16 @@ const StepInput = ({addStep}) => {
                 size={"sm"}
                 height={"40px"}
             />
-            <IconButton
-                aria-label={'add step'}
-                icon={<AddIcon/>}
-                onClick={submit}
-                variant={'link'}
-                color={"primary.500"}
-            />
-        </Flex>
+            <InputRightAddon bg={'none'} height={''}>
+                <IconButton
+                    aria-label={'add step'}
+                    icon={<AddIcon/>}
+                    onClick={submit}
+                    variant={'link'}
+                    color={"primary.500"}
+                />
+            </InputRightAddon>
+        </InputGroup>
     )
 }
 

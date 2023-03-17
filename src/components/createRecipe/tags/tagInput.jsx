@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {Flex, IconButton, Input, Textarea} from "@chakra-ui/react";
+import {Flex, IconButton, Input, InputGroup, InputRightAddon, Textarea} from "@chakra-ui/react";
 import {AddIcon} from "@chakra-ui/icons";
 
 
@@ -20,7 +20,7 @@ const TagInput = ({addTag}) => {
     }
 
     return (
-        <Flex>
+        <InputGroup>
             <Input
                 value={inputValue}
                 onChange={e => {
@@ -29,14 +29,16 @@ const TagInput = ({addTag}) => {
                 onBlur={submit}
                 onKeyDown={keyUpHandler}
             />
-            <IconButton
-                aria-label={'add step'}
-                icon={<AddIcon/>}
-                onClick={submit}
-                variant={'link'}
-                color={"primary.500"}
-            />
-        </Flex>
+            <InputRightAddon bg={'none'}>
+                <IconButton
+                    aria-label={'add step'}
+                    icon={<AddIcon/>}
+                    onClick={submit}
+                    variant={'link'}
+                    color={"primary.500"}
+                />
+            </InputRightAddon>
+        </InputGroup>
     )
 }
 
