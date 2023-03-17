@@ -1,5 +1,5 @@
 import Template from "../components/ui/template";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import useHttp from "../util/use-http";
 import {useEffect, useState} from "react";
 import {Flex, Heading, Spinner, useDisclosure, useToast} from '@chakra-ui/react'
@@ -19,7 +19,8 @@ const ViewRecipe = () => {
     const {isOpen, onOpen, onClose} = useDisclosure()
     const [groups, setGroups] = useState([])
     const [userToken, setUserToken] = useAtom(userTokenAtom);
-    const toast = useToast()
+    const toast = useToast();
+    const navigate = useNavigate();
 
     const shareRecipeWithGroupHandler = (groups) => {
         groups.forEach(group => {
@@ -50,6 +51,9 @@ const ViewRecipe = () => {
 
     //Get recipe
     useEffect(() => {
+        if (id == 'undefined') {
+            navigate('/error')
+        }
         sendRequest({
             url: `${process.env.REACT_APP_SERVER_URL}/recipe/${id}`,
             method: 'GET',

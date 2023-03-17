@@ -76,6 +76,7 @@ const CreateGroup = () => {
     }
 
     const handleSearch = (e) => {
+        e.preventDefault()
         const query = e.target.value;
         if (!query) {
             setSearchResults({searchResults: []})
@@ -131,8 +132,8 @@ const CreateGroup = () => {
                                 ref={searchRef}
                                 placeholder="search by username"
                                 borderRadius={"none"}
-                                onKeyDown={(e) => {
-                                    e.key === 'Enter' && e.preventDefault(handleSearch(e));
+                                onChange={(e) => {
+                                    handleSearch(e);
                                 }}
                             />
                             <InputLeftElement children={<Search2Icon/>}/>
@@ -168,12 +169,28 @@ const CreateGroup = () => {
                             })}
                         </VStack>
                     </FormControl>
-                    <Box mt={5}>
-                        <Button type={"submit"} colorScheme="blue" disabled={isLoading} mr={3}>Create Group</Button>
-                        <Button type="button" colorScheme="red" onClick={() => {
-                            navigate(-1)
-                        }}>Cancel</Button>
-                    </Box>
+                    <Flex justifyContent={"flex-end"}>
+                        <Button
+                            type="button"
+                            colorScheme="grey"
+                            variant={'outline'}
+                            mr={3}
+                            onClick={() => {
+                                navigate(-1)
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            type={"submit"}
+                            colorScheme="blue"
+                            disabled={isLoading}
+                            isLoading={isLoading}
+                        >
+                            Create Group
+                        </Button>
+
+                    </Flex>
                 </form>
             </Box>
         </Template>

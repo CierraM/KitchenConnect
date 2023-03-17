@@ -8,8 +8,8 @@ const TagInput = ({addTag}) => {
 
     const keyUpHandler = (e) => {
         if (e.key === 'Enter') {
-            submit()
             e.stopPropagation()
+            submit()
         }
     }
 
@@ -26,7 +26,13 @@ const TagInput = ({addTag}) => {
                 onBlur={submit}
                 onKeyUp={keyUpHandler}
             />
-            <IconButton aria-label={'add step'} icon={<AddIcon/>} onClick={submit} />
+            <IconButton
+                aria-label={'add step'}
+                icon={<AddIcon/>}
+                onClick={submit}
+                variant={'link'}
+                color={"primary.500"}
+            />
         </Flex>
     )
 }

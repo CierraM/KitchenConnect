@@ -11,14 +11,14 @@ const RecipeBrowser = ({recipeTabContent, cookbookTabContent, defaultIndex, chil
 
     return (
         <>
-            <Tabs colorScheme={"accent.500"} defaultIndex={defaultIndex} h={"full"}>
+            <Tabs colorScheme={"accent.500"} defaultIndex={defaultIndex} h={"full"} colorScheme="primary">
                 <TabList>
                     <Tab>Recipes</Tab>
                     <Tab>Cookbooks</Tab>
                     <Spacer/>
                     {showFavorites && <FavoritesButton/>}
                 </TabList>
-                <TabPanels bg={"secondary.500"} h={"full"}>
+                <TabPanels h={"full"}>
                     <TabPanel h={"full"}>
                         {recipeTabContent}
                     </TabPanel>

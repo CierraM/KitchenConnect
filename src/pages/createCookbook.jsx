@@ -1,7 +1,7 @@
 import Template from "../components/ui/template";
 import {
     Box,
-    Button,
+    Button, Flex,
     FormControl,
     FormLabel,
     Heading,
@@ -176,11 +176,29 @@ const CreateCookbook = ({editing}) => {
                             })}
                         </Wrap>
                     </FormControl>
-                    <Button type={"submit"} colorScheme="blue"
-                            disabled={isLoading}>{editing ? "Update Cookbook" : "Create Cookbook"}</Button>
-                    <Button type="button" colorScheme="red" onClick={() => {
-                        navigate(-1)
-                    }}>Cancel</Button>
+                    <Flex justifyContent={'flex-end'}>
+                        <Button
+                            type="button"
+                            colorScheme="grey"
+                            variant={"outline"}
+                            mr={3}
+                            onClick={() => {
+                                navigate(-1)
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            type={"submit"}
+                            colorScheme="blue"
+                            disabled={isLoading}
+                            isLoading={isLoading}
+                        >
+                            {editing ? "Update Cookbook" : "Create Cookbook"}
+                        </Button>
+
+                    </Flex>
+
                 </form>
             </Box>
         </Template>

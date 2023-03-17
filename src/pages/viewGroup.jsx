@@ -31,6 +31,12 @@ const ViewGroup = () => {
     const {isOpen, onOpen, onClose} = useDisclosure()
     const navigate = useNavigate();
 
+    useEffect(() => {
+        if (id == undefined) {
+            navigate('/error')
+        }
+    })
+
     const getGroupRecipes = () => {
         sendRequest({
             url: `${process.env.REACT_APP_SERVER_URL}/group/${id}/getRecipes`,

@@ -1,18 +1,21 @@
-import {Alert, AlertDescription, AlertIcon, AlertTitle, Link} from "@chakra-ui/react";
+import {Alert, AlertDescription, AlertIcon, AlertTitle, Button, Link} from "@chakra-ui/react";
 import {Link as ReactRouterLink, useNavigate} from 'react-router-dom'
 
 const ErrorPage = () => {
-    const navigate = useNavigate();
     return (
         <>
-            <Button onClick={() => navigate(-1)}>Back</Button>
+
             <Alert status='error'>
                 <AlertIcon/>
-                <AlertTitle>Your browser is outdated!</AlertTitle>
-                <AlertDescription>Your Chakra experience may be degraded.</AlertDescription>
+                <AlertTitle>Something went wrong! Sorry for the inconvenience.</AlertTitle>
+                <Link as={ReactRouterLink} to='/'>
+                    <Button colorScheme="red">
+                        Go back home
+                    </Button>
+                </Link>
             </Alert>
         </>
-)
+    )
 }
 
 export default ErrorPage

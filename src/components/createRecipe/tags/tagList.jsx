@@ -6,7 +6,7 @@ const TagList = ({tags, removeTag}) => {
     return (<>
             {tags.map((tag, index) => {
                 return (
-                    <Tag key={index} mr={2} mt={2}>
+                    <Tag key={index} mr={2} mt={2} colorScheme="primary">
                         <Flex alignItems={"center"}>
                             <Text>{tag}</Text>
                             <Spacer/>

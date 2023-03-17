@@ -7,7 +7,7 @@ const CustomCheckbox = ({label, ...radioProps}) => {
             <input {...getInputProps({})} hidden />
             <Tag
                 {...getCheckboxProps()}
-                colorScheme='accent'
+                colorScheme='primary'
                 variant={state.isChecked ? 'solid' : 'outline' }
                 borderRadius={"full"}>
                 {label}

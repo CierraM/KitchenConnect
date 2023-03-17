@@ -6,14 +6,14 @@ const RecipeCard = ({item, type, showTags = false}) => {
     return (
         <Link as={ReactRouterLink} to={`/${type}/${item?._id}`} w={"full"}
               _hover={{textDecoration: "none", shadow: "md"}}>
-            <Card shadow={"sm"} variant={"outline"}>
+            <Card shadow={"md"} variant={"outline"} colorScheme="primary" >
                 <CardBody>
                     <Text fontWeight={"bold"}>{item?.title}</Text>
                     {showTags && item?.tags.map((tag, index) => {
                         return <Tag
                             key={index}
                             variant={"outline"}
-                            colorScheme="accent"
+                            colorScheme="primary"
                             mr={2}
                             mt={.5}
                             borderRadius={"full"}

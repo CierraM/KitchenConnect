@@ -18,10 +18,11 @@ const NewButton = () => {
                 bottom={0}
                 right={0}
                 as={Button}
-                shadow={"lg"}
+                shadow={"xl"}
                 m={"5"}
                 _hover={{shadow: "sm"}}
                 rightIcon={<AddIcon/>}
+                colorScheme={"primary"}
             >
                 New
             </MenuButton>

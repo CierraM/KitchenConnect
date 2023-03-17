@@ -4,7 +4,7 @@ import FilterSection from "../components/myRecipes/filterButton";
 import List from "../components/myRecipes/list";
 import CookbookTab from "../components/viewCookbook/cookbookTab";
 import {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import useHttp from "../util/use-http";
 import NewButton from "../components/myRecipes/newButton";
 import {useToast} from "@chakra-ui/react";
@@ -15,6 +15,13 @@ const ViewCookbook = () => {
     const {isLoading, error, sendRequest} = useHttp()
     const [cookbook, setCookbook] = useState({})
     const [recipes, setRecipes] = useState({})
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (id == undefined) {
+            navigate('/error')
+        }
+    })
 
     useEffect(() => {
         sendRequest({

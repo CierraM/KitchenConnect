@@ -36,7 +36,7 @@ const FilterSection = ({tags, filterHandler}) => {
                             cursor="pointer"
                             key="-1"
                             onClick={setShowAll}
-                            colorScheme={"accent"}
+                            colorScheme={"primary"}
                             variant={"outline"}
                         >...</Tag>
                     }

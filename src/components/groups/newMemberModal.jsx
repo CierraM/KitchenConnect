@@ -120,7 +120,7 @@ const NewMemberModal = ({isOpen, onClose, groupInfo, reload}) => {
                                 placeholder="search by username"
                                 borderRadius={"none"}
                                 onKeyDown={(e) => {
-                                    e.key === 'Enter' && e.preventDefault(handleSearch(e));
+                                    handleSearch(e);
                                 }}
                             />
                             <InputLeftElement children={<Search2Icon/>}/>

@@ -15,7 +15,13 @@ const SortButton = ({sortHandler}) => {
 
     return (
         <Menu closeOnSelect={false}>
-            <MenuButton as={Button} rightIcon={<ChevronDownIcon/>} m={2}>
+            <MenuButton
+                as={Button}
+                rightIcon={<ChevronDownIcon/>}
+                m={2} variant={"solid"}
+                colorScheme={'primary'}
+                size={"sm"}
+            >
                 Sort
             </MenuButton>
             <MenuList minWidth='240px'>

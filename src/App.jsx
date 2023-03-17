@@ -18,35 +18,13 @@ import ViewGroup from "./pages/viewGroup";
 import {useAtom} from "jotai";
 import {userTokenAtom} from "./store/atoms";
 import Favorites from "./pages/favorites";
+import colors from "./util/colors";
+import ErrorPage from "./pages/error";
+
 
 function App() {
     const theme = extendTheme({
-        colors: {
-            main: {
-                // 500: "#FFFFFF",
-                500: "black"
-            },
-            secondary: {
-                // 500: "#ff5a5f",
-                // 600: "#e95a5f",
-                // 700: "#d95a5f",
-                // 800: "#c95a5f",
-                // 900: "#b95a5f",
-                500: "white",
-            },
-            accent: {
-                50: "#f9f9f9",
-                100: "#f4f4f4",
-                200: "#e9e9e9",
-                300: "#dedede",
-                400: "#d3d3d3",
-                500: "#151e3f",
-                600: "#1a2446",
-                700: "#1f2a4d",
-                800: "#242f54",
-                900: "#29345b",
-            }
-        }
+        colors: colors
     })
 
     const [userToken, setUserToken] = useAtom(userTokenAtom);
@@ -71,7 +49,7 @@ function App() {
                         <Route path="/cookbook/:id" element={<ViewCookbook/>}/>
                         <Route path="/login" element={<Auth isSignup={false}/>}/>
                         <Route path="/signup" element={<Auth isSignup={true}/>}/>
-                        <Route path="/error"/>
+                        <Route path="/error" element={<ErrorPage/>}/>
                     </Routes>
                 ) : (
                     <Routes>
@@ -80,7 +58,7 @@ function App() {
                         <Route path="*" element={<Auth/>}/>
                         <Route path="/recipe/:id" element={<ViewRecipe/>}/>
                         <Route path="/cookbook/:id" element={<ViewCookbook/>}/>
-                        <Route path="/error"/>
+                        <Route path="/error" element={<ErrorPage/>}/>
                     </Routes>
                 )}
             </Router>

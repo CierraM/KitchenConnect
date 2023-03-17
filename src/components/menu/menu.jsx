@@ -52,12 +52,12 @@ const Menu = () => {
             }
         })
     }
-    const logoutButton= <Button type="button" onClick={logout}>Log Out</Button>
+    const logoutButton= <Button type="button" onClick={logout} variant={"outline"}>Log Out</Button>
     const loginButton = <Button as={ReactRouterLink} to={'/login'}>Log In</Button>
 
     return (
         <>
-            <IconButton icon={<HamburgerIcon/>} ref={btnRef} onClick={onOpen}/>
+            <Button ref={btnRef} onClick={onOpen} variant={"solid"} colorScheme="blue">Menu</Button>
             <Drawer
                 isOpen={isOpen}
                 placement='left'

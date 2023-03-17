@@ -8,12 +8,13 @@ const IngredientInput = ({addIngredient}) => {
 
     const keyUpHandler = (e) => {
         if (e.key === 'Enter') {
-            submit()
             e.stopPropagation()
+            submit()
         }
     }
 
     const submit = () => {
+        console.log('add ingredient')
         addIngredient(inputValue);
         setInputValue('')
     }
@@ -24,9 +25,15 @@ const IngredientInput = ({addIngredient}) => {
                 value={inputValue}
                 onChange={e => {setInputValue(e.target.value)}}
                 onBlur={submit}
-                onKeyUp={keyUpHandler}
+                onKeyUpCapture={keyUpHandler}
             />
-            <IconButton aria-label={'add ingredient'} icon={<AddIcon/>} onClick={submit} />
+            <IconButton
+                aria-label={'add ingredient'}
+                icon={<AddIcon/>}
+                onClick={submit}
+                variant={'link'}
+                color={"primary.500"}
+            />
         </Flex>
     )
 }

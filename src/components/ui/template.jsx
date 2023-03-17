@@ -52,7 +52,7 @@ const Template = ({children}) => {
 
     return (
         <Flex p={3} h={"100%"} minH={"100vh"} flexDir={"column"}>
-            <HStack align="top" p={3}>
+            <HStack align="top" py={3}>
                 <Menu/>
                 <Flex w={"full"} flexDirection={"column"}>
                     <SearchBar searchHandler={searchHandler}/>

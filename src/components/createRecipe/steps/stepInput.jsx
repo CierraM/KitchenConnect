@@ -8,8 +8,8 @@ const StepInput = ({addStep}) => {
 
     const keyUpHandler = (e) => {
         if (e.key === 'Enter') {
-            submit()
             e.stopPropagation()
+            submit()
         }
     }
 
@@ -19,14 +19,22 @@ const StepInput = ({addStep}) => {
     }
 
     return (
-        <Flex>
+        <Flex alignItems={"start"}>
             <Textarea
                 value={inputValue}
                 onChange={e => {setInputValue(e.target.value)}}
                 onBlur={submit}
                 onKeyUp={keyUpHandler}
+                size={"sm"}
+                height={"40px"}
             />
-            <IconButton aria-label={'add step'} icon={<AddIcon/>} onClick={submit} />
+            <IconButton
+                aria-label={'add step'}
+                icon={<AddIcon/>}
+                onClick={submit}
+                variant={'link'}
+                color={"primary.500"}
+            />
         </Flex>
     )
 }

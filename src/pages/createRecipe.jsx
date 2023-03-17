@@ -274,10 +274,6 @@ const CreateRecipe = ({editing}) => {
                         <Steps addStep={addStep} removeStep={removeStep} steps={steps.steps}/>
                     </FormControl>
 
-                    <FormControl mb={2}>
-                        <FormLabel mb={0}>Additional Notes</FormLabel>
-                        <Textarea ref={notesRef}/>
-                    </FormControl>
 
                     {/*<FormControl mb={2}>*/}
                     {/*    <Flex alignItems={"center"}>*/}
@@ -292,6 +288,11 @@ const CreateRecipe = ({editing}) => {
                         <FormLabel mb={0}>Tags</FormLabel>
                         <FormHelperText mb={1}>Add tags to make the recipe easier to search for.</FormHelperText>
                         <Tags addTag={addTag} removeTag={removeTag} tags={tags.tags}/>
+                    </FormControl>
+
+                    <FormControl mb={2}>
+                        <FormLabel mb={0}>Additional Notes</FormLabel>
+                        <Textarea ref={notesRef}/>
                     </FormControl>
 
                     {
@@ -331,11 +332,28 @@ const CreateRecipe = ({editing}) => {
                             })}
                         </Box>
                     </FormControl>
-                    <Button type={"submit"} colorScheme="blue"
-                            disabled={isLoading}>{editing ? 'Update Recipe' : 'Create Recipe'}</Button>
-                    <Button type="button" colorScheme="red" onClick={() => {
-                        navigate(-1)
-                    }}>Cancel</Button>
+                    <Flex justifyContent={"flex-end"}>
+                        <Button
+                            type="button"
+                            colorScheme="grey"
+                            variant={'outline'}
+                            mr={3}
+                            onClick={() => {
+                                navigate(-1)
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            type={"submit"}
+                            colorScheme="blue"
+                            disabled={isLoading}
+                            isLoading={isLoading}
+                        >
+                            {editing ? 'Update Recipe' : 'Create Recipe'}
+                        </Button>
+
+                    </Flex>
                 </form>
             </Box>
         </Template>
