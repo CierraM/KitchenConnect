@@ -8,6 +8,7 @@ const IngredientInput = ({addIngredient}) => {
 
     const keyUpHandler = (e) => {
         if (e.key === 'Enter') {
+            e.preventDefault()
             e.stopPropagation()
             submit()
         }
@@ -25,7 +26,7 @@ const IngredientInput = ({addIngredient}) => {
                 value={inputValue}
                 onChange={e => {setInputValue(e.target.value)}}
                 onBlur={submit}
-                onKeyUpCapture={keyUpHandler}
+                onKeyDown={keyUpHandler}
             />
             <IconButton
                 aria-label={'add ingredient'}

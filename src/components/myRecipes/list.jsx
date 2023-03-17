@@ -5,6 +5,7 @@ import RecipeCard from "./recipeCard";
 const List = ({items, type}) => {
     return (
         <VStack>
+            {items?.length === 0 && <Flex>Nothing to show</Flex>}
             {items?.map((item, index) => {
                 return <RecipeCard key={index} item={item} type={type} showTags={type === 'recipe' ? true : false}/>
             })}

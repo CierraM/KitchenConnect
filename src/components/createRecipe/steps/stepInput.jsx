@@ -8,6 +8,7 @@ const StepInput = ({addStep}) => {
 
     const keyUpHandler = (e) => {
         if (e.key === 'Enter') {
+            e.preventDefault()
             e.stopPropagation()
             submit()
         }

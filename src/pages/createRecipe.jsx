@@ -14,7 +14,7 @@ import {
     CheckboxGroup,
     Wrap,
     InputGroup,
-    InputLeftElement, Text, useToast
+    InputLeftElement, Text, useToast, SimpleGrid
 } from '@chakra-ui/react'
 import Ingredients from "../components/createRecipe/ingredients/ingredients";
 import Steps from "../components/createRecipe/steps/steps";
@@ -89,7 +89,6 @@ const CreateRecipe = ({editing}) => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-
         const request = {
             title: titleInputRef.current.value,
             description: descriptionInputRef.current.value,
@@ -119,13 +118,6 @@ const CreateRecipe = ({editing}) => {
                 headers: {'Content-Type': 'application/json'}
             }, (result) => {
                 if (!error) {
-                    toast({
-                        title: "Success!",
-                        description: "Recipe Successfully Updated",
-                        status: "success",
-                        duration: 9000,
-                        isClosable: true,
-                    })
                     navigate(`/recipe/${id}`)
                 }
             })
@@ -138,13 +130,6 @@ const CreateRecipe = ({editing}) => {
             }, (result) => {
                 if (!error) {
                     navigate(`/recipe/${result._id}`)
-                    toast({
-                        title: "Success!",
-                        description: "Recipe Successfully Updated",
-                        status: "success",
-                        duration: 9000,
-                        isClosable: true,
-                    })
                 }
             })
 
@@ -300,16 +285,23 @@ const CreateRecipe = ({editing}) => {
                         <FormControl mb={2}>
                             <FormLabel mb={0}>Add to a Cookbook</FormLabel>
                             <CheckboxGroup onChange={setSelectedCookbooks}>
-                                {cookbooks.map((cookbook, index) => {
-                                    return (
-                                        <Checkbox key={index} value={cookbook._id}>{cookbook.title}</Checkbox>
-                                    )
-                                })}
+                                <SimpleGrid spacing={1}>
+                                    {cookbooks.map((cookbook, index) => {
+                                        return (
+                                            <Checkbox
+                                                key={index}
+                                                value={cookbook._id}
+                                            >{cookbook.title}</Checkbox>
+                                        )
+                                    })}
+                                </SimpleGrid>
                             </CheckboxGroup>
                         </FormControl>
                     }
                     <FormControl mb={2} mt={4}>
                         <FormLabel mb={0}>Related Recipes</FormLabel>
+                        <FormHelperText>If this recipe has a sauce or a certain dish that always goes with it, link it
+                            here</FormHelperText>
                         <Wrap my={relatedRecipes.length > 0 && 3}>
                             {relatedRecipes.map((recipe, index) => {
                                 return <RelatedRecipeTag key={index} recipe={recipe} relatedRecipes={relatedRecipes}
@@ -322,7 +314,6 @@ const CreateRecipe = ({editing}) => {
                             <InputLeftElement children={<Search2Icon/>}/>
                         </InputGroup>
                         <Box border={"1px solid lightgrey"} pl={3}>
-                            {filteredRecipes.length == 0 && <Text>Nothing to show</Text>}
                             {filteredRecipes.map((recipe, index) => {
                                 return (
                                     <RelatedRecipeTag key={index} recipe={recipe}

@@ -8,6 +8,7 @@ const TagInput = ({addTag}) => {
 
     const keyUpHandler = (e) => {
         if (e.key === 'Enter') {
+            e.preventDefault()
             e.stopPropagation()
             submit()
         }
@@ -22,9 +23,11 @@ const TagInput = ({addTag}) => {
         <Flex>
             <Input
                 value={inputValue}
-                onChange={e => {setInputValue(e.target.value)}}
+                onChange={e => {
+                    setInputValue(e.target.value)
+                }}
                 onBlur={submit}
-                onKeyUp={keyUpHandler}
+                onKeyDown={keyUpHandler}
             />
             <IconButton
                 aria-label={'add step'}
