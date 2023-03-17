@@ -106,8 +106,8 @@ const ViewGroup = () => {
                     size={"sm"}
                 >Leave Group</Button>
             </Flex>
-            <Flex>
-                <AvatarGroup max={10}>
+            <Flex wrap={'wrap'} alignItems={'center'} >
+                <AvatarGroup max={10} mt={2} mr={3}>
                     {groupInfo?.members?.map((m, index) => {
                         return (
                             <Tooltip label={m.username} key={index}>
@@ -116,7 +116,7 @@ const ViewGroup = () => {
                         )
                     })}
                 </AvatarGroup>
-                <Button ml={3} leftIcon={<BsPersonPlus/>} onClick={onOpen} variant={"outline"}>Invite</Button>
+                <Button mt={2} leftIcon={<BsPersonPlus/>} onClick={onOpen} variant={"outline"} colorScheme="grey">Invite</Button>
             </Flex>
             <RecipeBrowser recipeTabContent={recipeTabContent} cookbookTabContent={cookbookTabContent}>
                 <GroupRecipeAddButton groupInfo={groupInfo} reload={getGroupRecipes}/>

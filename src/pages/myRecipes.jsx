@@ -11,7 +11,7 @@ import {Box, Heading, useToast} from "@chakra-ui/react";
 
 const MyRecipes = () => {
     const [allRecipes, setAllRecipes] = useState({recipes: []})
-    const [cookbooks, setCookbooks] = useState({cookbooks:[]})
+    const [cookbooks, setCookbooks] = useState({cookbooks: []})
     const {isLoading, error, sendRequest} = useHttp()
     const [tags, setTags] = useState([]);
     const [filteredRecipes, setFilteredRecipes] = useState({recipes: []})
@@ -42,54 +42,63 @@ const MyRecipes = () => {
     }, [error, sendRequest, setAllRecipes])
 
     useEffect(() => {
-            const alphabet = [...Array(26)].map((_, i) => String.fromCharCode(i + 97))
-            let sortedRecipes = []
-            switch (sortType) {
-                case "asc":
-                    sortedRecipes = alphabet.map(letter => {
-                        const letterRecipes = filteredRecipes.recipes?.filter(r => r.title.toLowerCase().startsWith(letter))
-                        letterRecipes.sort((a, b) => a.title.localeCompare(b.title))
-                        return {
-                            heading: letter.toUpperCase(),
-                            recipes: letterRecipes
-                        }
-                    }).filter(r => r.recipes.length > 0)
-                    break;
-                case "desc":
-                    sortedRecipes = alphabet.map(letter => {
-                        const letterRecipes = filteredRecipes.recipes?.filter(r => r.title.toLowerCase().startsWith(letter))
+        let sortedRecipes = []
+        const alphabet = [...Array(26)].map((_, i) => String.fromCharCode(i + 97))
+        switch (sortType) {
+            case "asc":
+                // sortedRecipes = [{
+                //     heading: '',
+                //     recipes: filteredRecipes.recipes?.sort((a, b) => a?.title.toLowerCase().localeCompare(b?.title.toLowerCase()))
+                // }]
+                sortedRecipes = alphabet.map(letter => {
+                    const letterRecipes = filteredRecipes.recipes?.filter(r => r.title.toLowerCase().startsWith(letter))
+                    letterRecipes.sort((a, b) => a.title.localeCompare(b.title))
+                    return {
+                        heading: letter.toUpperCase(),
+                        recipes: letterRecipes
+                    }
+                }).filter(r => r.recipes.length > 0)
+                break;
+            case "desc":
+                // sortedRecipes = [{
+                //     heading: '',
+                //     recipes: filteredRecipes.recipes?.sort((a, b) => a.title.toLowerCase().localeCompare(b?.title.toLowerCase()))
+                //         .reverse()
+                // }]
+                sortedRecipes = alphabet.map(letter => {
+                    const letterRecipes = filteredRecipes.recipes?.filter(r => r.title.toLowerCase().startsWith(letter))
+                        .sort((a, b) => a.title.localeCompare(b.title))
+                        .reverse()
+                    return {
+                        heading: letter.toUpperCase(),
+                        recipes: letterRecipes
+
+                    }
+                }).filter(r => r.recipes?.length > 0).reverse()
+
+                break;
+            case "tagsDesc":
+                sortedRecipes = tags.map(tag => {
+                    return {
+                        heading: tag,
+                        recipes: filteredRecipes.recipes?.filter(r => r.tags.includes(tag))
                             .sort((a, b) => a.title.localeCompare(b.title))
-                            .reverse()
-                        return {
-                            heading: letter.toUpperCase(),
-                            recipes: letterRecipes
-
-                        }
-                    }).filter(r => r.recipes?.length > 0).reverse()
-
-                    break;
-                case "tagsDesc":
-                    sortedRecipes = tags.map(tag => {
-                        return {
-                            heading: tag,
-                            recipes: filteredRecipes.recipes?.filter(r => r.tags.includes(tag))
-                                .sort((a, b) => a.title.localeCompare(b.title))
-                        }
-                    }).filter(r => r.recipes?.length > 0)
-                    break;
-                case "tagsAsc":
-                    sortedRecipes = tags.map(tag => {
-                        return {
-                            heading: tag,
-                            recipes: filteredRecipes.recipes?.filter(r => r.tags.includes(tag))
-                                .sort((a, b) => a.title.localeCompare(b.title)).reverse()
-                        }
-                    }).filter(r => r.recipes?.length > 0).reverse()
-                    break;
-                default:
-                    break;
-            }
-            setDisplayRecipes(sortedRecipes)
+                    }
+                }).filter(r => r.recipes?.length > 0)
+                break;
+            case "tagsAsc":
+                sortedRecipes = tags.map(tag => {
+                    return {
+                        heading: tag,
+                        recipes: filteredRecipes.recipes?.filter(r => r.tags.includes(tag))
+                            .sort((a, b) => a.title.localeCompare(b.title)).reverse()
+                    }
+                }).filter(r => r.recipes?.length > 0).reverse()
+                break;
+            default:
+                break;
+        }
+        setDisplayRecipes(sortedRecipes)
     }, [sortType, filteredRecipes])
 
 
@@ -119,7 +128,7 @@ const MyRecipes = () => {
             <SortAndFilter tags={tags} filterHandler={filterDisplayRecipesByTags} sortHandler={setSortType}/>
             {displayRecipes.map((r, index) => {
                 return (
-                    <Box key={index} mb={4} >
+                    <Box key={index} mb={4}>
                         <Heading color={"main.500"} fontSize="lg">{r.heading}</Heading>
                         <List items={r.recipes} type={"recipe"}/>
                     </Box>

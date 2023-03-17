@@ -4,9 +4,17 @@ import {Link as ReactRouterLink} from "react-router-dom"
 const RecipeCard = ({item, type, showTags = false}) => {
 
     return (
-        <Link as={ReactRouterLink} to={`/${type}/${item?._id}`} w={"full"}
-              _hover={{textDecoration: "none", shadow: "md"}}>
-            <Card shadow={"md"} variant={"outline"} colorScheme="primary" >
+        <Link
+            as={ReactRouterLink}
+            to={`/${type}/${item?._id}`}
+            _hover={{textDecoration: "none", shadow: "md"}}
+            w={'full'}
+        >
+            <Card
+                shadow={"lg"}
+                variant={"outline"}
+                h={'full'}
+            >
                 <CardBody>
                     <Text fontWeight={"bold"}>{item?.title}</Text>
                     {showTags && item?.tags.map((tag, index) => {

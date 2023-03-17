@@ -51,7 +51,7 @@ const Template = ({children}) => {
     }
 
     return (
-        <Flex p={3} h={"100%"} minH={"100vh"} flexDir={"column"}>
+        <Flex p={3} h={"100%"} minH={"100vh"} flexDir={"column"} maxW={'1536px'} margin={'auto'} >
             <HStack align="top" py={3}>
                 <Menu/>
                 <Flex w={"full"} flexDirection={"column"}>

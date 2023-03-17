@@ -131,7 +131,7 @@ const GroupRecipeAddButton = ({groupInfo, reload}) => {
                     bottom={0}
                     right={0}
                     as={Button}
-                    colorScheme={"accent.500"}
+                    colorScheme={"primary"}
                     shadow={"lg"}
                     m={"5"}
                     _hover={{shadow: "sm"}}
