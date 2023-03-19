@@ -15,7 +15,6 @@ const Template = ({children}) => {
 
     //Get recipes from server
     useEffect(() => {
-
         if (userToken) {
             sendRequest({
                 url: `${process.env.REACT_APP_SERVER_URL}/user/myRecipes`,

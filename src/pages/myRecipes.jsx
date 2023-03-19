@@ -1,12 +1,12 @@
 import Template from '../components/ui/template';
-import SearchBar from '../components/ui/searchBar';
 import List from '../components/myRecipes/list';
 import RecipeBrowser from "../components/myRecipes/recipeBrowser";
 import {useState, useEffect, useCallback} from "react";
 import useHttp from "../util/use-http";
 import NewButton from "../components/myRecipes/newButton";
 import SortAndFilter from "../components/myRecipes/sortAndFilter";
-import {Box, Heading, useToast} from "@chakra-ui/react";
+import {Box, Heading, Link, useToast, Text} from "@chakra-ui/react";
+import {Link as ReactRouterLink} from "react-router-dom";
 
 
 const MyRecipes = () => {
@@ -126,6 +126,10 @@ const MyRecipes = () => {
     const recipeTabContent = (
         <>
             <SortAndFilter tags={tags} filterHandler={filterDisplayRecipesByTags} sortHandler={setSortType}/>
+            {isLoading && <p>Loading...</p>}
+            {displayRecipes.length === 0 && <Text>
+                No recipes yet! <Link as={ReactRouterLink} to={'/createRecipe'} textDecoration={'underline'} color={'blue'}>Create a new recipe.</Link>
+            </Text>}
             {displayRecipes.map((r, index) => {
                 return (
                     <Box key={index} mb={4}>

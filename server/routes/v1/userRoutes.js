@@ -7,9 +7,9 @@ const { body } = require('express-validator');
 //signup new user
 router.post(
     '/signup',
-    body('username').isAlphanumeric(),
+    body('username').isString(),
     body('password'),
-    body('email').isEmail().normalizeEmail(),
+    body('email').normalizeEmail(),
     body('firstName').optional().isString(),
     body('lastName').optional().isString(),
     controller.signup

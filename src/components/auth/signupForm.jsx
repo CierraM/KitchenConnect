@@ -63,7 +63,7 @@ const SignupForm = () => {
                 setDuplicateUserError('Username or email already exists');
                 return;
             }
-            if (!error) {
+            if (response.status === 200) {
                 // sign in user and redirect to myRecipes
                 const signinRequest = {
                     email: emailInputRef.current.value,
@@ -75,10 +75,26 @@ const SignupForm = () => {
                     headers: {'Content-Type': 'application/json'},
                     body: signinRequest
                 }, response => {
-                    if (!error) {
+                    if (response.status === 200) {
                         setUserToken(response.token)
                         navigate('/myRecipes')
+                    } else {
+                        toast({
+                            title: "An error occurred.",
+                            description: "Please try again.",
+                            status: "error",
+                            duration: 9000,
+                            isClosable: true,
+                        })
                     }
+                })
+            } else {
+                toast({
+                    title: "An error occurred.",
+                    description: "Please try again.",
+                    status: "error",
+                    duration: 9000,
+                    isClosable: true,
                 })
             }
         })
@@ -129,7 +145,7 @@ const SignupForm = () => {
                     </Box>
                     <Box m={3}>
                         <FormControl isRequired isInvalid={usernameError || duplicateUserError}>
-                            <FormLabel mb={0}> Username </FormLabel>
+                            <FormLabel mb={0}> Display Name </FormLabel>
                             <Input placeholder='Username' ref={usernameInputRef}/>
                             {usernameError && <FormErrorMessage>{usernameError}</FormErrorMessage>}
                             {duplicateUserError && <FormErrorMessage>{duplicateUserError}</FormErrorMessage>}
@@ -149,8 +165,14 @@ const SignupForm = () => {
                         </FormControl>
                     </Box>
                     <Box>
-                        <Button type="submit" onSubmit={trySignup} borderRadius="10" disabled={isLoading}>Create
-                            Account</Button>
+                        <Button
+                            type="submit"
+                            onSubmit={trySignup}
+                            borderRadius="10"
+                            disabled={isLoading}
+                            isLoading={isLoading}
+                            colorScheme={'blue'}
+                        >Create Account</Button>
                     </Box>
                     <Box m={6}>
                         <Link as={ReactRouterLink} to={'/login'}>Already have an account? Click Here.</Link>

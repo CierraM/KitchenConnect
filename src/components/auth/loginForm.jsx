@@ -75,7 +75,13 @@ const LoginForm = () => {
                             ?
                             <Spinner/>
                             :
-                            <Button type="submit" borderRadius="10">Login</Button>
+                            <Button
+                                type="submit"
+                                borderRadius="10"
+                                isLoading={isLoading}
+                                colorScheme={'blue'}
+                                disabled={isLoading}
+                            >Login</Button>
                         }
 
                     </Box>
