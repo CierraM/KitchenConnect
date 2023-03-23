@@ -1,5 +1,5 @@
 import Template from "../components/ui/template";
-import {Flex, Heading, Link, useToast} from "@chakra-ui/react";
+import {Flex, Heading, Link, Spinner, useToast} from "@chakra-ui/react";
 import {useEffect, useState} from "react";
 import useHttp from "../util/use-http";
 import RecipeCard from "../components/myRecipes/recipeCard";
@@ -35,6 +35,7 @@ const Favorites = () => {
         }
     })
     return <Template>
+        {isLoading && <Spinner/>}
         <Flex py={3} alignItems={"center"}>
             <Link aria-label={'back'} as={ReactRouterLink} to="../"><ArrowBackIcon/> Back </Link>
             <Heading pl={3}>Favorites</Heading>

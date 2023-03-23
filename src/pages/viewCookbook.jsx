@@ -7,7 +7,7 @@ import {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import useHttp from "../util/use-http";
 import NewButton from "../components/myRecipes/newButton";
-import {useToast} from "@chakra-ui/react";
+import {Spinner, useToast} from "@chakra-ui/react";
 
 const ViewCookbook = () => {
     const {id} = useParams()
@@ -75,6 +75,7 @@ const ViewCookbook = () => {
 
     return (
         <Template>
+            {isLoading && <Spinner/>}
             <RecipeBrowser recipeTabContent={recipeTabContent} cookbookTabContent={cookbookTabContent} defaultIndex={1}>
                 <NewButton/>
             </RecipeBrowser>

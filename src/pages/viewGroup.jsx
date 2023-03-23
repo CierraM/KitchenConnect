@@ -6,7 +6,7 @@ import {
     Flex, FormControl, FormLabel,
     Heading, Input, InputGroup, InputLeftElement,
     Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader,
-    ModalOverlay, Spacer, Text,
+    ModalOverlay, Spacer, Spinner, Text,
     Tooltip,
     useDisclosure, VStack
 } from "@chakra-ui/react";
@@ -95,6 +95,7 @@ const ViewGroup = () => {
 
     return (
         <Template>
+            {isLoading && <Spinner/>}
             <Flex alignItems={"center"} justify={"space-between"}>
                 <Heading my={3}>{groupInfo.name}</Heading>
                 <Button

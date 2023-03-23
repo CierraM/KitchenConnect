@@ -5,7 +5,7 @@ import {
     Button,
     Box,
     Link,
-    Heading, Alert, useToast, FormErrorMessage
+    Heading, Alert, useToast, FormErrorMessage, Spinner
 } from '@chakra-ui/react'
 import {Link as ReactRouterLink, useNavigate} from 'react-router-dom';
 import PasswordInput from './passwordInput';
@@ -115,6 +115,7 @@ const SignupForm = () => {
     //TODO: field validation
     return (
         <Box>
+            {isLoading && <Spinner/>}
             <form onSubmit={trySignup}>
                 <Box m={"auto"}
                      px='4'

@@ -5,6 +5,7 @@ import RecipeBrowser from "../components/myRecipes/recipeBrowser";
 import {useEffect, useState} from "react";
 import useHttp from "../util/use-http";
 import NewButton from "../components/myRecipes/newButton";
+import {Spinner} from "@chakra-ui/react";
 
 const Cookbooks = () => {
     const [recipes, setRecipes] = useState({})
@@ -34,6 +35,7 @@ const Cookbooks = () => {
     )
     return (
         <Template>
+            {isLoading && <Spinner/>}
             <RecipeBrowser recipeTabContent={recipeTabContent} cookbookTabContent={cookbookTabContent} defaultIndex={1}>
                 <NewButton/>
             </RecipeBrowser>

@@ -141,6 +141,7 @@ const ViewRecipe = () => {
 
     return (
         <Template>
+            {isLoading && <Spinner/>}
             <ViewRecipeHeader isFavorite={recipe.isFavorite} showShareModal={onOpen} toggleFavorite={toggleFavorite} favoriteLoading={favoriteIsLoading}/>
             <ViewRecipeTitle title={recipe.title} id={id} isOwner={recipe.isOwner}/>
             <RecipeBody recipe={recipe}/>

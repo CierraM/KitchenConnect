@@ -14,7 +14,7 @@ import {
     CheckboxGroup,
     Wrap,
     InputGroup,
-    InputLeftElement, Text, useToast, SimpleGrid
+    InputLeftElement, Text, useToast, SimpleGrid, Spinner
 } from '@chakra-ui/react'
 import Ingredients from "../components/createRecipe/ingredients/ingredients";
 import Steps from "../components/createRecipe/steps/steps";
@@ -247,6 +247,7 @@ const CreateRecipe = ({editing}) => {
 
     return (
         <Template>
+            {isLoading && <Spinner/>}
             <Box p={3}>
                 <Heading>{editing ? 'Edit Recipe' : 'New Recipe'}</Heading>
                 <form onSubmit={handleSubmit}>

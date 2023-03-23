@@ -7,7 +7,7 @@ import {
     Heading,
     Input,
     InputGroup,
-    InputLeftElement, Spacer,
+    InputLeftElement, Spacer, Spinner,
     Text, useToast, VStack,
     Wrap
 } from "@chakra-ui/react";
