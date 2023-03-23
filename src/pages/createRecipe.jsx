@@ -103,7 +103,6 @@ const CreateRecipe = ({editing}) => {
             cookbookIds: selectedCookbooks,
             tags: tags.tags,
             related: relatedRecipes.map(r => r._id)
-
         }
 
         if (editing) {
@@ -199,6 +198,7 @@ const CreateRecipe = ({editing}) => {
     }
 
     const removeStep = (step) => {
+        console.log(step)
         let temp = steps.steps;
         let result = [];
         temp.forEach(i => {

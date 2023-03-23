@@ -21,9 +21,9 @@ exports.signup = async (req, res, next) => {
     console.log('signing up')
     const username = req.body.username;
     const password = req.body.password;
-    const email = req.body.email;
-    const firstName = req.body.firstName || '';
-    const lastName = req.body.lastName || '';
+    const email = req.body.email.toLowerCase();
+    const firstName = req.body.firstName?.toLowerCase() || '';
+    const lastName = req.body.lastName?.toLowerCase() || '';
     const avatar = req.body.avatar || '';
 
     User.findOne({
@@ -93,7 +93,7 @@ exports.login = async (req, res, next) => {
     }
 
     console.log('attempting login')
-    const email = req.body.email;
+    const email = req.body.email.toLowerCase();
     const password = req.body.password;
 
     let loadedUser
@@ -131,6 +131,12 @@ exports.login = async (req, res, next) => {
                 return res.status(500).json({
                     message: "An error ocurred. Please try again later."
                 })
+            })
+        })
+        .catch(err => {
+            console.log(err)
+            return res.status(500).json({
+                message: "An error ocurred. Please try again later."
             })
         })
 }

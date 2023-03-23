@@ -15,10 +15,10 @@ import {CloseIcon, DeleteIcon, SmallCloseIcon} from "@chakra-ui/icons";
 const StepList = ({steps, removeStep, editStep}) => {
 
     return (
-        <OrderedList flexDirection={"column"} mb={3}>
+        <OrderedList flexDirection={"column"} mb={3}  >
             {steps.map((step, index) => {
                 return (
-                    <ListItem key={index} _hover={{backgroundColor: '#e0e0e0'}}>
+                    <ListItem key={index} _hover={{backgroundColor: '#e0e0e0'}} >
                         <Flex alignItems={"center"}>
                             <Editable value={step} w={'full'} onChange={(nextValue) => editStep(nextValue, index)}>
                                 <EditablePreview w={'full'}/>

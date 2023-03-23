@@ -33,6 +33,7 @@ exports.createRecipe = (req, res, next) => {
         ingredients: req.body.ingredients,
         steps: req.body.steps,
         related: req.body.related,
+        notes: req.body.notes,
         private: req.body.private || false,
         userPermissions: {
             owner: mongoose.Types.ObjectId(userId),
@@ -105,6 +106,7 @@ exports.getRecipeById = (req, res, next) => {
                     description: recipe.description,
                     tags: recipe.tags,
                     ingredients: recipe.ingredients,
+                    notes: recipe.notes,
                     steps: recipe.steps.map(step => {
                         return {
                             ordinal: step.ordinal,
@@ -141,7 +143,7 @@ exports.shareRecipeWithUser = (req, res, next) => {
     console.log(errors)
     if (!errors.isEmpty()) {
         return res.status(400).send({
-            message: "one or more errors ocurred",
+            message: "one or more errors occurred",
             errors: errors
         })
     }

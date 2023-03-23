@@ -5,7 +5,7 @@ import List from "../myRecipes/list";
 
 const RecipeBody = ({recipe}) => {
     return (
-        <Box my={3}>
+        <Box my={3} maxW={'900px'} mx={'auto'}>
             <Text fontStyle={"italic"}>
                 {recipe.description}
             </Text>
@@ -16,7 +16,7 @@ const RecipeBody = ({recipe}) => {
                 })}
             </Flex>
             <Heading as={"h3"} size={"lg"} mt={"3"}>Steps:</Heading>
-            <OrderedList>
+            <OrderedList spacing={3}>
                 {recipe.steps?.sort((a, b) => a.ordinal < b.ordinal)
                     .map((step, key) => {
                         return <ListItem key={key}>{step.text}</ListItem>

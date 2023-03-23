@@ -1,10 +1,11 @@
 import {Flex, FormControl, IconButton, Input, InputGroup, InputRightAddon, Textarea} from "@chakra-ui/react";
 import {AddIcon} from "@chakra-ui/icons";
-import {useState} from "react";
+import {useState, useEffect} from "react";
 
 
 const StepInput = ({addStep}) => {
     const [inputValue, setInputValue] = useState("");
+    const [pasted, setPasted] = useState(false)
 
     const keyUpHandler = (e) => {
         if (e.key === 'Enter') {
@@ -14,20 +15,40 @@ const StepInput = ({addStep}) => {
         }
     }
 
+    useEffect(() => {
+        if (pasted) {
+            setPasted(false)
+            submit()
+        }
+    }, [inputValue])
+
+    const pasteHandler = (e) => {
+        e.preventDefault()
+        setPasted(true)
+        setInputValue(e.clipboardData.getData('Text'))
+
+    }
+
     const submit = () => {
-        addStep(inputValue);
+        let steps = inputValue.split(/\r?\n|\r|\n/g).filter(step => step.trim() !== '')
+        steps.forEach(step => {
+            addStep(step);
+        })
         setInputValue('')
     }
 
     return (
-        <InputGroup >
+        <InputGroup>
             <Textarea
                 value={inputValue}
-                onChange={e => {setInputValue(e.target.value)}}
+                onChange={e => {
+                    setInputValue(e.target.value)
+                }}
                 onBlur={submit}
                 onKeyUp={keyUpHandler}
                 size={"sm"}
                 height={"40px"}
+                onPaste={(e) => pasteHandler(e)}
             />
             <InputRightAddon bg={'none'} height={''}>
                 <IconButton
@@ -42,4 +63,4 @@ const StepInput = ({addStep}) => {
     )
 }
 
-export default StepInput
+export default StepInput;

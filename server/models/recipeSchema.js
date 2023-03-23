@@ -14,7 +14,7 @@ const recipeSchema = new Schema({
         ordinal: Number,
         text: String
     }],
-    notes: [String],
+    notes: String,
     related: {
         type: [mongoose.ObjectId],
         ref: 'Recipe'

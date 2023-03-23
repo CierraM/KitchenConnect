@@ -11,7 +11,7 @@ const ViewRecipeHeader = ({isFavorite, showShareModal, toggleFavorite, favoriteL
 
     let favoriteIcon = isFavorite ? FaHeart : FaRegHeart;
     return (
-        <Flex py={3}>
+        <Flex py={3} justify={'center'}>
             <Link aria-label={'back'} as={ReactRouterLink} to="/myRecipes"><ArrowBackIcon/> Back </Link>
             <Spacer></Spacer>
 

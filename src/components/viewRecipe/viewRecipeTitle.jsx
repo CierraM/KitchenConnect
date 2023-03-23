@@ -8,7 +8,7 @@ const ViewRecipeTitle = ({title, id, isOwner}) => {
     const {isOpen, onOpen, onClose} = useDisclosure()
     return (
         <>
-            <Flex my={3} alignItems={"center"}>
+            <Flex my={3} alignItems={"center"} justify={'center'}>
                 <Heading as={"h2"}>{title}</Heading>
                 {isOwner &&
                     <>

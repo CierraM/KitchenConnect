@@ -8,7 +8,7 @@ import {
     Spinner,
     Text,
     Image,
-    Heading
+    Heading, useToast
 } from '@chakra-ui/react'
 import React, {useRef, useEffect} from 'react';
 import PasswordInput from './passwordInput';
@@ -22,6 +22,7 @@ const LoginForm = () => {
     const emailInputRef = useRef();
     const passwordInputRef = useRef();
     const [userToken, setUserToken] = useAtom(userTokenAtom);
+    const toast = useToast();
 
     const {isLoading, error, sendRequest} = useHttp();
     const tryLogin = (e) => {
@@ -36,9 +37,17 @@ const LoginForm = () => {
             headers: {'Content-Type': 'application/json'},
             body: request
         }, response => {
-            if (!error) {
+            if (response.status === 200) {
                 setUserToken(response.token)
                 navigate('/myRecipes')
+            } else {
+                toast({
+                    title: "Login failed",
+                    description: "Invalid username/password",
+                    status: "error",
+                    duration: 9000,
+                    isClosable: true,
+                })
             }
         })
     }

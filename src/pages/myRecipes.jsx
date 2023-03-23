@@ -127,7 +127,7 @@ const MyRecipes = () => {
         <>
             <SortAndFilter tags={tags} filterHandler={filterDisplayRecipesByTags} sortHandler={setSortType}/>
             {isLoading && <p>Loading...</p>}
-            {displayRecipes.length === 0 && <Text>
+            {(displayRecipes.length === 0 && !isLoading) && <Text>
                 No recipes yet! <Link as={ReactRouterLink} to={'/createRecipe'} textDecoration={'underline'} color={'blue'}>Create a new recipe.</Link>
             </Text>}
             {displayRecipes.map((r, index) => {
