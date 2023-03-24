@@ -18,7 +18,7 @@ const Auth = ({isSignup}) => {
     })
 
     return (
-        <Box margin={"auto"} maxW={'600px'}>
+        <Box m={"30px auto"} maxW={'600px'}>
             <Heading align={"center"} my={5}>Kitchen Connect</Heading>
             {   isSignup ?
                 <SignupForm />
