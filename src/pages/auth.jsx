@@ -1,11 +1,10 @@
 import SignupForm from '../components/auth/signupForm';
 import LoginForm from '../components/auth/loginForm';
-import Template from "../components/ui/template";
 import {useAtom} from "jotai";
 import {userTokenAtom} from "../store/atoms";
 import {useNavigate} from "react-router-dom";
 import {useEffect} from "react";
-import {Box, Flex, Heading} from "@chakra-ui/react";
+import {Box, Flex} from "@chakra-ui/react";
 
 const Auth = ({isSignup}) => {
     const [userToken, setUserToken] = useAtom(userTokenAtom);

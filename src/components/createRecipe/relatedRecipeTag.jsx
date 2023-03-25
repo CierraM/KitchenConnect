@@ -1,4 +1,4 @@
-import {Box, Button, Container, Icon, Text} from "@chakra-ui/react";
+import {Button, Text} from "@chakra-ui/react";
 import {CloseIcon} from "@chakra-ui/icons";
 
 

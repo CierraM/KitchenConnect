@@ -7,7 +7,6 @@ import {
     Link,
     Spinner,
     Text,
-    Image,
     Heading, useToast
 } from '@chakra-ui/react'
 import React, {useRef, useEffect} from 'react';

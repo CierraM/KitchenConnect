@@ -1,5 +1,4 @@
 import {useEffect, useRef, useState} from 'react'
-import {AddIcon, HamburgerIcon} from '@chakra-ui/icons'
 import {
     Drawer,
     DrawerBody,
@@ -10,8 +9,6 @@ import {
     DrawerCloseButton,
     useDisclosure,
     Button,
-    Input,
-    IconButton,
     Link, Flex, UnorderedList, ListItem, Heading, Text, VStack
 } from '@chakra-ui/react'
 import {Link as ReactRouterLink, useNavigate} from "react-router-dom"
@@ -19,6 +16,7 @@ import useHttp from "../../util/use-http";
 import {useAtom} from "jotai";
 import {userTokenAtom} from "../../store/atoms";
 import React from "react";
+import {AddIcon} from "@chakra-ui/icons";
 
 const Menu = () => {
     const {isOpen, onOpen, onClose} = useDisclosure()

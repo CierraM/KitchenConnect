@@ -1,4 +1,4 @@
-import {Heading, Flex, Box, IconButton, Link, useDisclosure} from "@chakra-ui/react";
+import {Heading, Flex, IconButton, Link, useDisclosure} from "@chakra-ui/react";
 import {DeleteIcon, EditIcon} from "@chakra-ui/icons";
 import {Link as ReactRouterLink} from "react-router-dom";
 import DeleteDialog from "../ui/deleteDialog";

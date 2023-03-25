@@ -1,6 +1,5 @@
 import {
-    Avatar,
-    Button, Flex, Heading, Input, InputGroup, InputLeftElement, Link,
+    Button, Flex, Heading, Link,
     Modal,
     ModalBody,
     ModalCloseButton,
@@ -9,11 +8,8 @@ import {
     ModalHeader,
     ModalOverlay, Spacer, Text, Wrap
 } from "@chakra-ui/react";
-import {useEffect, useState, useRef} from "react";
-import useHttp from "../../util/use-http";
-import {useNavigate} from "react-router-dom";
-import List from "../myRecipes/list";
-import {CloseIcon, Search2Icon} from "@chakra-ui/icons";
+import { useState} from "react";
+import {CloseIcon} from "@chakra-ui/icons";
 import SearchBar from "./searchBar";
 import {useAtom} from "jotai";
 import {userTokenAtom} from "../../store/atoms";

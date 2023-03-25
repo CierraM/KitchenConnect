@@ -1,14 +1,11 @@
-import {Button, Heading, Flex, Link, IconButton, useDisclosure, useToast} from "@chakra-ui/react";
+import { Heading, Flex, Link, IconButton, useDisclosure, useToast} from "@chakra-ui/react";
 import {Link as ReactRouterLink} from "react-router-dom";
-import FilterSection from "../myRecipes/filterButton";
-import List from "../myRecipes/list";
 import {ArrowBackIcon, DeleteIcon, EditIcon, ExternalLinkIcon} from "@chakra-ui/icons";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import DeleteDialog from "../ui/deleteDialog";
 import ShareModal from "../ui/shareModal";
 import useHttp from "../../util/use-http";
-import SortAndFilter from "../myRecipes/sortAndFilter";
 import RecipesWithSortAndFilter from "../myRecipes/recipesWithSortAndFilter";
 
 

@@ -1,4 +1,4 @@
-import {Flex, FormControl, IconButton, Input, InputGroup, InputRightAddon, Textarea} from "@chakra-ui/react";
+import { IconButton, InputGroup, InputRightAddon, Textarea} from "@chakra-ui/react";
 import {AddIcon} from "@chakra-ui/icons";
 import {useState, useEffect} from "react";
 

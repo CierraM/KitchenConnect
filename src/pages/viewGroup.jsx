@@ -3,19 +3,16 @@ import {
     Avatar,
     AvatarGroup,
     Button,
-    Flex, FormControl, FormLabel,
-    Heading, Input, InputGroup, InputLeftElement,
-    Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader,
-    ModalOverlay, Spacer, Spinner, Text,
+    Flex,
+    Heading, Spinner,
     Tooltip,
-    useDisclosure, VStack
+    useDisclosure
 } from "@chakra-ui/react";
 import {useNavigate, useParams} from "react-router-dom";
 import {useState, useEffect} from "react";
 import useHttp from "../util/use-http";
 import {BiExit} from "react-icons/bi";
 import {BsPersonPlus} from "react-icons/bs";
-import {CloseIcon, Search2Icon} from "@chakra-ui/icons";
 import NewMemberModal from "../components/groups/newMemberModal";
 import RecipeBrowser from "../components/myRecipes/recipeBrowser";
 import FilterSection from "../components/myRecipes/filterButton";

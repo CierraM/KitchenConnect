@@ -9,9 +9,7 @@ import {
     InputGroup,
     InputLeftElement, Spacer, Spinner,
     Text, useToast, VStack,
-    Wrap
 } from "@chakra-ui/react";
-import RelatedRecipeTag from "../components/createRecipe/relatedRecipeTag";
 import {CloseIcon, Search2Icon} from "@chakra-ui/icons";
 import {useState, useRef, useEffect} from "react";
 import useHttp from "../util/use-http";
@@ -115,6 +113,7 @@ const CreateGroup = () => {
         <Template>
             <Box p={3}>
                 <Heading>New Group</Heading>
+                {isLoading && <Spinner/>}
                 <form onSubmit={handleSubmit}>
                     <FormControl mb={2}>
                         <FormLabel mb={0}>Name</FormLabel>

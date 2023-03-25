@@ -1,13 +1,10 @@
 import Template from '../components/ui/template';
 import List from '../components/myRecipes/list';
 import RecipeBrowser from "../components/myRecipes/recipeBrowser";
-import {useState, useEffect, useCallback} from "react";
+import {useState, useEffect} from "react";
 import useHttp from "../util/use-http";
 import NewButton from "../components/myRecipes/newButton";
-import SortAndFilter from "../components/myRecipes/sortAndFilter";
-import {Box, Heading, Link, useToast, Text} from "@chakra-ui/react";
-import {Link as ReactRouterLink, useParams} from "react-router-dom";
-import CookbookTab from "../components/viewCookbook/cookbookTab";
+import {useToast} from "@chakra-ui/react";
 import RecipesWithSortAndFilter from "../components/myRecipes/recipesWithSortAndFilter";
 
 

@@ -7,14 +7,13 @@ import {
     Box,
     Heading,
     Textarea,
-    Switch,
     Flex,
     Button,
     Checkbox,
     CheckboxGroup,
     Wrap,
     InputGroup,
-    InputLeftElement, Text, useToast, SimpleGrid, Spinner
+    InputLeftElement, useToast, SimpleGrid, Spinner
 } from '@chakra-ui/react'
 import Ingredients from "../components/createRecipe/ingredients/ingredients";
 import Steps from "../components/createRecipe/steps/steps";
@@ -198,7 +197,6 @@ const CreateRecipe = ({editing}) => {
     }
 
     const removeStep = (step) => {
-        console.log(step)
         let temp = steps.steps;
         let result = [];
         temp.forEach(i => {

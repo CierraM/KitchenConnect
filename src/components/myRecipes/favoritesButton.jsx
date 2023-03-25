@@ -1,5 +1,5 @@
 import {Link as ReactRouterLink} from 'react-router-dom'
-import {Box, Button, Link} from "@chakra-ui/react";
+import { Button, Link} from "@chakra-ui/react";
 import {AiFillHeart} from "react-icons/ai";
 
 

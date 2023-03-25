@@ -73,7 +73,6 @@ const NewMemberModal = ({isOpen, onClose, groupInfo, reload}) => {
             headers: {'Content-Type': 'application/json'}
         }, (result) => {
             if (!error) {
-                console.log(result)
                 //remove users from search results if they are already part of the group
                 const filtered = result.users.filter(u => !groupInfo.members.map(m => m._id).includes(u._id) )
                 setSearchResults({searchResults: filtered})
@@ -140,7 +139,6 @@ const NewMemberModal = ({isOpen, onClose, groupInfo, reload}) => {
                                             cursor: "pointer"
                                         }}
                                         onClick={() => {
-                                            console.log(alreadyAdded)
                                             if (alreadyAdded) {
                                                 removeMember(user)
                                             } else {

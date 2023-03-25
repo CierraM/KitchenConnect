@@ -110,7 +110,6 @@ exports.login = async (req, res, next) => {
             loadedUser = user;
             bcrypt.compare(password, user.hashedPassword)
                 .then(matched => {
-                    console.log(matched)
                     if (!matched) {
                         console.log('not a match')
                         return res.status(401).json({
@@ -120,7 +119,7 @@ exports.login = async (req, res, next) => {
                     const token = jwt.sign({
                         email,
                         userId: loadedUser._id.toString()
-                    }, process.env.SECRET_KEY)
+                    }, process.env.SECRET_KEY, {expiresIn: '168h'})
                     res.cookie('Authorization', token).status(200).json({
                         message: 'User authenticated',
                         token: token,

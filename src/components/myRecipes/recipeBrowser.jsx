@@ -1,9 +1,5 @@
-import Template from "../ui/template";
+
 import {Spacer, Tab, TabList, TabPanel, TabPanels, Tabs, Text} from "@chakra-ui/react";
-import SortButton from "./sortButton";
-import FilterSection from "./filterButton";
-import List from "./list";
-import NewButton from "./newButton";
 import FavoritesButton from "./favoritesButton";
 
 

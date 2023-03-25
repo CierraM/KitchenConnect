@@ -1,6 +1,6 @@
-import {Link as ReactRouterLink, useLocation, useNavigate} from "react-router-dom";
+import { useLocation, useNavigate} from "react-router-dom";
 import {ArrowBackIcon} from "@chakra-ui/icons";
-import {Button, Link} from "@chakra-ui/react";
+import {Button} from "@chakra-ui/react";
 import {useEffect, useRef} from "react";
 
 

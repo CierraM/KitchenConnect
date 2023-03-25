@@ -1,5 +1,4 @@
-import {Text, Box, Heading, UnorderedList, ListItem, VStack, Flex, OrderedList} from "@chakra-ui/react";
-import RecipeCard from "../myRecipes/recipeCard";
+import {Text, Box, Heading, ListItem, Flex, OrderedList} from "@chakra-ui/react";
 import List from "../myRecipes/list";
 
 

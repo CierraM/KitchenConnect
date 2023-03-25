@@ -1,4 +1,4 @@
-import {Flex, IconButton, ListItem, OrderedList, Spacer, TagCloseButton, Text, Tag, Wrap} from "@chakra-ui/react";
+import {Flex, Spacer, TagCloseButton, Text, Tag, Wrap} from "@chakra-ui/react";
 import {SmallCloseIcon} from "@chakra-ui/icons";
 
 

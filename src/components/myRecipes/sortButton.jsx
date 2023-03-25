@@ -2,11 +2,8 @@ import {
     Menu,
     MenuButton,
     MenuList,
-    MenuItem,
     MenuItemOption,
-    MenuGroup,
     MenuOptionGroup,
-    MenuDivider,
     Button
 } from '@chakra-ui/react'
 import {ChevronDownIcon} from "@chakra-ui/icons";
@@ -21,6 +18,7 @@ const SortButton = ({sortHandler}) => {
                 m={2} variant={"solid"}
                 colorScheme={'primary'}
                 size={"sm"}
+                minW={'auto'}
             >
                 Sort
             </MenuButton>
@@ -28,8 +26,7 @@ const SortButton = ({sortHandler}) => {
                 <MenuOptionGroup defaultValue='asc' type='radio' onChange={sortHandler}>
                     <MenuItemOption value='asc'>Alphabetical</MenuItemOption>
                     <MenuItemOption value='desc'> Reverse Alphabetical</MenuItemOption>
-                    <MenuItemOption value='tagsAsc'>Tags ascending</MenuItemOption>
-                    <MenuItemOption value='tagsDesc'>Tags descending</MenuItemOption>
+                    <MenuItemOption value='tagsDesc'>Tags</MenuItemOption>
                 </MenuOptionGroup>
             </MenuList>
         </Menu>

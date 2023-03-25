@@ -1,15 +1,12 @@
 import {
     Flex,
-    VStack,
     IconButton,
-    Text,
     Spacer,
     OrderedList,
     ListItem,
-    EditablePreview,
-    EditableInput, Editable, EditableTextarea
+    EditablePreview, Editable, EditableTextarea
 } from "@chakra-ui/react";
-import {CloseIcon, DeleteIcon, SmallCloseIcon} from "@chakra-ui/icons";
+import {CloseIcon} from "@chakra-ui/icons";
 
 
 const StepList = ({steps, removeStep, editStep}) => {

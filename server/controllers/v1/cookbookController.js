@@ -57,7 +57,6 @@ exports.getCookbook = (req, res, next) => {
             if(!cookbook) {
                 return res.status(404).json({message: "cookbook not found"})
             }
-            console.log(cookbook)
             return res.status(200).json({
                 cookbook: {
                     _id: cookbook._id,
@@ -365,7 +364,6 @@ exports.updateCookbook = (req, res, next) => {
     }
     const cookbookId = req.body.cookbookId;
     const update = req.body.changes;
-    console.log(update)
 
     Cookbook.findById(cookbookId).then(cookbook => {
         if (cookbook.userPermissions.owner != userId) {

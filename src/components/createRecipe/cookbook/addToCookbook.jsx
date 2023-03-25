@@ -1,4 +1,4 @@
-import {Checkbox, CheckboxGroup, Stack, useCheckbox} from "@chakra-ui/react";
+import {Checkbox, CheckboxGroup, useCheckbox} from "@chakra-ui/react";
 
 
 const AddToCookbook = ({cookbooks}) => {

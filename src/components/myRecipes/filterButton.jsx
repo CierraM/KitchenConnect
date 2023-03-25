@@ -1,21 +1,7 @@
 import {
-    Menu,
-    MenuButton,
-    MenuList,
-    MenuItem,
-    MenuItemOption,
-    MenuGroup,
-    MenuOptionGroup,
-    MenuDivider,
-    Button,
-    Box,
-    chakra,
     Wrap,
-    useRadio,
-    useRadioGroup,
     Tag, useCheckboxGroup
 } from '@chakra-ui/react'
-import {ChevronDownIcon} from "@chakra-ui/icons";
 import CustomCheckbox from "./customCheckbox"
 import {useState} from "react";
 

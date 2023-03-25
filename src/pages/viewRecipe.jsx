@@ -2,7 +2,7 @@ import Template from "../components/ui/template";
 import {useNavigate, useParams} from "react-router-dom";
 import useHttp from "../util/use-http";
 import {useEffect, useState} from "react";
-import {Flex, Heading, Spinner, useDisclosure, useToast} from '@chakra-ui/react'
+import {Flex, Spinner, useDisclosure, useToast} from '@chakra-ui/react'
 import ViewRecipeHeader from "../components/viewRecipe/viewRecipeHeader";
 import ViewRecipeTitle from "../components/viewRecipe/viewRecipeTitle";
 import RecipeBody from "../components/viewRecipe/recipeBody";
@@ -18,7 +18,7 @@ const ViewRecipe = () => {
     const [recipe, setRecipe] = useState({})
     const {isOpen, onOpen, onClose} = useDisclosure()
     const [groups, setGroups] = useState([])
-    const [userToken, setUserToken] = useAtom(userTokenAtom);
+    const [userToken, ] = useAtom(userTokenAtom);
     const toast = useToast();
     const navigate = useNavigate();
 
@@ -59,7 +59,7 @@ const ViewRecipe = () => {
             method: 'GET',
             headers: {'Content-Type': 'application/json'}
         }, response => {
-            if (!error) {
+            if (response.status === 200) {
                 setRecipe(response.recipe)
                 if (userToken) {
                     //get user favorites
@@ -85,6 +85,8 @@ const ViewRecipe = () => {
                         }
                     })
                 }
+            } else {
+                navigate('/error')
             }
         })
     }, [error, id, sendRequest, setGroups])

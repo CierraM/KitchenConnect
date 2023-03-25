@@ -5,7 +5,7 @@ import FilterSection from "./filterButton";
 
 const SortAndFilter = ({tags, sortHandler, filterHandler}) => {
     return (
-        <Flex alignItems={"center"} justify={"space-between"}>
+        <Flex alignItems={"flex-start"} justify={"space-between"}>
             <FilterSection tags={tags} filterHandler={filterHandler}/>
             <SortButton sortHandler={sortHandler}/>
         </Flex>

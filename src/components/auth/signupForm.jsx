@@ -5,7 +5,7 @@ import {
     Button,
     Box,
     Link,
-    Heading, Alert, useToast, FormErrorMessage, Spinner
+    Heading, useToast, FormErrorMessage, Spinner
 } from '@chakra-ui/react'
 import {Link as ReactRouterLink, useNavigate} from 'react-router-dom';
 import PasswordInput from './passwordInput';

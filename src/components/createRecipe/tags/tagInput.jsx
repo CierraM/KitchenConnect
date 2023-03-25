@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {Flex, IconButton, Input, InputGroup, InputRightAddon, Textarea} from "@chakra-ui/react";
+import { IconButton, Input, InputGroup, InputRightAddon, } from "@chakra-ui/react";
 import {AddIcon} from "@chakra-ui/icons";
 
 

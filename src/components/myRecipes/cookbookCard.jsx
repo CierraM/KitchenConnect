@@ -1,4 +1,4 @@
-const { Card } = require("@chakra-ui/react")
+import {Card} from '@chakra-ui/react'
 
 const CookbookCard = () => {
     return (

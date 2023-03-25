@@ -1,5 +1,5 @@
-import {Alert, AlertDescription, AlertIcon, AlertTitle, Button, Link} from "@chakra-ui/react";
-import {Link as ReactRouterLink, useNavigate} from 'react-router-dom'
+import {Alert, AlertIcon, AlertTitle, Button, Link} from "@chakra-ui/react";
+import {Link as ReactRouterLink} from 'react-router-dom'
 
 const ErrorPage = () => {
     return (

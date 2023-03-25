@@ -96,7 +96,7 @@ exports.getRecipeById = (req, res, next) => {
             }
             const userId = getToken(req);
 
-            const isOwner = recipe.userPermissions.owner.toString() === userId?.toString();
+            const isOwner = recipe.userPermissions.owner?.toString() === userId?.toString();
 
 
             return res.status(200).json({

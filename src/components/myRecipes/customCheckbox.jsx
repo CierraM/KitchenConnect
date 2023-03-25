@@ -1,4 +1,4 @@
-import {chakra, Tag, useCheckbox, useRadio} from "@chakra-ui/react";
+import {chakra, Tag, useCheckbox} from "@chakra-ui/react";
 
 const CustomCheckbox = ({label, ...radioProps}) => {
     const { state, getInputProps, getCheckboxProps, htmlProps, getLabelProps } = useCheckbox(radioProps)

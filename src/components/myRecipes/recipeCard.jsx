@@ -1,7 +1,7 @@
-import {LinkBox, LinkOverlay, Box, Text, Heading, Link, Container, Card, CardBody, Tag} from '@chakra-ui/react'
+import {Text, Link, Card, CardBody, Tag} from '@chakra-ui/react'
 import {Link as ReactRouterLink} from "react-router-dom"
 
-const RecipeCard = ({item, type, showTags = false}) => {
+const RecipeCard = ({item, type, showTags = false, selectedTags}) => {
 
     return (
         <Link
@@ -18,14 +18,15 @@ const RecipeCard = ({item, type, showTags = false}) => {
                 <CardBody>
                     <Text fontWeight={"bold"}>{item?.title}</Text>
                     {showTags && item?.tags.map((tag, index) => {
+                        const variant = selectedTags?.includes(tag.toLowerCase()) ? "solid" : "outline"
                         return <Tag
                             key={index}
-                            variant={"outline"}
+                            variant={variant}
                             colorScheme="primary"
                             mr={2}
                             mt={.5}
                             borderRadius={"full"}
-                        >{tag}</Tag>
+                        >{tag.toLowerCase()}</Tag>
                     })}
                 </CardBody>
             </Card>

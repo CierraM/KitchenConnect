@@ -1,8 +1,8 @@
 //this component shows all recipes and cookbooks according to the criteria passed in by filters
-import {Flex, Grid, SimpleGrid, useMediaQuery, VStack, Wrap} from "@chakra-ui/react";
+import {Flex, SimpleGrid} from "@chakra-ui/react";
 import RecipeCard from "./recipeCard";
 
-const List = ({items, type}) => {
+const List = ({items, type, selectedTags}) => {
         return (
             <SimpleGrid columns={[1, null, 2, 3, 4]} spacing={'10px'} >
                 {items?.length === 0 && <Flex>Nothing to show</Flex>}
@@ -12,6 +12,7 @@ const List = ({items, type}) => {
                         item={item}
                         type={type}
                         showTags={type === 'recipe' ? true : false}
+                        selectedTags={selectedTags}
                     />
                 })}
             </SimpleGrid>

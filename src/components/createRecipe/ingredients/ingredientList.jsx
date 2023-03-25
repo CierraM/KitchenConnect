@@ -1,15 +1,13 @@
 import {
     Flex,
-    VStack,
     IconButton,
-    Text,
     Spacer,
     ListItem,
     UnorderedList,
     EditablePreview,
     EditableInput, Editable
 } from "@chakra-ui/react";
-import {DeleteIcon, CloseIcon} from "@chakra-ui/icons";
+import {CloseIcon} from "@chakra-ui/icons";
 
 
 const IngredientList = ({ingredients, removeIngredient, editIngredient}) => {

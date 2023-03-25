@@ -11,6 +11,7 @@ const RecipesWithSortAndFilter = ({recipes, isLoading}) => {
     const [filteredRecipes, setFilteredRecipes] = useState({recipes: []})
     const [displayRecipes, setDisplayRecipes] = useState([{heading: '', recipes: []}])
     const [sortType, setSortType] = useState("asc")
+    const [selectedTags, setSelectedTags] = useState([])
 
     useEffect(() => {
         if (recipes) {
@@ -63,7 +64,7 @@ const RecipesWithSortAndFilter = ({recipes, isLoading}) => {
                         recipes: filteredRecipes.recipes?.filter(r => r.tags.includes(tag))
                             .sort((a, b) => a.title.localeCompare(b.title))
                     }
-                }).filter(r => r.recipes?.length > 0)
+                }).sort((a, b) => a.heading.localeCompare(b.heading)).filter(r => r.recipes?.length > 0)
                 break;
             case "tagsAsc":
                 sortedRecipes = tags.map(tag => {
@@ -72,7 +73,7 @@ const RecipesWithSortAndFilter = ({recipes, isLoading}) => {
                         recipes: filteredRecipes.recipes?.filter(r => r.tags.includes(tag))
                             .sort((a, b) => a.title.localeCompare(b.title)).reverse()
                     }
-                }).filter(r => r.recipes?.length > 0).reverse()
+                }).sort((a, b) => a.heading.localeCompare(b.heading)).filter(r => r.recipes?.length > 0).reverse()
                 break;
             default:
                 break;
@@ -83,8 +84,10 @@ const RecipesWithSortAndFilter = ({recipes, isLoading}) => {
     const filterDisplayRecipesByTags = (tags) => {
         if (tags.length === 0) {
             setFilteredRecipes({recipes: recipes.slice()})
+            setSelectedTags([])
         } else {
             setFilteredRecipes({recipes: recipes.filter(r => r.tags.some(t => tags.includes(t.toLowerCase().trim())))})
+            setSelectedTags(tags)
         }
     }
 
@@ -99,7 +102,7 @@ const RecipesWithSortAndFilter = ({recipes, isLoading}) => {
             return (
                 <Box key={index} mb={4}>
                     <Heading color={"main.500"} fontSize="lg">{r.heading}</Heading>
-                    <List items={r.recipes} type={"recipe"}/>
+                    <List items={r.recipes} type={"recipe"} selectedTags={selectedTags}/>
                 </Box>
             )
         })}

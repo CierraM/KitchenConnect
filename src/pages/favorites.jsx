@@ -2,7 +2,6 @@ import Template from "../components/ui/template";
 import {Flex, Heading, Link, Spinner, useToast} from "@chakra-ui/react";
 import {useEffect, useState} from "react";
 import useHttp from "../util/use-http";
-import RecipeCard from "../components/myRecipes/recipeCard";
 import List from "../components/myRecipes/list";
 import {Link as ReactRouterLink} from "react-router-dom";
 import {ArrowBackIcon} from "@chakra-ui/icons";
