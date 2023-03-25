@@ -53,7 +53,7 @@ const LoginForm = () => {
     }
 
     return (
-        <Box>
+        <Box >
             <Box
                 m="auto"
                 py='3'
@@ -62,17 +62,17 @@ const LoginForm = () => {
                 alignItems='center'
                 justifyContent='center'
                 textAlign='center'>
-                <Heading>Login</Heading>
+                <Heading align={"center"} py={5} color={'primary.600'} fontFamily={'accent'} fontSize={'3em'}>Kitchen Connect</Heading>
                 <form onSubmit={tryLogin}>
-                    <Box m={2}>
+                    <Box m={2} mb={4}>
                         <FormControl isRequired>
-                            <FormLabel> Email </FormLabel>
+                            <FormLabel mb={'4px'}> Email </FormLabel>
                             <Input placeholder='Email' ref={emailInputRef}/>
                         </FormControl>
                     </Box>
-                    <Box m={2}>
+                    <Box m={2} mb={8}>
                         <FormControl isRequired>
-                            <FormLabel>Password</FormLabel>
+                            <FormLabel mb={'4px'}>Password</FormLabel>
                             <PasswordInput ref={passwordInputRef}></PasswordInput>
                         </FormControl>
                         {

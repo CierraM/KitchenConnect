@@ -6,18 +6,21 @@ import useHttp from "../util/use-http";
 import NewButton from "../components/myRecipes/newButton";
 import SortAndFilter from "../components/myRecipes/sortAndFilter";
 import {Box, Heading, Link, useToast, Text} from "@chakra-ui/react";
-import {Link as ReactRouterLink} from "react-router-dom";
+import {Link as ReactRouterLink, useParams} from "react-router-dom";
+import CookbookTab from "../components/viewCookbook/cookbookTab";
 
 
 const MyRecipes = () => {
     const [allRecipes, setAllRecipes] = useState({recipes: []})
     const [cookbooks, setCookbooks] = useState({cookbooks: []})
+    const [currentCookbook, setCurrentCookbook] = useState({currentCookbook: {}})
     const {isLoading, error, sendRequest} = useHttp()
     const [tags, setTags] = useState([]);
     const [filteredRecipes, setFilteredRecipes] = useState({recipes: []})
     const [displayRecipes, setDisplayRecipes] = useState([{heading: '', recipes: []}])
     const [sortType, setSortType] = useState("asc")
     const toast = useToast()
+    const {id} = useParams()
 
     //Get recipes from server
     useEffect(() => {
@@ -101,7 +104,6 @@ const MyRecipes = () => {
         setDisplayRecipes(sortedRecipes)
     }, [sortType, filteredRecipes])
 
-
     const filterDisplayRecipesByTags = (tags) => {
         if (tags.length === 0) {
             setFilteredRecipes({recipes: allRecipes.recipes.slice()})
@@ -141,9 +143,11 @@ const MyRecipes = () => {
         </>
     )
 
-    const cookbookTabContent = (
-        <List items={cookbooks?.cookbooks} type={"cookbook"}/>
-    )
+
+        const cookbookTabContent = (
+            <List items={cookbooks?.cookbooks} type={"cookbook"}/>)
+
+
     return (
         <Template>
             <RecipeBrowser

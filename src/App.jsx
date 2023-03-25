@@ -4,12 +4,10 @@ import {
     BrowserRouter as Router,
     Routes,
     Route,
-    Navigate, Redirect
 } from "react-router-dom";
 import Auth from './pages/auth';
 import ViewRecipe from "./pages/viewRecipe";
 import ViewCookbook from "./pages/viewCookbook";
-import Cookbooks from "./pages/cookbooks";
 import CreateRecipe from "./pages/createRecipe";
 import CreateCookbook from "./pages/createCookbook";
 import Profile from "./pages/profile";
@@ -20,11 +18,23 @@ import {userTokenAtom} from "./store/atoms";
 import Favorites from "./pages/favorites";
 import colors from "./util/colors";
 import ErrorPage from "./pages/error";
+import '@fontsource/raleway/400.css'
+import '@fontsource/open-sans/700.css'
+import '@fontsource/abril-fatface/400.css'
+import {Input} from "./util/components";
 
 
 function App() {
     const theme = extendTheme({
-        colors: colors
+        colors: colors,
+        fonts: {
+            heading: `'Open Sans', sans-serif`,
+            body: `'Raleway', sans-serif`,
+            accent: `'Abril Fatface', cursive`
+        },
+        components: {
+            Input: Input
+        }
     })
 
     const [userToken, setUserToken] = useAtom(userTokenAtom);
@@ -33,7 +43,7 @@ function App() {
             <Router>
                 {userToken ? (
                     <Routes>
-                        <Route path="/myRecipes" element={<MyRecipes/>}/>
+                        <Route path="/myRecipes" element={<MyRecipes isCookbookView={false}/>}/>
                         <Route path="/profile" element={<Profile/>}/>
                         <Route path="/group/create" element={<CreateGroup/>}/>
                         <Route path="/createCookbook" element={<CreateCookbook editing={false}/>}/>

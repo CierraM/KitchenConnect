@@ -17,7 +17,7 @@ function PasswordInput(props, ref) {
           ref={ref}
         />
         <InputRightElement width='4.5rem'>
-          <Button h='1.75rem' size='sm' onClick={handleClick} tabIndex={-1}>
+          <Button h='1.75rem' size='sm' onClick={handleClick} tabIndex={-1} color={'#777'} fontWeight={'regular'}>
             {show ? 'Hide' : 'Show'}
           </Button>
         </InputRightElement>

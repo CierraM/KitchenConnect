@@ -8,6 +8,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import useHttp from "../util/use-http";
 import NewButton from "../components/myRecipes/newButton";
 import {Spinner, useToast} from "@chakra-ui/react";
+import SortAndFilter from "../components/myRecipes/sortAndFilter";
 
 const ViewCookbook = () => {
     const {id} = useParams()
@@ -51,7 +52,7 @@ const ViewCookbook = () => {
 
     const recipeTabContent = (
         <>
-            <FilterSection></FilterSection>
+            <SortAndFilter/>
             <List items={recipes.recipes} type={"recipe"}/>
         </>
     )

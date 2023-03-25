@@ -18,6 +18,7 @@ import {Link as ReactRouterLink, useNavigate} from "react-router-dom"
 import useHttp from "../../util/use-http";
 import {useAtom} from "jotai";
 import {userTokenAtom} from "../../store/atoms";
+import React from "react";
 
 const Menu = () => {
     const {isOpen, onOpen, onClose} = useDisclosure()
@@ -52,7 +53,7 @@ const Menu = () => {
             }
         })
     }
-    const logoutButton= <Button type="button" onClick={logout} variant={"outline"}>Log Out</Button>
+    const logoutButton = <Button type="button" onClick={logout} variant={"outline"}>Log Out</Button>
     const loginButton = <Button as={ReactRouterLink} to={'/login'}>Log In</Button>
 
     return (
@@ -67,7 +68,9 @@ const Menu = () => {
                 <DrawerOverlay/>
                 <DrawerContent>
                     <DrawerCloseButton/>
-                    <DrawerHeader>KitchenConnect</DrawerHeader>
+                    <DrawerHeader>
+                        <Heading color={'primary.600'} fontFamily={'accent'} fontSize={'3xl'}>Kitchen Connect</Heading>
+                    </DrawerHeader>
 
                     <DrawerBody>
                         <Flex flexDirection={"column"}>
@@ -99,7 +102,7 @@ const Menu = () => {
                     </DrawerBody>
                     <DrawerFooter>
                         <VStack>
-                        {/*<Link as={ReactRouterLink} to={"/profile"}>My Profile</Link>*/}
+                            {/*<Link as={ReactRouterLink} to={"/profile"}>My Profile</Link>*/}
                             {userToken ? logoutButton : loginButton}
                         </VStack>
                     </DrawerFooter>

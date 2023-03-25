@@ -123,8 +123,9 @@ const SignupForm = () => {
                      bg='white'
                      alignItems='center'
                      justifyContent='center'
+                     borderRadius={'2px'}
                      textAlign='center'>
-                    <Heading mb={'lg'}>Create Your Account</Heading>
+                    <Heading align={"center"} my={6} color={'primary.600'} fontFamily={'accent'} fontSize={'3em'}>Kitchen Connect</Heading>
                     {/*<Box m={3}>*/}
                     {/*    <FormControl>*/}
                     {/*        <FormLabel mb={0}> First Name </FormLabel>*/}
@@ -137,14 +138,14 @@ const SignupForm = () => {
                     {/*        <Input placeholder='Doe' ref={lastNameInputRef}/>*/}
                     {/*    </FormControl>*/}
                     {/*</Box>*/}
-                    <Box m={3}>
+                    <Box m={3} mb={4}>
                         <FormControl isRequired isInvalid={duplicateUserError}>
                             <FormLabel mb={0}> Email </FormLabel>
                             <Input placeholder='example@example.com' ref={emailInputRef} type="email"/>
                             {duplicateUserError && <FormErrorMessage>{duplicateUserError}</FormErrorMessage>}
                         </FormControl>
                     </Box>
-                    <Box m={3}>
+                    <Box m={3} mb={4}>
                         <FormControl isRequired isInvalid={usernameError || duplicateUserError}>
                             <FormLabel mb={0}> Display Name </FormLabel>
                             <Input placeholder='Username' ref={usernameInputRef}/>
@@ -152,14 +153,14 @@ const SignupForm = () => {
                             {duplicateUserError && <FormErrorMessage>{duplicateUserError}</FormErrorMessage>}
                         </FormControl>
                     </Box>
-                    <Box m={3}>
+                    <Box m={3} mb={4}>
                         <FormControl isRequired isInvalid={passwordError}>
                             <FormLabel mb={0}>Password</FormLabel>
                             <PasswordInput ref={passwordInputRef}></PasswordInput>
                             {passwordError && <FormErrorMessage>{passwordError}</FormErrorMessage>}
                         </FormControl>
                     </Box>
-                    <Box m={3}>
+                    <Box m={3} mb={8}>
                         <FormControl isRequired isInvalid={passwordError}>
                             <FormLabel mb={0}>Confirm Password</FormLabel>
                             <PasswordInput ref={confirmPasswordInputRef}></PasswordInput>

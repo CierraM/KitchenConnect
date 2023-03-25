@@ -8,6 +8,7 @@ import {useEffect, useState} from "react";
 import DeleteDialog from "../ui/deleteDialog";
 import ShareModal from "../ui/shareModal";
 import useHttp from "../../util/use-http";
+import SortAndFilter from "../myRecipes/sortAndFilter";
 
 
 const CookbookTab = ({cookbook, id}) => {
@@ -102,7 +103,7 @@ const CookbookTab = ({cookbook, id}) => {
                     variant={"link"}
                     onClick={deleteModalOnOpen}/>
             </Flex>
-            <FilterSection></FilterSection>
+            <SortAndFilter></SortAndFilter>
             <List items={cookbook.recipes} type={"recipe"}/>
             <DeleteDialog isOpen={deleteModalIsOpen} onClose={deleteModalOnClose} deleteUrl={`${process.env.REACT_APP_SERVER_URL}/cookbook/delete/${id}`} title={"Delete Cookbook"}/>
             <ShareModal
