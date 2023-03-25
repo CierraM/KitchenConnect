@@ -1,14 +1,12 @@
 import Template from "../components/ui/template";
 import RecipeBrowser from "../components/myRecipes/recipeBrowser";
-import FilterSection from "../components/myRecipes/filterButton";
-import List from "../components/myRecipes/list";
 import CookbookTab from "../components/viewCookbook/cookbookTab";
 import {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import useHttp from "../util/use-http";
 import NewButton from "../components/myRecipes/newButton";
 import {Spinner, useToast} from "@chakra-ui/react";
-import SortAndFilter from "../components/myRecipes/sortAndFilter";
+import RecipesWithSortAndFilter from "../components/myRecipes/recipesWithSortAndFilter";
 
 const ViewCookbook = () => {
     const {id} = useParams()
@@ -41,23 +39,30 @@ const ViewCookbook = () => {
             method: 'GET',
             headers: {'Content-Type': 'application/json'}
         }, response => {
-            if (!error) {
+            if (response.status == 200) {
                 const cookbookRecipes = [].concat.apply([], response.cookbooks.map(c => c.recipes))
                 const allRecipes = response.recipes.concat(cookbookRecipes)
                     .filter((v, i, a) => i === a.findIndex(t => (t._id === v._id)))
                 setRecipes({recipes: allRecipes})
+            } else {
+                toast(
+                    {
+                        title: "An error occurred.",
+                        description: "We're sorry, but an error occurred. Please try again.",
+                        status: "error",
+                        duration: 5000,
+                        isClosable: true,
+                    }
+                )
             }
         })
     }, [error, sendRequest, setRecipes])
 
     const recipeTabContent = (
-        <>
-            <SortAndFilter/>
-            <List items={recipes.recipes} type={"recipe"}/>
-        </>
+            <RecipesWithSortAndFilter recipes={recipes?.recipes} isLoading={isLoading}/>
     )
 
-    const cookbookTabContent = (
+    const cookbookTabContent =(
         <CookbookTab cookbook={cookbook} id={id}/>
     )
 

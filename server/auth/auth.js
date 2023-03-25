@@ -17,7 +17,7 @@ exports.isAuth = (req, res, next) => {
         console.log(err)
         console.log(decodedToken)
         return res.status(403).json({
-            message: "failed to confirm token"
+            message: "failed to confirm tokens"
         })
     }
 

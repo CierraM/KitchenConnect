@@ -4,6 +4,7 @@ import {useNavigate} from "react-router-dom";
 import {FaHeart, FaRegHeart} from "react-icons/fa";
 import {useState} from "react";
 import {Link as ReactRouterLink} from "react-router-dom";
+import BackButton from "../ui/backButton";
 
 const ViewRecipeHeader = ({isFavorite, showShareModal, toggleFavorite, favoriteLoading}) => {
     const navigate = useNavigate();
@@ -12,7 +13,7 @@ const ViewRecipeHeader = ({isFavorite, showShareModal, toggleFavorite, favoriteL
     let favoriteIcon = isFavorite ? FaHeart : FaRegHeart;
     return (
         <Flex py={3} justify={'center'}>
-            <Link aria-label={'back'} as={ReactRouterLink} to="/myRecipes"><ArrowBackIcon/> Back </Link>
+            <BackButton/>
             <Spacer></Spacer>
 
             {favoriteLoading ? <Spinner/> : <IconButton

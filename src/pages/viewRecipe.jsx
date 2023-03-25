@@ -100,7 +100,7 @@ const ViewRecipe = () => {
                 position: "top-right"
             })
         }
-    }, [error])
+    }, [error, toast])
 
     if (isLoading) {
         return (

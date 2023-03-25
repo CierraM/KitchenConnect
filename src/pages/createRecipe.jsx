@@ -117,7 +117,7 @@ const CreateRecipe = ({editing}) => {
                 headers: {'Content-Type': 'application/json'}
             }, (result) => {
                 if (!error) {
-                    navigate(`/recipe/${id}`)
+                    navigate(`/recipe/${id}`, {state: {createPage: true}})
                 }
             })
         } else {
@@ -128,7 +128,7 @@ const CreateRecipe = ({editing}) => {
                 headers: {'Content-Type': 'application/json'}
             }, (result) => {
                 if (!error) {
-                    navigate(`/recipe/${result._id}`)
+                    navigate(`/recipe/${result._id}`, {state: {createPage: true}})
                 }
             })
 
