@@ -12,8 +12,8 @@ const {getToken} = require("../../auth/getToken");
 
 exports.createRecipe = (req, res, next) => {
     const errors = validationResult(req)
-    console.log(errors)
     if (!errors.isEmpty()) {
+        console.log(errors)
         return res.status(400).send({
             message: "one or more errors ocurred",
             errors: errors
@@ -44,7 +44,6 @@ exports.createRecipe = (req, res, next) => {
         }
     }
     const cookbookIds = req.body.cookbookIds || [];
-
     Recipe.create(recipe)
         .then(async recipe => {
             if (!recipe) {
@@ -388,4 +387,19 @@ exports.updateRecipe = (req, res, next) => {
         })
 
     })
+}
+
+exports.deleteTestRecipes = (req, res, next) => {
+    //delete all recipes with specified user id. Must change value below to do it
+    Recipe.deleteMany({ 'userPermissions.owner': 'userId' }).then(result => {
+        return res.status(200).json({
+            message: "recipes deleted",
+            result: result
+        })
+    }).catch(err => {
+        return res.status(400).json({
+            message: "not allowed",
+        })
+    })
+
 }

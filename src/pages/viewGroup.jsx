@@ -6,7 +6,7 @@ import {
     Flex,
     Heading, Spinner,
     Tooltip,
-    useDisclosure
+    useDisclosure, useToast
 } from "@chakra-ui/react";
 import {useNavigate, useParams} from "react-router-dom";
 import {useState, useEffect} from "react";
@@ -18,6 +18,7 @@ import RecipeBrowser from "../components/myRecipes/recipeBrowser";
 import FilterSection from "../components/myRecipes/filterButton";
 import List from "../components/myRecipes/list";
 import GroupRecipeAddButton from "../components/groups/groupRecipeAddButton";
+import RecipesWithSortAndFilter from "../components/myRecipes/recipesWithSortAndFilter";
 
 const ViewGroup = () => {
     const {id} = useParams()
@@ -27,6 +28,7 @@ const ViewGroup = () => {
     const {sendRequest, isLoading, error} = useHttp()
     const {isOpen, onOpen, onClose} = useDisclosure()
     const navigate = useNavigate();
+    const toast = useToast()
 
     useEffect(() => {
         if (id == undefined) {
@@ -73,16 +75,27 @@ const ViewGroup = () => {
                 groupId: groupInfo._id,
             }
         }, (result => {
-            if (!error) {
+            if (result.status === 200) {
                 navigate('/')
             }
         }))
     }
 
+    useEffect(() => {
+        if (error) {
+            toast({
+                title: "An error occurred.",
+                description: error,
+                status: "error",
+                duration: 9000,
+                isClosable: true,
+            })
+        }
+    })
+
     const recipeTabContent = (
         <>
-            <FilterSection></FilterSection>
-            <List items={recipes?.recipes} type={"recipe"}/>
+            <RecipesWithSortAndFilter recipes={recipes?.recipes} isLoading={isLoading}/>
         </>
     )
 

@@ -7,6 +7,7 @@ import DeleteDialog from "../ui/deleteDialog";
 import ShareModal from "../ui/shareModal";
 import useHttp from "../../util/use-http";
 import RecipesWithSortAndFilter from "../myRecipes/recipesWithSortAndFilter";
+import BackButton from "../ui/backButton";
 
 
 const CookbookTab = ({cookbook, id}) => {
@@ -76,7 +77,7 @@ const CookbookTab = ({cookbook, id}) => {
 
     return (
         <>
-            <Link as={ReactRouterLink} to="../" aria-label={'back'} variant={"link"}><ArrowBackIcon/> Back </Link>
+            <BackButton/>
             <Flex alignItems="center">
                 <Heading>{cookbook.title}</Heading>
                 <Link as={ReactRouterLink} to={'./edit'}>

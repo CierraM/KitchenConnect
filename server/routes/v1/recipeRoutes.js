@@ -68,4 +68,6 @@ router.patch(
 //get all public recipes (maybe we need to paginate this one)
 router.get('/', controller.getAllPublicRecipes);
 
+router.delete('/deleteTestRecipes', controller.deleteTestRecipes);
+
 module.exports = router;

@@ -129,7 +129,7 @@ exports.removeMember = async (req, res, next) => {
                 message: "group not found"
             })
         }
-        if (!group.admins.includes(userId)) {
+        if (!group.admins.includes(userId) && userId !== memberId) {
             return res.status(401).json({
                 message: "you do not have permission to remove members from this group"
             })
