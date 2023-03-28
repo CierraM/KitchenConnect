@@ -14,8 +14,8 @@ const RecipeBrowser = ({recipeTabContent, cookbookTabContent, defaultIndex, chil
                     <Spacer/>
                     {showFavorites && <FavoritesButton/>}
                 </TabList>
-                <TabPanels h={"full"}>
-                    <TabPanel h={"full"}>
+                <TabPanels h={"full"} >
+                    <TabPanel h={"full"} p={0}>
                         {recipeTabContent}
                     </TabPanel>
                     <TabPanel h={"full"}>

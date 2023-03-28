@@ -102,6 +102,8 @@ const Menu = () => {
                         <VStack>
                             {/*<Link as={ReactRouterLink} to={"/profile"}>My Profile</Link>*/}
                             {userToken ? logoutButton : loginButton}
+                            <Link href={"mailto:Cierra.Morris09@gmail.com"} textDecoration={'underline'}>
+                                Problems or feedback? Send me an email!</Link>
                         </VStack>
                     </DrawerFooter>
 

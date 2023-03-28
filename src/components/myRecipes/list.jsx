@@ -4,7 +4,7 @@ import RecipeCard from "./recipeCard";
 
 const List = ({items, type, selectedTags}) => {
         return (
-            <SimpleGrid columns={[1, null, 2, 3, 4]} spacing={'10px'} >
+            <SimpleGrid columns={[1, null, 2, 3, 4]} spacing={'10px'} mb={'10px'}>
                 {items?.length === 0 && <Flex>Nothing to show</Flex>}
                 {items?.map((item, index) => {
                     return <RecipeCard
